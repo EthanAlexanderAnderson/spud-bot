@@ -1,6 +1,6 @@
 # spud-bot
 
-Shit
+Spam
 Post
 User
 Database
