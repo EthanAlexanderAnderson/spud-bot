@@ -64,4 +64,4 @@ async def on_message(message):
 async def ok(ctx):
     await ctx.send('https://cdn.discordapp.com/attachments/605588158913970176/605588488112570369/image0.jpg')
 '''
-client.run(str(os.environ.get('BOT_TOKEN')))       #token to link code to discord bot
+client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot
