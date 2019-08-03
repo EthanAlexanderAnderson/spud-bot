@@ -33,4 +33,4 @@ async def on_message(message):      # read sent message
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
         pickle.dump(dic, open(saveFile, "wb"))      # update dictionary file
 
-client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
+client.run(BOT_TOKEN)       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
