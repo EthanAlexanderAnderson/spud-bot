@@ -58,6 +58,6 @@ async def on_message(message):      # read sent message
         with open("myson.json", "w") as write_file:
             dic = json.dump(dic, write_file)     # update dictionary file
 
-client.run('BOT_TOKEN')       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
+client.run(BOT_TOKEN)       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
 
 
