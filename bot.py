@@ -1,6 +1,15 @@
 import discord
 import json
 from discord.ext import commands
+import os
+import redis
+
+redis = redis.Redis.from_url("redis://h:pd461d2ca0afbb0e93ddfcda006691526b53a83f255f1420c145b5a39eec47ba9@ec2-34-203-164-221.compute-1.amazonaws.com:13299", decode_responses=True)
+#redis.set("test", "hell yes")
+#result = redis.get("test").decode('utf-8')
+#print(result)
+#print("or nah")
+#redis.echo("please help me")
 
 client = commands.Bot(command_prefix='/')       # command prefix (/)
 
@@ -30,33 +39,26 @@ async def on_ready():
 async def on_message(message):      # read sent message
     global write_file, read_file, dic
     if message.content.startswith('/send '):        # for /send
-        with open("myson.json", "r") as read_file:
-            dic = json.load(read_file)              # load dictionary from file ---
         keyword = message.content.split(" ")        # split message
-        msg = dic[keyword[1]]                       # find tag in dictionary
+        msg = redis.get(keyword[1])     # find tag in dictionary
         await message.channel.send(msg)             # send link connected to tag
 
     elif message.content.startswith('/add '):       # for /add
-        with open("myson.json", "r") as read_file:
-            dic = json.load(read_file)              # load dictionary from file
         words = message.content.split(" ")          # split message
         key = words[1]                              # define dictionary key
         value = words[2]                            # define dictionary value
-        dic[key] = value                            # add entry to dictionary
+        redis.set(str(key), str(value))                            # add entry to dictionary
         await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
-        #pickle.dump(dic, open(saveFile, "wb"))      # update dictionary file
-        with open("myson.json", "w") as write_file:
-            dic = json.dump(dic, write_file)
 
 
     elif message.content.startswith('/remove '):    # for /remove
-        with open("myson.json", "r") as read_file:
-            dic = json.load(read_file)       # load dictionary from file
         target = message.content.split(" ")         # split message
-        dic.pop(target[1])                          # remove entry from dictionary
+        redis.delete(target[1])                          # remove entry from dictionary
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
-        with open("myson.json", "w") as write_file:
-            dic = json.dump(dic, write_file)     # update dictionary file
+
+    elif message.content.startswith('/list'):
+        allKeys = redis.keys('*')
+        await message.channel.send((', ').join(allKeys))
 
 client.run(BOT_TOKEN)       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
 
