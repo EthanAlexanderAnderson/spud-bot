@@ -1,4 +1,3 @@
 discord
 pip
 redis
-os
