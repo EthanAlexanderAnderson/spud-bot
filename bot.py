@@ -1,34 +1,12 @@
 import discord
-import json
 from discord.ext import commands
 import os
 import redis
 
 redis = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-#redis.set("test", "hell yes")
-#result = redis.get("test").decode('utf-8')
-#print(result)
-#print("or nah")
-#redis.echo("please help me")
 
 client = commands.Bot(command_prefix='/')       # command prefix (/)
 
-     # file where dictionary (tags & links) are stored
-
-while True:
-    try:
-        with open("myson.json", "r") as read_file:
-            dic = json.load(read_file)
-        break
-    except json.decoder.JSONDecodeError:
-        dic={}
-        with open("myson.json", "w") as write_file:
-            dic = json.dump(dic, write_file)
-'''
-dic={}
-with open("myson.json", "w") as write_file:
-    dic = json.dump(dic, write_file)
-'''
 
 @client.event                       # tell server when bot is ready
 async def on_ready():
