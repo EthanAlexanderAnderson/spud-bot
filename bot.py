@@ -34,6 +34,6 @@ async def on_message(message):      # read sent message
         allKeys = redis.keys('*')
         await message.channel.send((', ').join(allKeys))
 
-client.run(BOT_TOKEN)       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
+client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
 
 
