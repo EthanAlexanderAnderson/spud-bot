@@ -1,6 +1,4 @@
-import discord
 from discord.ext import commands
-import os
 import redis
 
 redis = redis.Redis.from_url(REDIS_URL, decode_responses=True)
@@ -15,7 +13,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message):      # read sent message
-    global write_file, read_file, dic
     if message.content.startswith('/send '):        # for /send
         keyword = message.content.split(" ")        # split message
         msg = redis.get(keyword[1])     # find tag in dictionary
@@ -27,7 +24,6 @@ async def on_message(message):      # read sent message
         value = words[2]                            # define dictionary value
         redis.set(str(key), str(value))                            # add entry to dictionary
         await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
-
 
     elif message.content.startswith('/remove '):    # for /remove
         target = message.content.split(" ")         # split message
