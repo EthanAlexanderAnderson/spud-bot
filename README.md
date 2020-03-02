@@ -1,12 +1,12 @@
 # spud-bot
 
-Spam Post User Database
+Spam Post User Database - Discord Bot
 
-Required for running bot:
-bot.py
-save.p
+Commands:
 
-For hosting:
-Procfile
-requirements.txt
-runtime.txt
+/add [key] [link] - Adds image
+/send [key] - Sends image
+/remove [key] - Removes images
+/list - Lists all images keys
+
+My bot is run using a Heroku free server.
