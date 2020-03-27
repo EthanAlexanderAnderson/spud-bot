@@ -17,12 +17,12 @@ async def on_ready():
 async def on_message(message):                                                  # read sent message
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
-        
+        newKey = ""
         if len(keyword) > 1:
-          	for i in range(len(keyword)):
-                newKey = newKey + keyword[i] + " "
-            newKey = str(newKey[:-1])
-            key = newKey
+          for i in range(len(keyword)):
+            newKey = newKey + keyword[i] + " "
+          newKey = str(newKey[:-1])
+          key = newKey
         else:
             key = keyword[1]
         
