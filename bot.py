@@ -61,7 +61,7 @@ async def on_message(message):                                                  
         else:
             redis.delete(target[1])
                                                          # remove entry from dictionary
-        await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
+        await message.channel.send("{} has been removed".format(target))     # inform user the entry has been removed
 
     elif message.content.startswith('/list'):                                   # for /list
         allKeys = redis.keys('*')                                               # defines all keys
