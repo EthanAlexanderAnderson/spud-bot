@@ -34,7 +34,7 @@ async def on_message(message):                                                  
                 newKey = newKey + key[i] + " "
             newKey = str(newKey[:-1])
             key = newKey
-        key = str(key[0])
+        key = str(key)
         key = key.lower()
         redis.set(str(key), str(value))                                         # add entry to dictionary
         await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
