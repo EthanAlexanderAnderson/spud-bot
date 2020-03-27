@@ -17,6 +17,7 @@ async def on_ready():
 async def on_message(message):                                                  # read sent message
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
+        msg = ""
         msg = redis.get(keyword[1])                                             # find tag in dictionary
         if msg == "":
             msg = "No image found."
