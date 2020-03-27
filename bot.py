@@ -20,7 +20,7 @@ async def on_message(message):                                                  
         
         if len(keyword) > 1:
           	for i in range(len(keyword)):
-                newKey = newKey + keyword[i] + " "
+            	newKey = newKey + keyword[i] + " "
             newKey = str(newKey[:-1])
             key = newKey
         else:
