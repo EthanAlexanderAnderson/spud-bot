@@ -17,7 +17,7 @@ async def on_ready():
 async def on_message(message):                                                  # read sent message
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
-        keyword = keyword.lower()
+        keyword[1] = keyword[1].lower()
         msg = ""
         msg = redis.get(keyword[1])                                             # find tag in dictionary
         if msg is None:
