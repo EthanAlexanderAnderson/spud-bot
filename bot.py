@@ -18,8 +18,8 @@ async def on_message(message):                                                  
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
         newKey = ""
-        keyword = keyword[1:]
         if len(keyword) > 1:
+          keyword = keyword[1:]
           for i in range(len(keyword)):
             newKey = newKey + keyword[i] + " "
           newKey = str(newKey[:-1])
