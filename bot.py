@@ -67,7 +67,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/list'):                                   # for /list
         allKeys = redis.keys('*')                                               # defines all keys
-        allKeys = allKeys.sort()
+        allKeys.sort()
         allKeys = (', ').join(allKeys)
         await message.channel.send(allKeys)                        # inform user of all set keys
 
