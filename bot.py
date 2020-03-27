@@ -28,7 +28,7 @@ async def on_message(message):                                                  
         words = message.content.split(" ")                                      # split message
         key = words[1:-1]                                                       # define dictionary key
         value = words[-1]                                                       # define dictionary value
-         if len(key) > 1:
+        if len(key) > 1:
             newKey = ""
             for i in range(len(key)):
                 newKey = newKey + key[i] + " "
