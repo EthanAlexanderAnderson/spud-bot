@@ -50,6 +50,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/remove '):                                # for /remove
         target = message.content.split(" ")                                     # split message
+        newTarget = ""
         if len(target) > 1:
             target = target[1:]
             for i in range(len(target)):
