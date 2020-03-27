@@ -17,9 +17,18 @@ async def on_ready():
 async def on_message(message):                                                  # read sent message
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
-        keyword[1] = keyword[1].lower()
+        
+        if len(keyword) > 1:
+          	for i in range(len(keyword)):
+                newKey = newKey + keyword[i] + " "
+            newKey = str(newKey[:-1])
+            key = newKey
+        else:
+            key = keyword[1]
+        
+        key = key.lower()
         msg = ""
-        msg = redis.get(keyword[1])                                             # find tag in dictionary
+        msg = redis.get(key)                                             # find tag in dictionary
         if msg is None:
             msg = "No image found."
         await message.channel.send(msg)                                         # send link connected to tag
@@ -37,7 +46,7 @@ async def on_message(message):                                                  
         key = str(key)
         key = key.lower()
         redis.set(str(key), str(value))                                         # add entry to dictionary
-        await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
+        await message.channel.send("{} has been added".format(key))        # inform user the entry has been made
 
     elif message.content.startswith('/remove '):                                # for /remove
         target = message.content.split(" ")                                     # split message
