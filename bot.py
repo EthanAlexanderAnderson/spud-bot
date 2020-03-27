@@ -19,7 +19,7 @@ async def on_message(message):                                                  
         keyword = message.content.split(" ")                                    # split message
         msg = ""
         msg = redis.get(keyword[1])                                             # find tag in dictionary
-        if msg == "":
+        if msg is None:
             msg = "No image found."
         else:
             msg = msg.lower()
