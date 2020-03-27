@@ -17,12 +17,11 @@ async def on_ready():
 async def on_message(message):                                                  # read sent message
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
+        keyword = keyword.lower()
         msg = ""
         msg = redis.get(keyword[1])                                             # find tag in dictionary
         if msg is None:
             msg = "No image found."
-        else:
-            msg = msg.lower()
         await message.channel.send(msg)                                         # send link connected to tag
 
     elif message.content.startswith('/add '):                                   # for /add
