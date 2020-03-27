@@ -50,7 +50,16 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/remove '):                                # for /remove
         target = message.content.split(" ")                                     # split message
-        redis.delete(str(target[1:]))                                                 # remove entry from dictionary
+        if len(target) > 1:
+            target = target[1:]
+            for i in range(len(target)):
+                newTarget = newTarget + target[i] + " "
+            newTarget = str(newTarget[:-1])
+            target = newTarget
+            redis.delete(target)
+        else:
+            redis.delete(target[1])
+                                                         # remove entry from dictionary
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
     elif message.content.startswith('/list'):                                   # for /list
