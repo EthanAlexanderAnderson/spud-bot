@@ -18,6 +18,7 @@ async def on_message(message):                                                  
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
         newKey = ""
+        keyword = keyword[1:]
         if len(keyword) > 1:
           for i in range(len(keyword)):
             newKey = newKey + keyword[i] + " "
@@ -25,7 +26,6 @@ async def on_message(message):                                                  
           key = newKey
         else:
             key = keyword[1]
-        
         key = key.lower()
         msg = ""
         msg = redis.get(key)                                             # find tag in dictionary
