@@ -61,20 +61,18 @@ async def on_message(message):                                                  
             target = newTarget
             
             msg = redis.get(target)                                             # find tag in dictionary
-			if msg is None:
-				await message.channel.send("{} does not exist.".format(target))
-			else:
-				redis.delete(target)												# remove entry from dictionary
-				await message.channel.send("{} has been removed.".format(target))	# inform user the entry has been removed
-            
-            
+            if msg is None:
+              await message.channel.send("{} does not exist.".format(target))
+            else:
+              redis.delete(target)												# remove entry from dictionary
+              await message.channel.send("{} has been removed.".format(target))	# inform user the entry has been removed
         else:
-			msg = redis.get(target[1])                                             # find tag in dictionary
-			if msg is None:
-				await message.channel.send("{} does not exist.".format(target[1]))
-			else:
-				redis.delete(target[1])												# remove entry from dictionary
-				await message.channel.send("{} has been removed.".format(target[1]))	# inform user the entry has been removed
+          msg = redis.get(target[1])                                             # find tag in dictionary
+          if msg is None:
+            await message.channel.send("{} does not exist.".format(target[1]))
+          else:
+            redis.delete(target[1])												# remove entry from dictionary
+            await message.channel.send("{} has been removed.".format(target[1]))	# inform user the entry has been removed
                                                          
              
 
