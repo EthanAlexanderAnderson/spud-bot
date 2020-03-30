@@ -77,6 +77,7 @@ async def on_message(message):                                                  
              
 
     elif message.content.startswith('/list'):                                   # for /list
+        redis.delete("cole <@!291061865935798273> ")
         allKeys = redis.keys('*')                                               # defines all keys
         allKeys.sort()
         allKeys = (', ').join(allKeys)
