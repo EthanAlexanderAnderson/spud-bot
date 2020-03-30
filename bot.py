@@ -69,6 +69,7 @@ async def on_message(message):                                                  
         allKeys = redis.keys('*')                                               # defines all keys
         allKeys.sort()
         allKeys = (', ').join(allKeys)
+        print(allKeys)
         await message.channel.send(allKeys)                        # inform user of all set keys
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
