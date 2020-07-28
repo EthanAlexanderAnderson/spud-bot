@@ -1,3 +1,3 @@
-discord
-pip
+pip 20.1.1
+discord 1.3.2
 redis
