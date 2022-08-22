@@ -12,4 +12,14 @@ Commands:
 
 /list - Lists all images keys
 
+Dream Journal Game Commands:
+
+/dreamplay - Get a random dream
+
+/dreamreveal - Reveal the dreamer of the random dream
+
+/dreamadd [dreamer name] [dream] - Add a dream to the database
+
+/dreamcount - Number of dreams in the database
+
 My bot is run using a Heroku free server.
