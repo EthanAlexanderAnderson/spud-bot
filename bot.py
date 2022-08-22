@@ -10,6 +10,16 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/')                                       # command prefix (/)
 
 
+def scan_keys(r, pattern):                                                      # from https://riptutorial.com/redis/example/29393/scanning-the-redis-keyspace
+    result = []
+    cur, keys  = r.scan(cursor=0, match=pattern, count=2)
+    result.extend(keys)
+    while cur != 0:
+        cur, keys = r.scan(cursor=cur, match=pattern, count=2)
+        result.extend(keys)
+        
+    return result
+
 @client.event                                                                   # tell server when bot is ready
 async def on_ready():
     print('Bot is ready.')
@@ -66,15 +76,5 @@ async def on_message(message):                                                  
         msg = redis.get("dreamcount")                                           # gets dream count
         await message.channel.send(msg)                                         # sends dream count
 
-
-    def scan_keys(r, pattern):                                                  # from https://riptutorial.com/redis/example/29393/scanning-the-redis-keyspace
-        result = []
-        cur, keys  = r.scan(cursor=0, match=pattern, count=2)
-        result.extend(keys)
-        while cur != 0:
-            cur, keys = r.scan(cursor=cur, match=pattern, count=2)
-            result.extend(keys)
-            
-        return result
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
