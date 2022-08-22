@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import redis
 import os
+import random
+
 
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 
@@ -33,7 +35,34 @@ async def on_message(message):                                                  
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
     elif message.content.startswith('/list'):                                   # for /list
-        allKeys = redis.keys('*')                                               # defines all keys
+        allKeys = redis.keys('!*(dream?|dreamer?)')                             # defines all keys (other than dream related)
         await message.channel.send((', ').join(allKeys))                        # inform user of all set keys
+
+    # dream journal game commands
+
+    elif message.content.startswith('/dreamadd'):                               # for /dreamadd
+        dreamadd = message.content.split(" ")                                   # split message
+        dreamer = dreamadd[1]                                                   # define who had the dream  
+        dream = dreamadd[2:]                                                    # define the dream contents
+        i = 0
+        while (redis.exists("dream"+i)):                                        # find what numbers are taken to not override
+            i+=1
+        redis.set(("dreamer"+i), str(dreamer))                                  # set dreamer
+        redis.set(("dream"+i), str(dream))                                      # set dream
+        if (i > int(redis.get("dreamcount"))):                                  # increase dream count
+            redis.set("dreamcount", str(i))
+    
+    elif message.content.startswith('/dreamplay'):                              # for /dreamplay
+        rng = random.randint(0, int(redis.get("dreamcount")))
+        msg = redis.get("dream"+str(rng))
+        await message.channel.send(msg + " ||dream#: " + rng + "||")
+
+    elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
+        msg = redis.get("dreamer"+str(rng))
+        await message.channel.send(msg + " ||dream#: " + rng + "||")
+
+    elif message.content.startswith('/dreamcount'):
+        msg = redis.get("dreamcount")
+        await message.channel.send(msg)
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
