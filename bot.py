@@ -44,8 +44,9 @@ async def on_message(message):                                                  
         redis.delete(target[1])                                                 # remove entry from dictionary
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
-    elif message.content.startswith('/list'):                                   # for /list
-        allKeys = scan_keys(redis, "[!&]*")                       # defines all keys (other than dream related)
+    elif message.content.startswith('/list'):                                   # for /list       
+        # allKeys = scan_keys(redis, "[!&]*")                       # defines all keys (other than dream related)
+        allKeys = redis.keys('[!&]*')
         await message.channel.send((', ').join(allKeys))                        # inform user of all set keys
 
     # dream journal game commands
