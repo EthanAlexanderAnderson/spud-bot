@@ -9,17 +9,6 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 
 client = commands.Bot(command_prefix='/')                                       # command prefix (/)
 
-
-def scan_keys(r, pattern):                                                      # from https://riptutorial.com/redis/example/29393/scanning-the-redis-keyspace
-    result = []
-    cur, keys  = r.scan(cursor=0, match=pattern, count=2)
-    result.extend(keys)
-    while cur != 0:
-        cur, keys = r.scan(cursor=cur, match=pattern, count=2)
-        result.extend(keys)
-        
-    return result
-
 @client.event                                                                   # tell server when bot is ready
 async def on_ready():
     print('Bot is ready.')
@@ -45,9 +34,8 @@ async def on_message(message):                                                  
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
     elif message.content.startswith('/list'):                                   # for /list       
-        # allKeys = scan_keys(redis, "[!&]*")                       # defines all keys (other than dream related)
-        keys = redis.keys(pattern='[^&]*')
-        await message.channel.send((', ').join(keys))                        # inform user of all set keys
+        keys = redis.keys(pattern='[^&]*')                                      # defines all keys (other than dream related)
+        await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
     # dream journal game commands
 
@@ -56,25 +44,25 @@ async def on_message(message):                                                  
         dreamer = dreamadd[1]                                                   # define who had the dream  
         dream = dreamadd[2:]                                                    # define the dream contents
         i = 0
-        while (redis.exists("&dream"+str(i))):                                   # find what numbers are taken to not override
+        while (redis.exists("&dream"+str(i))):                                  # find what numbers are taken to not override
             i+=1
-        redis.set(("&dreamer"+str(i)), str(dreamer))                             # set dreamer
-        redis.set(("&dream"+str(i)), str(dream))                                 # set dream
-        if (i > int(redis.get("dreamcount"))):                                  # increase dream count if required
-            redis.set("dreamcount", str(i))
-        await message.channel.send("Dream {} has been added".format(redis.get("dreamcount")))
+        redis.set(("&dreamer"+str(i)), str(dreamer))                            # set dreamer
+        redis.set(("&dream"+str(i)), str(dream))                                # set dream
+        if (i > int(redis.get("&dreamcount"))):                                  # increase dream count if required
+            redis.set("&dreamcount", str(i))
+        await message.channel.send("Dream {} has been added".format(redis.get("&dreamcount")))
     
     elif message.content.startswith('/dreamplay'):                              # for /dreamplay
-        rng = random.randint(0, int(redis.get("dreamcount")))                   # creates random number upto dream count
-        msg = redis.get("&dream"+str(rng))                                       # gets dream of random number
+        rng = random.randint(0, int(redis.get("&dreamcount")))                   # creates random number upto dream count
+        msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
         await message.channel.send(msg + " ||dream#: " + str(rng) + "||")       # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
-        msg = redis.get("&dreamer"+str(rng))                                     # gets dreamer of random number (defined previously)
+        msg = redis.get("&dreamer"+str(rng))                                    # gets dreamer of random number (defined previously)
         await message.channel.send(msg + " ||dream#: " + str(rng) + "||")       # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount'):                             # for /dreamcount
-        msg = redis.get("dreamcount")                                           # gets dream count
+        msg = redis.get("&dreamcount")                                           # gets dream count
         await message.channel.send(msg)                                         # sends dream count
 
 
