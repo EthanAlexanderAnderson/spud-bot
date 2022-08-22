@@ -46,7 +46,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/list'):                                   # for /list       
         # allKeys = scan_keys(redis, "[!&]*")                       # defines all keys (other than dream related)
-        keys = redis.keys('!&*')
+        keys = redis.keys(pattern='!&*')
         await message.channel.send((', ').join(keys))                        # inform user of all set keys
 
     # dream journal game commands
