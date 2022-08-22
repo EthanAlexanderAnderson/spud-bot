@@ -49,20 +49,20 @@ async def on_message(message):                                                  
             i+=1
         redis.set(("dreamer"+i), str(dreamer))                                  # set dreamer
         redis.set(("dream"+i), str(dream))                                      # set dream
-        if (i > int(redis.get("dreamcount"))):                                  # increase dream count
+        if (i > int(redis.get("dreamcount"))):                                  # increase dream count if required
             redis.set("dreamcount", str(i))
     
     elif message.content.startswith('/dreamplay'):                              # for /dreamplay
-        rng = random.randint(0, int(redis.get("dreamcount")))
-        msg = redis.get("dream"+str(rng))
-        await message.channel.send(msg + " ||dream#: " + rng + "||")
+        rng = random.randint(0, int(redis.get("dreamcount")))                   # creates random number upto dream count
+        msg = redis.get("dream"+str(rng))                                       # gets dream of random number
+        await message.channel.send(msg + " ||dream#: " + rng + "||")            # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
-        msg = redis.get("dreamer"+str(rng))
-        await message.channel.send(msg + " ||dream#: " + rng + "||")
+        msg = redis.get("dreamer"+str(rng))                                     # gets dreamer of random number (defined previously)
+        await message.channel.send(msg + " ||dream#: " + rng + "||")            # sends dreamer and number for debug
 
-    elif message.content.startswith('/dreamcount'):
-        msg = redis.get("dreamcount")
-        await message.channel.send(msg)
+    elif message.content.startswith('/dreamcount'):                             # for /dreamcount
+        msg = redis.get("dreamcount")                                           # gets dream count
+        await message.channel.send(msg)                                         # sends dream count
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
