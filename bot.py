@@ -50,13 +50,13 @@ async def on_message(message):                                                  
         redis.set(("&dream"+str(i)), str(dream))                                # set dream
         if (i > int(redis.get("&dreamcount"))):                                 # increase dream count if required
             redis.set("&dreamcount", str(i))
-        await message.channel.send("Dream {} has been added".format(redis.get("&dreamcount")))
+        await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount")),str(dreamer))
     
     elif message.content.startswith('/dreamplay'):                              # for /dreamplay
         rng = random.randint(0, int(redis.get("&dreamcount")))                  # creates random number upto dream count
         msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
         redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
-        await message.channel.send(msg + " ||/#" + str(rng) + "||")             # sends dream and number for debug
+        await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
