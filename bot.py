@@ -55,10 +55,11 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamplay'):                              # for /dreamplay
         rng = random.randint(0, int(redis.get("&dreamcount")))                   # creates random number upto dream count
         msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
+        redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
         await message.channel.send(msg + " ||dream#" + str(rng) + "||")       # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
-        msg = redis.get("&dreamer"+str(rng))                                    # gets dreamer of random number (defined previously)
+        msg = redis.get("&dreamtemp")                                              # gets dreamer of random number (defined previously)
         await message.channel.send(msg + " ||dream#: " + str(rng) + "||")       # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount'):                             # for /dreamcount
