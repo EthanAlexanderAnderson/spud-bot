@@ -62,8 +62,12 @@ async def on_message(message):                                                  
         await message.channel.send(msg + " ||dream#: " + str(rng) + "||")       # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount'):                             # for /dreamcount
-        msg = redis.get("&dreamcount")                                           # gets dream count
+        msg = redis.get("&dreamcount")                                          # gets dream count
         await message.channel.send(msg)                                         # sends dream count
+
+    elif message.content.startswith('/dreamlist'):                              # for /dreamlist       
+        keys = redis.keys(pattern='&*')                                         # defines all keys (dream related)
+        await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
