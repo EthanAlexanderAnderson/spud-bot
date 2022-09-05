@@ -7,7 +7,7 @@ import random
 
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 
-client = commands.Bot(command_prefix='/', intents=discord.Intents.default())    # command prefix (/)
+client = commands.Bot(command_prefix='/', intents=discord.Intents.all())    # command prefix (/)
 
 @client.event                                                                   # tell server when bot is ready
 async def on_ready():
