@@ -22,4 +22,10 @@ Dream Journal Game Commands:
 
 /dreamcount - Number of dreams in the database
 
+/dreamsend [number] - Sends the dream and dreamer of corresponding number ID
+
+/dreamname [name] - Sends all number IDs of dreams belonging the dreamer name provided
+
+All dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
+
 My bot is run using a Heroku free server.
