@@ -39,7 +39,7 @@ async def on_message(message):                                                  
 
     # dream journal game commands
 
-    elif message.content.startswith('/dreamadd'):                               # for /dreamadd
+    elif message.content.startswith('/dreamadd' or '/da'):                               # for /dreamadd
         dreamadd = message.content.split(" ")                                   # split message
         dreamer = dreamadd[1]                                                   # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
@@ -52,23 +52,37 @@ async def on_message(message):                                                  
             redis.set("&dreamcount", str(i))
         await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount"),str(dreamer)))
     
-    elif message.content.startswith('/dreamplay'):                              # for /dreamplay
+    elif message.content.startswith('/dreamplay' or '/dp'):                              # for /dreamplay
         rng = random.randint(0, int(redis.get("&dreamcount")))                  # creates random number upto dream count
         msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
         redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
-    elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamreveal' or '/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
-    elif message.content.startswith('/dreamcount'):                             # for /dreamcount
+    elif message.content.startswith('/dreamcount' or '/dc'):                             # for /dreamcount
         msg = redis.get("&dreamcount")                                          # gets dream count
         await message.channel.send(msg)                                         # sends dream count
 
-    elif message.content.startswith('/dreamlist'):                              # for /dreamlist       
+    elif message.content.startswith('/dreamlist' or '/dl'):                              # for /dreamlist       
         keys = redis.keys(pattern='&*')                                         # defines all keys (dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
+    elif message.content.startswith('/dreamsend' or '/ds'):
+        msg = message.content.split(" ")
+        num = msg[1]
+        msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
+        await message.channel.send(msg)
+
+    elif message.content.startswith('/dreamname' or '/dn'):
+        msg = message.content.split(" ")
+        name = msg[1]
+        count = int(redis.get("&dreamcount"))
+        list = ""
+        for i in range(count):
+            if (redis.get("&dreamer" + i) == name):
+                list = list + ", " + str(i)
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
