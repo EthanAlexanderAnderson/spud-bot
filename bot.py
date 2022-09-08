@@ -39,7 +39,7 @@ async def on_message(message):                                                  
 
     # dream journal game commands
 
-    elif message.content.startswith('/dreamadd'):                               # for /dreamadd
+    elif message.content.startswith('/dreamadd' or '/da'):                               # for /dreamadd
         dreamadd = message.content.split(" ")                                   # split message
         dreamer = dreamadd[1]                                                   # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
@@ -52,23 +52,40 @@ async def on_message(message):                                                  
             redis.set("&dreamcount", str(i))
         await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount"),str(dreamer)))
     
-    elif message.content.startswith('/dreamplay'):                              # for /dreamplay
+    elif message.content.startswith('/dreamplay' or '/dp'):                              # for /dreamplay
+        # todo: flag processing
+        # todo here: divide dreamcount and fake count for odds of fake
         rng = random.randint(0, int(redis.get("&dreamcount")))                  # creates random number upto dream count
         msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
         redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
-        await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
+        await message.channel.send(msg + " ||#" + str(rng) + "||")              # sends dream and number for debug
 
-    elif message.content.startswith('/dreamreveal'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamreveal' or '/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
-    elif message.content.startswith('/dreamcount'):                             # for /dreamcount
+    elif message.content.startswith('/dreamcount' or '/dc'):                             # for /dreamcount
         msg = redis.get("&dreamcount")                                          # gets dream count
         await message.channel.send(msg)                                         # sends dream count
 
     elif message.content.startswith('/dreamlist'):                              # for /dreamlist       
         keys = redis.keys(pattern='&*')                                         # defines all keys (dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
+
+    # Fake functions
+
+    elif message.content.startswith('/dreamfake' or '/df'):                          # for /dreamfake
+        dreamfake = message.content.split(" ")                                   # split message
+        faker = dreamfake[1]                                                   # define who had the dream  
+        fake = (' ').join(dreamfake[2:])                                        # define the dream contents
+        i = 0
+        while (redis.exists("&fake"+str(i))):                                  # find what numbers are taken to not override
+            i+=1
+        redis.set(("&faker"+str(i)), ("Fake by " + str(faker)))                            # set dreamer
+        redis.set(("&fake"+str(i)), str(fake))                                # set dream
+        if (i > int(redis.get("&fakecount"))):                                 # increase dream count if required
+            redis.set("&fakecount", str(i))
+        await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
