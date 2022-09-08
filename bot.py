@@ -9,6 +9,8 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())    # command prefix (/)
 
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Scooby", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+
 @client.event                                                                   # tell server when bot is ready
 async def on_ready():
     print('Bot is ready.')
@@ -53,9 +55,30 @@ async def on_message(message):                                                  
         await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount"),str(dreamer)))
     
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):                            # for /dreamreveal
+        # initialize variables
+        censor = False
+        msg = message.content.split(" ")
+
+        # check for flags and set variables
+        if (len(msg) > 1):
+            if ('C' in msg or 'c' in msg):
+                censor = True
+
+        # fetch random dream
         rng = random.randint(0, int(redis.get("&dreamcount")))                  # creates random number upto dream count
         msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
         redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
+
+        # if censor flag is true, censor names
+        if censor:
+            censored = msg.content.split(" ")
+            # nested for loop to search for names
+            for i in range(len(censored)):
+                for j in range(len(names)):
+                    if censored[i].lower() == names[j].lower():
+                        censored[i] = "###"
+            msg = (" ").join(censored)
+
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.startswith('/dr'):                            # for /dreamreveal
