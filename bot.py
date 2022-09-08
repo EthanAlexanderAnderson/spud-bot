@@ -86,13 +86,12 @@ async def on_message(message):                                                  
             redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
 
         # if censor flag is true, censor names
-        # TODO censor possesive names (ex. Max's), and names followed by periods or commas
         if censor:
             censored = msg.split(" ")
             # nested for loop to search for names
             for i in range(len(censored)):
                 for j in range(len(names)):
-                    if censored[i].lower() == names[j].lower():
+                    if censored[i].lower() == (names[j].lower() or names[j].lower()+"'s" or names[j].lower()+"," or names[j].lower()+"."):
                         censored[i] = "###"
             msg = (" ").join(censored)
 
