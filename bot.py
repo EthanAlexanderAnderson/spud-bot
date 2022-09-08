@@ -58,17 +58,32 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):                            # for /dreamreveal
         # initialize variables
         censor = False
+        fake = False
         msg = message.content.split(" ")
-
+        dreamCount = int(redis.get("&dreamcount"))
+        fakeCount = int(redis.get("&fakecount"))
         # check for flags and set variables
         if (len(msg) > 1):
             if ('C' in msg or 'c' in msg):
                 censor = True
+            if ('F' in msg or 'f' in msg):
+                fake = True
 
-        # fetch random dream
-        rng = random.randint(0, int(redis.get("&dreamcount")))                  # creates random number upto dream count
-        msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
-        redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
+        if fake:
+            # fetch random dream or fake
+            rng = random.randint(0, dreamCount + fakeCount )                # creates random number upto dream count + fake count
+            if rng <= dreamCount:
+                msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
+                redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
+            else:
+                rng -= dreamCount
+                msg = redis.get("&fake"+str(rng))                                      # gets fake of random number
+                redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
+        else:
+            # fetch random dream
+            rng = random.randint(0, dreamCount)                  # creates random number upto dream count
+            msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
+            redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
 
         # if censor flag is true, censor names
         if censor:
