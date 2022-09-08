@@ -4,13 +4,14 @@ import redis
 import os
 import random
 
-
+# -- global variables --
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 
-client = commands.Bot(command_prefix='/', intents=discord.Intents.all())    # command prefix (/)
+client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Scooby", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 
+# -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
 async def on_ready():
     print('Bot is ready.')
@@ -39,7 +40,7 @@ async def on_message(message):                                                  
         keys = redis.keys(pattern='[^&]*')                                      # defines all keys (other than dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
-    # dream journal game commands
+    # -- dream journal game commands --
 
     elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):                            # for /dreamreveal
         dreamadd = message.content.split(" ")                                   # split message
@@ -81,7 +82,7 @@ async def on_message(message):                                                  
 
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
-    elif message.content.startswith('/dreamreveal') or message.content.startswith('/dr'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
