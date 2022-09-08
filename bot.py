@@ -9,7 +9,7 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Scooby", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 
 # -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
@@ -86,6 +86,7 @@ async def on_message(message):                                                  
             redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
 
         # if censor flag is true, censor names
+        # TODO censor possesive names (ex. Max's), and names followed by periods or commas
         if censor:
             censored = msg.split(" ")
             # nested for loop to search for names
@@ -104,10 +105,6 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):                            # for /dreamreveal
         msg = redis.get("&dreamcount")                                          # gets dream count
         await message.channel.send(msg)                                         # sends dream count
-
-    elif message.content.startswith('/dreamlist'):                              # for /dreamlist       
-        keys = redis.keys(pattern='&*')                                         # defines all keys (dream related)
-        await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         msg = message.content.split(" ")

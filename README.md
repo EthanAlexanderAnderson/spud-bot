@@ -14,11 +14,13 @@
 
 ## Dream Journal Game Commands:
 
-- /dreamplay [flag] - Get a random dream. Flags: none = normal, c = censor names
+- /dreamplay [flag] - Get a random dream. Flags: none = normal, c = censor names, f = include fakes
 
 - /dreamreveal - Reveal the dreamer of the random dream
 
 - /dreamadd [dreamer name] [dream] - Add a dream to the database
+
+- /dreamfake [faker name] [fake dream] - Add a fake dream for the alternative gamemode
 
 - /dreamcount - Number of dreams in the database
 
