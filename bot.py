@@ -9,7 +9,7 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Scooby", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Scooby", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 
 # -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
@@ -106,7 +106,7 @@ async def on_message(message):                                                  
 
     # Fake functions
 
-    elif message.content.startswith('/dreamfake' or '/df'):                          # for /dreamfake
+    elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):                          # for /dreamfake
         dreamfake = message.content.split(" ")                                   # split message
         faker = dreamfake[1]                                                   # define who had the dream  
         fake = (' ').join(dreamfake[2:])                                        # define the dream contents
