@@ -71,7 +71,7 @@ async def on_message(message):                                                  
 
         # if censor flag is true, censor names
         if censor:
-            censored = msg.content.split(" ")
+            censored = msg.split(" ")
             # nested for loop to search for names
             for i in range(len(censored)):
                 for j in range(len(names)):
