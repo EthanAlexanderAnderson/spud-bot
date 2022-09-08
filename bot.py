@@ -109,6 +109,12 @@ async def on_message(message):                                                  
         keys = redis.keys(pattern='&*')                                         # defines all keys (dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
+    elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
+        msg = message.content.split(" ")
+        num = msg[1]
+        msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
+        await message.channel.send(msg)
+
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
         msg = message.content.split(" ")
         name = msg[1]
