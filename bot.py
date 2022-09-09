@@ -8,7 +8,7 @@ import random
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
-
+# global variables for dream journal game
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 buffer = []
 guesses = 0
@@ -17,7 +17,7 @@ playing = False
 players = 0
 
 # -- Bot Functionality --
-@client.event                                                                   # tell server when bot is ready
+@client.event                                                                   # tell console when bot is ready
 async def on_ready():
     print('Bot is ready.')
 
@@ -27,19 +27,19 @@ async def on_message(message):                                                  
     global buffer, guesses, scores, playing, players
 
     if message.content.startswith('/send '):                                    # for /send
-        keyword = message.content.split(" ")                                    # split message
+        keyword = message.content.split(" ")                                    # split incoming message
         msg = redis.get(keyword[1])                                             # find tag in dictionary
         await message.channel.send(msg)                                         # send link connected to tag
 
     elif message.content.startswith('/add '):                                   # for /add
-        words = message.content.split(" ")                                      # split message
+        words = message.content.split(" ")                                      # split incoming message
         key = words[1]                                                          # define dictionary key
         value = words[2]                                                        # define dictionary value
         redis.set(str(key), str(value))                                         # add entry to dictionary
         await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
 
     elif message.content.startswith('/remove '):                                # for /remove
-        target = message.content.split(" ")                                     # split message
+        target = message.content.split(" ")                                     # split incoming message
         redis.delete(target[1])                                                 # remove entry from dictionary
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
@@ -47,12 +47,15 @@ async def on_message(message):                                                  
         keys = redis.keys(pattern='[^&]*')                                      # defines all keys (other than dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
-    # -- dream journal game commands --
+    # -- Dream Journal Game Commands --
 
-    elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):                            # for /dreamreveal
-        dreamadd = message.content.split(" ")                                   # split message
+    elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):
+        dreamadd = message.content.split(" ")                                   # split incoming message
         dreamer = dreamadd[1]                                                   # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
+        if dreamer not in names:                                                # input validation
+            await message.channel.send("Error: Invalid dreamer name")           # throw error to user
+            return
         i = 0
         while (redis.exists("&dream"+str(i))):                                  # find what numbers are taken to not override
             i+=1
@@ -62,7 +65,7 @@ async def on_message(message):                                                  
             redis.set("&dreamcount", str(i))
         await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount"),str(dreamer)))
     
-    elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
         # initialize variables
         censor = False
         fake = False
@@ -193,8 +196,6 @@ async def on_message(message):                                                  
             await message.channel.send("Scores: ")
             for player, score in scores.items():
                 await message.channel.send("<@{}>: {}".format(player, score))
-
-
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
