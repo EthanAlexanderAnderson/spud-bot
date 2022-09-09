@@ -14,7 +14,7 @@
 
 ## Dream Journal Game Commands:
 
-- /dreamplay [flag] - Get a random dream. Flags: none = normal, c = censor names, f = include fakes
+- /dreamplay [flag] - Get a random dream. Flags: none = normal, c = censor names, f = include fakes, [number] number of players (for auto scoring)
 
 - /dreamreveal - Reveal the dreamer of the random dream
 
@@ -28,6 +28,8 @@
 
 - /dreamname [name] - Sends all number IDs of dreams belonging the dreamer name provided
 
-All dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
+- /dreamreset - resets scores (for auto scoring)
+
+Most dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
 
 My bot is run using a Heroku free server.
