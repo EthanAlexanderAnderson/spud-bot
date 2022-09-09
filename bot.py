@@ -8,8 +8,6 @@ import random
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
-global playing
-global guesses
 
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 buffer = []
@@ -77,7 +75,6 @@ async def on_message(message):                                                  
 
         # generate random number for dream (buffer is used to avoid repeats)
         rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )               
-        global buffer
         while rng in buffer:
             rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )
         buffer.append(rng)
@@ -117,13 +114,11 @@ async def on_message(message):                                                  
                         censored[i] = "(###"
             msg = (" ").join(censored)
 
-        global playing
         playing = True
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
-        global playing
         playing = False
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
@@ -173,9 +168,6 @@ async def on_message(message):                                                  
 
     # for scoring (must be at the bottom to not interfere with other commands)
     elif playing == True:
-        global scores
-        global guesses
-
         if message.content in names and message.content == redis.get("&dreamtemp"):
             scores[message.author.id] += 1
         
