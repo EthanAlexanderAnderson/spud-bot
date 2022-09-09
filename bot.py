@@ -152,6 +152,6 @@ async def on_message(message):                                                  
     #debug
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)))
-        await message.channel.send("Buffer Content: " + (', ').join(buffer))
+        await message.channel.send("Buffer Content: " + (', ').map(str, buffer))
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
