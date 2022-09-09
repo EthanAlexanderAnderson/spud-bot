@@ -6,11 +6,13 @@ import random
 
 # -- global variables --
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
-
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 buffer = []
+guesses = 0
+scores = {}
+playing = False
 
 # -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
@@ -112,10 +114,14 @@ async def on_message(message):                                                  
                         censored[i] = "(###"
             msg = (" ").join(censored)
 
+        global playing
+        playing = True
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
+        global playing
+        playing = False
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):                            # for /dreamreveal
@@ -159,5 +165,18 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)))
         await message.channel.send("Buffer Content: " + (', ').join(map(str, buffer)))
+        await message.channel.send("Guesses: " + str(guesses))
+        await message.channel.send("Scores: " + str(scores))
+
+    # for scoring (must be at the bottom to not interfere with other commands)
+    elif playing == True:
+        global scores
+        global guesses
+
+        if message.content in names and message.content == redis.get("&dreamtemp"):
+            scores[message.author.id] += 1
+        
+        guesses += 1
+
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
