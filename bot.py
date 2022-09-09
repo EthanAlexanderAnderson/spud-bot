@@ -51,7 +51,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):
         dreamadd = message.content.split(" ")                                   # split incoming message
-        dreamer = dreamadd[1]                                                   # define who had the dream  
+        dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
         if dreamer not in names:                                                # input validation
             await message.channel.send("Error: Invalid dreamer name")           # throw error to user
@@ -172,7 +172,11 @@ async def on_message(message):                                                  
         await message.channel.send("Buffer Length: " + str(len(buffer)))
         await message.channel.send("Buffer Content: " + (', ').join(map(str, buffer)))
         await message.channel.send("Guesses: " + str(guesses))
-        await message.channel.send("Scores: " + str(scores))
+        await message.channel.send("Scores: ")
+        for player, score in scores.items():
+            await message.channel.send("<@{}>: {}".format(player, score))
+        await message.channel.send("Players: " + str(players))
+        await message.channel.send("Currently playing: " + str(playing))
 
     # for scoring (must be at the bottom to not interfere with other commands)
     elif playing == True and message.author.id != client.user.id and guesses < players:
