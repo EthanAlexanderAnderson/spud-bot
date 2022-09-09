@@ -166,6 +166,12 @@ async def on_message(message):                                                  
         if (i > int(redis.get("&fakecount"))):                                 # increase dream count if required
             redis.set("&fakecount", str(i))
         await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
+
+    elif message.content.startswith('/dreamreset'):
+        guesses = 0
+        scores = {}
+        playing = False
+        players = 0
     
     #debug
     elif message.content.startswith('/dreamdebug'):
