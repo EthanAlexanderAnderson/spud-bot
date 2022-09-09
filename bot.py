@@ -148,6 +148,10 @@ async def on_message(message):                                                  
         if (i > int(redis.get("&fakecount"))):                                 # increase dream count if required
             redis.set("&fakecount", str(i))
         await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
-
+    
+    #debug
+    elif message.content.startswith('/dreamdebug'):
+        await message.channel.send("Buffer Length: " + str(len(buffer)))
+        await message.channel.send("Buffer Content: " + (', ').join(buffer))
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
