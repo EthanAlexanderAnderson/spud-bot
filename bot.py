@@ -9,7 +9,7 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
 buffer = []
 
 # -- Bot Functionality --
@@ -98,12 +98,18 @@ async def on_message(message):                                                  
                         censored[i] = "###"
                     elif censored[i].lower() == (names[j].lower()+"’s"):
                         censored[i] = "###’s"
+                    elif censored[i].lower() == (names[j].lower()+"'s"):
+                        censored[i] = "###'s"
                     elif censored[i].lower() == (names[j].lower()+"s"):
                         censored[i] = "###s"
                     elif censored[i].lower() == (names[j].lower()+","):
                         censored[i] = "###,"
                     elif censored[i].lower() == (names[j].lower()+"."):
                         censored[i] = "###."
+                    elif censored[i].lower() == (names[j].lower()+")"):
+                        censored[i] = "###)"
+                    elif censored[i].lower() == ("("+names[j].lower()):
+                        censored[i] = "(###"
             msg = (" ").join(censored)
 
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
