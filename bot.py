@@ -14,6 +14,7 @@ buffer = []
 guesses = 0
 scores = {}
 playing = False
+players = 0
 
 # -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
@@ -23,7 +24,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global buffer, guesses, scores, playing
+    global buffer, guesses, scores, playing, players
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
@@ -70,6 +71,8 @@ async def on_message(message):                                                  
         fakeCount = int(redis.get("&fakecount"))
         # check for flags and set variables
         if (len(msg) > 1):
+            if msg[1].isdigit():
+                players = int(msg[1])
             if ('C' in msg or 'c' in msg):
                 censor = True
             if ('F' in msg or 'f' in msg):
@@ -169,7 +172,7 @@ async def on_message(message):                                                  
         await message.channel.send("Scores: " + str(scores))
 
     # for scoring (must be at the bottom to not interfere with other commands)
-    elif playing == True:
+    elif playing == True and message.author.id != message.user.id and guesses < players:
         if message.content in names and message.content == redis.get("&dreamtemp"):
             if message.author.id in scores:
                 scores[message.author.id] += 1
@@ -177,6 +180,9 @@ async def on_message(message):                                                  
                 scores[message.author.id] = 1
         
         guesses += 1
-
+        if guesses == players:
+            await message.channel.send("Scores: ")
+            for player, score in scores.iteritems:
+                await message.channel.send("{}: {}".format(player, score))
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
