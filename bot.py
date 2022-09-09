@@ -10,6 +10,7 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", " Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+buffer = []
 
 # -- Bot Functionality --
 @client.event                                                                   # tell server when bot is ready
@@ -69,21 +70,23 @@ async def on_message(message):                                                  
             if ('F' in msg or 'f' in msg):
                 fake = True
 
-        if fake:
-            # fetch random dream or fake
-            rng = random.randint(0, dreamCount + fakeCount )                # creates random number upto dream count + fake count
-            if rng <= dreamCount:
-                msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
-                redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
-            else:
-                rng -= dreamCount
-                msg = redis.get("&fake"+str(rng))                                      # gets fake of random number
-                redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
-        else:
-            # fetch random dream
-            rng = random.randint(0, dreamCount)                  # creates random number upto dream count
-            msg = redis.get("&dream"+str(rng))                                      # gets dream of random number
+        # generate random number for dream (buffer is used to avoid repeats)
+        rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )               
+        global buffer
+        while rng in buffer:
+            rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )
+        buffer.append(rng)
+        if len(buffer) > 50:
+            del buffer[0]
+
+        # get dream (or fake) from database
+        if rng <= dreamCount:
+            msg = redis.get("&dream"+str(rng))   
             redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
+        else:
+            rng -= dreamCount
+            msg = redis.get("&fake"+str(rng))
+            redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
 
         # if censor flag is true, censor names
         if censor:
