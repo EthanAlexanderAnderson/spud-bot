@@ -23,6 +23,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
+    global buffer, guesses, scores, playing
+
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split message
         msg = redis.get(keyword[1])                                             # find tag in dictionary
