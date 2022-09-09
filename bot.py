@@ -171,7 +171,10 @@ async def on_message(message):                                                  
     # for scoring (must be at the bottom to not interfere with other commands)
     elif playing == True:
         if message.content in names and message.content == redis.get("&dreamtemp"):
-            scores[message.author.id] += 1
+            if message.author.id in scores:
+                scores[message.author.id] += 1
+            else:
+                scores[message.author.id] = 1
         
         guesses += 1
 
