@@ -95,6 +95,8 @@ async def on_message(message):                                                  
                         censored[i] = "###"
                     elif censored[i].lower() == (names[j].lower()+"'s"):
                         censored[i] = "###'s"
+                    elif censored[i].lower() == (names[j].lower()+"s"):
+                        censored[i] = "###s"
                     elif censored[i].lower() == (names[j].lower()+","):
                         censored[i] = "###,"
                     elif censored[i].lower() == (names[j].lower()+"."):
