@@ -172,7 +172,7 @@ async def on_message(message):                                                  
         await message.channel.send("Scores: " + str(scores))
 
     # for scoring (must be at the bottom to not interfere with other commands)
-    elif playing == True and message.author.id != message.user.id and guesses < players:
+    elif playing == True and message.author.id != client.user.id and guesses < players:
         if message.content in names and message.content == redis.get("&dreamtemp"):
             if message.author.id in scores:
                 scores[message.author.id] += 1
