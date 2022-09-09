@@ -91,8 +91,14 @@ async def on_message(message):                                                  
             # nested for loop to search for names
             for i in range(len(censored)):
                 for j in range(len(names)):
-                    if censored[i].lower() == (names[j].lower() or names[j].lower()+"'s" or names[j].lower()+"," or names[j].lower()+"."):
+                    if censored[i].lower() == names[j].lower():
                         censored[i] = "###"
+                    elif censored[i].lower() == (names[j].lower()+"'s"):
+                        censored[i] = "###'s"
+                    elif censored[i].lower() == (names[j].lower()+","):
+                        censored[i] = "###,"
+                    elif censored[i].lower() == (names[j].lower()+"."):
+                        censored[i] = "###."
             msg = (" ").join(censored)
 
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
@@ -112,6 +118,7 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
+        total = 0
         msg = message.content.split(" ")
         name = msg[1]
         count = int(redis.get("&dreamcount"))
@@ -119,7 +126,8 @@ async def on_message(message):                                                  
         for i in range(count):
             if (redis.get("&dreamer" + str(i)) == name):
                 list.append(str(i))
-        await message.channel.send((', ').join(list))                           # inform user of all set keys
+                total+=1
+        await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(list))                           # inform user of all set keys
 
     # Fake functions
 
