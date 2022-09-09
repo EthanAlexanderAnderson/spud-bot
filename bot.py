@@ -178,11 +178,14 @@ async def on_message(message):                                                  
                 scores[message.author.id] += 1
             else:
                 scores[message.author.id] = 1
-        
+        else:
+            if message.author.id not in scores:
+                scores[message.author.id] = 0
+                
         guesses += 1
         if guesses == players:
             await message.channel.send("Scores: ")
-            for player, score in scores.iteritems:
+            for player, score in scores.items():
                 await message.channel.send("{}: {}".format(player, score))
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
