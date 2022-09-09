@@ -152,6 +152,12 @@ async def on_message(message):                                                  
                 total+=1
         await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(list))                           # inform user of all set keys
 
+    elif message.content.startswith('/dreamreset'):
+        guesses = 0
+        scores = {}
+        playing = False
+        players = 0
+
     # Fake functions
 
     elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):                          # for /dreamfake
@@ -166,12 +172,6 @@ async def on_message(message):                                                  
         if (i > int(redis.get("&fakecount"))):                                 # increase dream count if required
             redis.set("&fakecount", str(i))
         await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
-
-    elif message.content.startswith('/dreamreset'):
-        guesses = 0
-        scores = {}
-        playing = False
-        players = 0
     
     #debug
     elif message.content.startswith('/dreamdebug'):
