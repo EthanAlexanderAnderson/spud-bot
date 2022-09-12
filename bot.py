@@ -67,6 +67,7 @@ async def on_message(message):                                                  
     
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
         # initialize variables
+        guesses = 0
         censor = False
         fake = False
         AI = False
@@ -251,7 +252,6 @@ async def on_message(message):                                                  
         if guesses == players:
             # auto reveal
             msg = redis.get("&dreamtemp")
-            guesses = 0
             await message.channel.send("Answer: " + msg)    
             # show scores
             await message.channel.send("Scores: ")
