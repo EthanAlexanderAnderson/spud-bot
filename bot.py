@@ -10,7 +10,7 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
 scores = {}
@@ -213,12 +213,26 @@ async def on_message(message):                                                  
         await message.channel.send("Currently playing: " + str(playing))
 
     # for scoring (must be at the bottom to not interfere with other commands)
+    # TODO function for scoring, to remove repeated code
     elif playing == True and message.author.id != client.user.id and guesses < players:
-        if message.content in names and message.content == redis.get("&dreamtemp"):
+        dreamTemp = redis.get("&dreamtemp").split(" ")
+        if message.content in names and message.content == dreamTemp[0]:
             if message.author.id in scores:
                 scores[message.author.id] += 1
             else:
                 scores[message.author.id] = 1
+        elif "Fake" in dreamTemp:
+            msgSplit = (message.content.lower()).split(" ")
+            if "fake" in msgSplit and dreamTemp[2].lower() in msgSplit:
+                if message.author.id in scores:
+                    scores[message.author.id] += 2
+                else:
+                    scores[message.author.id] = 2
+            elif "fake" in msgSplit:
+                if message.author.id in scores:
+                    scores[message.author.id] += 1
+                else:
+                    scores[message.author.id] = 1
         else:
             if message.author.id not in scores:
                 scores[message.author.id] = 0
