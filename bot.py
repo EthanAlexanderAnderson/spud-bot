@@ -1,3 +1,4 @@
+from pickle import TRUE
 import discord
 from discord.ext import commands
 import redis
@@ -69,9 +70,11 @@ async def on_message(message):                                                  
         # initialize variables
         censor = False
         fake = False
+        AI = False
         msg = message.content.split(" ")
         dreamCount = int(redis.get("&dreamcount"))
         fakeCount = int(redis.get("&fakecount"))
+        AICount = int(redis.get("&AIcount"))
         # check for flags and set variables
         if (len(msg) > 1):
             if msg[1].isdigit():
@@ -80,11 +83,18 @@ async def on_message(message):                                                  
                 censor = True
             if ('F' in msg or 'f' in msg):
                 fake = True
+            if ('AI' in msg or 'ai' in msg):
+                AI = True
 
         # generate random number for dream (buffer is used to avoid repeats)
-        rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )               
+        maxCount = dreamCount
+        if fake == True:
+            maxCount += fakeCount
+        if AI == True:
+            maxCount += AICount
+        rng = random.randint(0, maxCount)          
         while rng in buffer:
-            rng = random.randint(0, dreamCount) if fake == False else random.randint(0, dreamCount + fakeCount )
+            rng = random.randint(0, maxCount)
         buffer.append(rng)
         if len(buffer) > 50:
             del buffer[0]
@@ -93,10 +103,14 @@ async def on_message(message):                                                  
         if rng <= dreamCount:
             msg = redis.get("&dream"+str(rng))   
             redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
-        else:
+        elif rng <= (dreamCount + fakeCount):
             rng -= dreamCount
             msg = redis.get("&fake"+str(rng))
             redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
+        else:
+            rng -= fakeCount
+            msg = redis.get("&AI"+str(rng))
+            redis.set("&dreamtemp", "AI")
 
         # if censor flag is true, censor names
         if censor:
@@ -173,6 +187,20 @@ async def on_message(message):                                                  
             redis.set("&fakecount", str(i))
         await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
     
+
+    # AI functions (same concept as fakes, just seperated for gamemode customizability)
+
+    elif message.content.startswith('/dreamAI') or message.content.startswith('/dAI'):
+        dreamAI = message.content.split(" ")                                   # split message
+        dreamAI = (' ').join(dreamAI[1:])                                        # define the dream contents
+        i = 0
+        while (redis.exists("&AI"+str(i))):                                  # find what numbers are taken to not override
+            i+=1
+        redis.set(("&AI"+str(i)), str(dreamAI))                                # set dream
+        if (i > int(redis.get("&AIcount"))):                                 # increase dream count if required
+            redis.set("&AIcount", str(i))
+        await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
+
     #debug
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)))
