@@ -142,8 +142,9 @@ async def on_message(message):                                                  
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):                            # for /dreamreveal
-        msg = redis.get("&dreamcount")                                          # gets dream count
-        await message.channel.send(msg)                                         # sends dream count
+        await message.channel.send("Dreams:" + redis.get("&dreamcount"))                                         # sends dream count
+        await message.channel.send("Fake dreams:" + redis.get("&fakecount"))                                         # sends dream count
+        await message.channel.send("AI generated dreams:" + redis.get("&AIcount"))
 
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         msg = message.content.split(" ")
