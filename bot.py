@@ -225,9 +225,9 @@ async def on_message(message):                                                  
     # TODO function for scoring, to remove repeated code
     elif guesses < players and message.author.id != client.user.id:
         dreamTemp = redis.get("&dreamtemp").split(" ")
-        guess = message.content.capitalize()
+        guess = message.content
 
-        if guess in names and guess == dreamTemp[0]:
+        if (guess.capitalize() in names or guess in names) and guess == dreamTemp[0]:
             if message.author.id in scores:
                 scores[message.author.id] += 1
             else:
