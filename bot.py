@@ -14,7 +14,6 @@ names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Natha
 buffer = []
 guesses = 0
 scores = {}
-playing = False
 players = 0
 
 # -- Bot Functionality --
@@ -25,7 +24,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global buffer, guesses, scores, playing, players
+    global buffer, guesses, scores, players
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
@@ -136,12 +135,10 @@ async def on_message(message):                                                  
                         censored[i] = "(###"
             msg = (" ").join(censored)
 
-        playing = True
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
-        playing = False
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
     elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):                            # for /dreamreveal
@@ -169,7 +166,6 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamreset'):
         guesses = 0
         scores = {}
-        playing = False
         players = 0
 
     # Fake functions
@@ -210,11 +206,10 @@ async def on_message(message):                                                  
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
         await message.channel.send("Players: " + str(players))
-        await message.channel.send("Currently playing: " + str(playing))
 
     # for scoring (must be at the bottom to not interfere with other commands)
     # TODO function for scoring, to remove repeated code
-    elif playing == True and message.author.id != client.user.id and guesses < players:
+    elif guesses < players and message.author.id != client.user.id:
         dreamTemp = redis.get("&dreamtemp").split(" ")
         if message.content in names and message.content == dreamTemp[0]:
             if message.author.id in scores:
@@ -241,7 +236,6 @@ async def on_message(message):                                                  
         if guesses == players:
             # auto reveal
             msg = redis.get("&dreamtemp")
-            playing = False
             guesses = 0
             await message.channel.send("Answer: " + msg)    
             # show scores
