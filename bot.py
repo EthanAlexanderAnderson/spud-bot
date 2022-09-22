@@ -272,11 +272,11 @@ async def on_message(message):                                                  
             channel = client.get_channel(channelplaying)
             # auto reveal
             msg = redis.get("&dreamtemp")
-            await message.channel.send("Answer: " + msg)    
+            await channel.send("Answer: " + msg)    
             # show scores
-            await message.channel.send("Scores: ")
+            await channel.send("Scores: ")
             for player, score in scores.items():
-                await message.channel.send("<@{}>: {}".format(player, score))
+                await channel.send("<@{}>: {}".format(player, score))
             # reset
             players = 0
             guessed = []
