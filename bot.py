@@ -26,7 +26,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global buffer, guesses, scores, players, guessed, channelplaying
+    global buffer, guesses, guessed, scores, players, channelplaying
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
@@ -190,10 +190,20 @@ async def on_message(message):                                                  
                 total+=1
         await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(list))                           # inform user of all set keys
 
+    # Resets all global variables
     elif message.content.startswith('/dreamreset'):
+        buffer = []
         guesses = 0
+        guessed = []
         scores = {}
         players = 0
+        channelplaying = 0
+
+    # skip feature, also doubles as insurance encase a user puts too high of a playercount
+    elif message.content.startswith('/dreamskip'):
+        guesses = 0
+        guessed = []
+        players = 0 
 
     # Fake functions
 
