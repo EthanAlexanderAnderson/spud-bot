@@ -13,8 +13,10 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
+guessed = []
 scores = {}
 players = 0
+channelplaying = 0
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -24,7 +26,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global buffer, guesses, scores, players
+    global buffer, guesses, scores, players, guessed, channelplaying
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
@@ -79,6 +81,7 @@ async def on_message(message):                                                  
         if (len(msg) > 1):
             if msg[1].isdigit():
                 players = int(msg[1])
+                channelplaying = message.channel.id
             if ('C' in msg or 'c' in msg):
                 censor = True
             if ('F' in msg or 'f' in msg):
@@ -151,6 +154,11 @@ async def on_message(message):                                                  
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
+        # cheat prevention
+        if guesses < players:
+            await message.channel.send("This commmand is disabled while dreamplay is active")
+            return
+        
         msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
         await message.channel.send(msg)                                         # sends dreamer and number for debug
 
@@ -160,6 +168,11 @@ async def on_message(message):                                                  
         await message.channel.send("AI generated dreams: " + redis.get("&AIcount"))
 
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
+        # cheat prevention
+        if guesses < players:
+            await message.channel.send("This commmand is disabled while dreamplay is active")
+            return
+        
         msg = message.content.split(" ")
         num = msg[1]
         msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
@@ -227,6 +240,10 @@ async def on_message(message):                                                  
         dreamTemp = redis.get("&dreamtemp").split(" ")
         guess = message.content
 
+        # prevent double guess
+        if message.author.id in guessed:
+            return
+
         if (guess.capitalize() in names or guess in names) and guess == dreamTemp[0]:
             if message.author.id in scores:
                 scores[message.author.id] += 1
@@ -248,8 +265,11 @@ async def on_message(message):                                                  
             if message.author.id not in scores:
                 scores[message.author.id] = 0
 
+        guessed.append(message.author.id)
         guesses += 1
-        if guesses == players:
+        # TODO make play send is channel
+        if guesses >= players:
+            channel = client.get_channel(channelplaying)
             # auto reveal
             msg = redis.get("&dreamtemp")
             await message.channel.send("Answer: " + msg)    
@@ -257,6 +277,9 @@ async def on_message(message):                                                  
             await message.channel.send("Scores: ")
             for player, score in scores.items():
                 await message.channel.send("<@{}>: {}".format(player, score))
+            # reset
+            players = 0
+            guessed = []
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
