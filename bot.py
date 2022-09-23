@@ -12,6 +12,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # global variables for dream journal game
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO replace &dreamtemp with global variable
+# TODO make all multi-line sends into single lines to eliminate cooldown issue
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
@@ -331,11 +332,9 @@ async def on_message(message):                                                  
         guesses += 1
         if guesses >= players:
             channel = client.get_channel(channelplaying)
-            # auto reveal
+            # auto reveal and show scores
             msg = redis.get("&dreamtemp")
-            await channel.send("Answer: " + msg)    
-            # show scores
-            await channel.send("Scores: ")
+            await channel.send("Answer: " + msg + "\n" + "Scores: ")    
             for player, score in scores.items():
                 await channel.send("<@{}>: {}".format(player, score))
             # reset
