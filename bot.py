@@ -293,7 +293,7 @@ async def on_message(message):                                                  
         await message.channel.send("Scores: ")
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
-        await message.channel.send("Players: " + str(players) + "\n" + "Channel Playing: " + str(channelplaying))
+        await message.channel.send("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">")
 
 
     # for scoring (must be at the bottom to not interfere with other commands)
