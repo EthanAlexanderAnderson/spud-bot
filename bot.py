@@ -311,7 +311,7 @@ async def on_message(message):                                                  
         if message.author.id in guessed:
             return
 
-        if (guess.capitalize() in names or guess in names) and guess.lower() == dreamTemp[0].lower():
+        if (guess.capitalize() in names or guess.upper() in names) and guess.lower() == dreamTemp[0].lower():
             scores[message.author.id] += 1
         elif "Fake" in dreamTemp:
             msgSplit = (guess.lower()).split(" ")
