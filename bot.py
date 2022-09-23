@@ -230,6 +230,7 @@ async def on_message(message):                                                  
         guesses = 0
         guessed = []
         players = 0 
+        await message.channel.send("Dream skipped")
 
     # Fake functions
 
