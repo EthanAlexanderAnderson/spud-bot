@@ -306,7 +306,7 @@ async def on_message(message):                                                  
         if message.author.id in guessed:
             return
 
-        if (guess.capitalize() in names or guess in names) and guess == dreamTemp[0]:
+        if (guess.capitalize() in names or guess in names) and guess.lower() == dreamTemp[0].lower():
             if message.author.id in scores:
                 scores[message.author.id] += 1
             else:
