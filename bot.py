@@ -12,6 +12,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # global variables for dream journal game
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO replace &dreamtemp with global variable
+# TODO dream Undo add command
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
@@ -54,8 +55,10 @@ async def on_message(message):                                                  
     # -- Dream Journal Game Commands --
 
     elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):
-        # TODO sanitize input name (capitalized, no alias, etc.)
+        # Input processing and validation
         dreamadd = message.content.split(" ")                                   # split incoming message
+        if len(dreamadd) < 3:
+            await message.channel.send("Error: Missing required inputs")
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
         if dreamer not in names:                                                # input validation
@@ -182,14 +185,21 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
-        total = 0
         msg = message.content.split(" ")
+        if len(msg) < 2:
+            await message.channel.send("Error: Missing required inputs")
+        
+        total = 0
         count = int(redis.get("&dreamcount"))
         list = []
         dict = {}
 
         if (len(msg) > 1):       # if name is provided
             name = msg[1]
+            if name not in names:                                                # input validation
+                await message.channel.send("Error: Invalid name")           # throw error to user
+                return
+
             for i in range(count):
                 if (redis.get("&dreamer" + str(i)) == name):
                     list.append(str(i))
@@ -228,7 +238,12 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):                          # for /dreamfake
         dreamfake = message.content.split(" ")                                   # split message
+        if len(dreamfake) < 3:
+            await message.channel.send("Error: Missing required inputs")
         faker = dreamfake[1]                                                   # define who had the dream  
+        if faker not in names:                                                # input validation
+            await message.channel.send("Error: Invalid faker name")           # throw error to user
+            return
         fake = (' ').join(dreamfake[2:])                                        # define the dream contents
         i = 0
         while (redis.exists("&fake"+str(i))):                                  # find what numbers are taken to not override
@@ -244,6 +259,8 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamAI') or message.content.startswith('/dAI'):
         dreamAI = message.content.split(" ")                                   # split message
+        if len(dreamfake) < 4:
+            await message.channel.send("Error: AI dreams must be more than 3 words in length")
         dreamAI = (' ').join(dreamAI[1:])                                        # define the dream contents
         i = 0
         while (redis.exists("&AI"+str(i))):                                  # find what numbers are taken to not override
@@ -254,6 +271,7 @@ async def on_message(message):                                                  
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
 
     #debug
+    # TODO update debug
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)))
         await message.channel.send("Buffer Content: " + (', ').join(map(str, buffer)))
