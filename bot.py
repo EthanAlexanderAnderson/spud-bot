@@ -10,6 +10,8 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
+# TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
+# TODO replace &dreamtemp with global variable
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
@@ -179,16 +181,33 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
+        # TODO if no name is provided, give every name (count only not list)
         total = 0
         msg = message.content.split(" ")
-        name = msg[1]
         count = int(redis.get("&dreamcount"))
         list = []
-        for i in range(count):
-            if (redis.get("&dreamer" + str(i)) == name):
-                list.append(str(i))
-                total+=1
-        await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(list))                           # inform user of all set keys
+        dict = {}
+
+        if (len(msg) > 1):       # if name is provided
+            name = msg[1]
+            for i in range(count):
+                if (redis.get("&dreamer" + str(i)) == name):
+                    list.append(str(i))
+                    total+=1
+            if total > 0:
+                await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(list))                           # inform user of all set keys
+            else:
+                await message.channel.send("Error: No dreams under the name " + name)
+        else:       # if no name
+            for i in range(count):
+                if (redis.get("&dreamer" + str(i)) in dict):
+                    dict[redis.get("&dreamer" + str(i))] += 1
+                else:
+                    dict[redis.get("&dreamer" + str(i))] = 1
+            await message.channel.send("Count per name: ")
+            for key in dict:
+                await message.channel.send(key + ": " + dict[key])
+
 
     # Resets all global variables
     elif message.content.startswith('/dreamreset'):
