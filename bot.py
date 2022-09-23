@@ -186,6 +186,7 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
+        msg = message.content.split(" ")
         total = 0
         count = int(redis.get("&dreamcount"))
         list = []
