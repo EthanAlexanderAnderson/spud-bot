@@ -77,6 +77,7 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
         # initialize variables
         guesses = 0
+        guessed = []
         censor = False
         fake = False
         AI = False
