@@ -94,7 +94,7 @@ async def on_message(message):                                                  
                 censor = True
             if ('F' in msg or 'f' in msg):
                 fake = True
-            if ('AI' in msg or 'ai' in msg):
+            if ('AI' in msg or 'ai' in msg or ):
                 AI = True
 
         # generate random number for dream (buffer is used to avoid repeats)
@@ -225,13 +225,14 @@ async def on_message(message):                                                  
         scores = defaultdict(int)
         players = 0
         channelplaying = 0
+        await message.channel.send("Scores reset.")
 
     # skip feature, also doubles as insurance encase a user puts too high of a playercount
     elif message.content.startswith('/dreamskip'):
         guesses = 0
         guessed = []
         players = 0 
-        await message.channel.send("Dream skipped")
+        await message.channel.send("Dream skipped.")
 
     # Fake functions
 
