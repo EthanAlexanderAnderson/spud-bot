@@ -282,7 +282,7 @@ async def on_message(message):                                                  
         if redis.get("&dreamer"+redis.get("&dreamcount")) == msg[2]:    # final layer of protection
             redis.delete("&dream"+redis.get("&dreamcount"))
             redis.delete("&dreamer"+redis.get("&dreamcount"))
-            await message.channel.send("Dream {} by {} has been undone.")     # inform user the entry has been removed
+            await message.channel.send("Dream {} by {} has been undone.".format(msg[1], msg[2]))     # inform user the entry has been removed
             # decrease dreamcount
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
