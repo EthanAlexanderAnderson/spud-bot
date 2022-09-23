@@ -184,10 +184,6 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
-        msg = message.content.split(" ")
-        if len(msg) < 2:
-            await message.channel.send("Error: Missing required inputs")
-        
         total = 0
         count = int(redis.get("&dreamcount"))
         list = []
