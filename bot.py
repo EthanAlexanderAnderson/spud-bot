@@ -259,7 +259,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamAI') or message.content.startswith('/dAI'):
         dreamAI = message.content.split(" ")                                   # split message
-        if len(dreamfake) < 4:
+        if len(dreamAI) < 4:
             await message.channel.send("Error: AI dreams must be more than 3 words in length")
         dreamAI = (' ').join(dreamAI[1:])                                        # define the dream contents
         i = 0
