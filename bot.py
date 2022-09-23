@@ -94,7 +94,7 @@ async def on_message(message):                                                  
                 censor = True
             if ('F' in msg or 'f' in msg):
                 fake = True
-            if ('AI' in msg or 'ai' in msg or ):
+            if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
                 AI = True
 
         # generate random number for dream (buffer is used to avoid repeats)
