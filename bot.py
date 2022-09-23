@@ -283,11 +283,12 @@ async def on_message(message):                                                  
             await message.channel.send("Error: Invalid name provided.")
             await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
             return
-        redis.delete("&dream"+redis.get("&dreamcount"))
-        redis.delete("&dreamer"+redis.get("&dreamcount"))
-        await message.channel.send("Dream {} by {} has been undone.")     # inform user the entry has been removed
-        # decrease dreamcount
-        redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
+        if redis.get("&dreamer"+redis.get("&dreamcount")) == msg[2]:    # final layer of protection
+            redis.delete("&dream"+redis.get("&dreamcount"))
+            redis.delete("&dreamer"+redis.get("&dreamcount"))
+            await message.channel.send("Dream {} by {} has been undone.")     # inform user the entry has been removed
+            # decrease dreamcount
+            redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
     #debug
     elif message.content.startswith('/dreamdebug'):
