@@ -271,15 +271,17 @@ async def on_message(message):                                                  
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
 
     #debug
-    # TODO update debug
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)))
         await message.channel.send("Buffer Content: " + (', ').join(map(str, buffer)))
         await message.channel.send("Guesses: " + str(guesses))
+        await message.channel.send("Guessed: " + str(guessed))
         await message.channel.send("Scores: ")
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
         await message.channel.send("Players: " + str(players))
+        await message.channel.send("Channel Playing: " + str(channelplaying))
+
 
     # for scoring (must be at the bottom to not interfere with other commands)
     # TODO function for scoring, to remove repeated code
