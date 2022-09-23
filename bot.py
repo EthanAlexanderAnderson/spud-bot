@@ -206,7 +206,7 @@ async def on_message(message):                                                  
                     dict[redis.get("&dreamer" + str(i))] = 1
             await message.channel.send("Count per name: ")
             for key in dict:
-                await message.channel.send(key + ": " + dict[key])
+                await message.channel.send(key + ": " + str(dict[key]))
 
 
     # Resets all global variables
