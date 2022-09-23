@@ -12,7 +12,6 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # global variables for dream journal game
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO replace &dreamtemp with global variable
-# TODO dream Undo add command
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
@@ -269,6 +268,26 @@ async def on_message(message):                                                  
         if (i > int(redis.get("&AIcount"))):                                 # increase dream count if required
             redis.set("&AIcount", str(i))
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
+
+    elif message.content.startswith('/dreamundo'):
+        msg = message.content.split(" ")
+        if len(msg) < 3 or not msg[1].isdigit():
+            await message.channel.send("Error: Missing required inputs.")
+            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
+            return
+        if int(msg[1]) != int(redis.get("&dreamcount")):
+            await message.channel.send("Error: Only the most recently added dream can be undone.")
+            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
+            return
+        if msg[2] not in names:
+            await message.channel.send("Error: Invalid name provided.")
+            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
+            return
+        redis.delete("&dream"+redis.get("&dreamcount"))
+        redis.delete("&dreamer"+redis.get("&dreamcount"))
+        await message.channel.send("Dream {} by {} has been undone.")     # inform user the entry has been removed
+        # decrease dreamcount
+        redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
     #debug
     elif message.content.startswith('/dreamdebug'):
