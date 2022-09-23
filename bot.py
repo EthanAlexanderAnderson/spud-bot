@@ -4,6 +4,7 @@ from discord.ext import commands
 import redis
 import os
 import random
+from collections import defaultdict
 
 # -- global variables --
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
@@ -17,7 +18,7 @@ names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Natha
 buffer = []
 guesses = 0
 guessed = []
-scores = {}
+scores = defaultdict(int)
 players = 0
 channelplaying = 0
 
@@ -188,7 +189,7 @@ async def on_message(message):                                                  
         total = 0
         count = int(redis.get("&dreamcount"))
         list = []
-        dict = {}
+        dict = defaultdict(int)
 
         if (len(msg) > 1):       # if name is provided
             name = msg[1]
@@ -206,10 +207,7 @@ async def on_message(message):                                                  
                 await message.channel.send("Error: No dreams under the name " + name)
         else:       # if no name
             for i in range(count):
-                if (redis.get("&dreamer" + str(i)) in dict):
-                    dict[redis.get("&dreamer" + str(i))] += 1
-                else:
-                    dict[redis.get("&dreamer" + str(i))] = 1
+                dict[redis.get("&dreamer" + str(i))] += 1
             await message.channel.send("Count per name: ")
             for key in dict:
                 await message.channel.send(key + ": " + str(dict[key]))
@@ -220,7 +218,7 @@ async def on_message(message):                                                  
         buffer = []
         guesses = 0
         guessed = []
-        scores = {}
+        scores = defaultdict(int)
         players = 0
         channelplaying = 0
 
@@ -308,22 +306,13 @@ async def on_message(message):                                                  
             return
 
         if (guess.capitalize() in names or guess in names) and guess.lower() == dreamTemp[0].lower():
-            if message.author.id in scores:
-                scores[message.author.id] += 1
-            else:
-                scores[message.author.id] = 1
+            scores[message.author.id] += 1
         elif "Fake" in dreamTemp:
             msgSplit = (guess.lower()).split(" ")
             if "fake" in msgSplit and dreamTemp[2].lower() in msgSplit:
-                if message.author.id in scores:
-                    scores[message.author.id] += 2
-                else:
-                    scores[message.author.id] = 2
+                scores[message.author.id] += 2
             elif "fake" in msgSplit:
-                if message.author.id in scores:
-                    scores[message.author.id] += 1
-                else:
-                    scores[message.author.id] = 1
+                scores[message.author.id] += 1
         else:
             if message.author.id not in scores:
                 scores[message.author.id] = 0
