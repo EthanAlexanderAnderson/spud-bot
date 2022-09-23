@@ -3,6 +3,7 @@
 # Spam Post User Database - Discord Bot
 
 ## Commands:
+[Square Bracket] = Required Flag,   (Round Bracket) = Optional Flag
 
 - /add [key] [link] - Adds image
 
@@ -14,7 +15,7 @@
 
 ## Dream Journal Game Commands:
 
-- /dreamplay [# of players] [flags (optional)] - Get a random dream. Flags: c = censor names, f = include fakes, AI = include AI generated
+- /dreamplay (#) (c) (f) (AI) - Get a random dream. # = Number of players, c = Censor names, f = Include fake dreams, AI = Include AI dreams
 
 - /dreamreveal - Reveal the dreamer of the random dream
 
@@ -28,9 +29,9 @@
 
 - /dreamsend [number] - Sends the dream and dreamer of corresponding number ID
 
-- /dreamname [name] - Sends all number IDs of dreams belonging the dreamer name provided
+- /dreamname (name) - Sends all number IDs of dreams belonging the dreamer name provided. If no name is provided it will send the number of dreams belonging to each name.
 
-- /dreamreset - resets scores (for auto scoring)
+- /dreamreset - Resets scores and buffer (for auto scoring)
 
 Most dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
 

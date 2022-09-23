@@ -54,6 +54,7 @@ async def on_message(message):                                                  
     # -- Dream Journal Game Commands --
 
     elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):
+        # TODO sanitize input name (capitalized, no alias, etc.)
         dreamadd = message.content.split(" ")                                   # split incoming message
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
@@ -181,7 +182,6 @@ async def on_message(message):                                                  
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
-        # TODO if no name is provided, give every name (count only not list)
         total = 0
         msg = message.content.split(" ")
         count = int(redis.get("&dreamcount"))
@@ -296,7 +296,6 @@ async def on_message(message):                                                  
 
         guessed.append(message.author.id)
         guesses += 1
-        # TODO make play send is channel
         if guesses >= players:
             channel = client.get_channel(channelplaying)
             # auto reveal
