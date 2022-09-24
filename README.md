@@ -21,7 +21,7 @@
 
 - /dreamadd [dreamer name] [dream] - Add a dream to the database
 
-- /dreamfake [faker name] [fake dream] - Add a fake dream for the alternative gamemode
+- /dreamfake [fake dream] - Add a fake dream for the alternative gamemode
 
 - /dreamAI [AI dream] - Add an AI generated dream for the alternative gamemode
 

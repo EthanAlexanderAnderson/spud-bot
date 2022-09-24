@@ -14,8 +14,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO replace &dreamtemp with global variable
 # TODO make all multi-line sends into single lines to eliminate cooldown issue
-# TODO make fake same as AI for guessing
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
 buffer = []
 guesses = 0
 guessed = []
@@ -119,7 +118,7 @@ async def on_message(message):                                                  
         elif rng > dreamCount and fake and not AI:
             rng -= dreamCount
             msg = redis.get("&fake"+str(rng))
-            redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
+            redis.set("&dreamtemp", "Fake")
         # AI mode
         elif rng > dreamCount and AI and not fake:
             rng -= dreamCount
@@ -130,7 +129,7 @@ async def on_message(message):                                                  
             rng -= dreamCount
             if rng <= fakeCount:
                 msg = redis.get("&fake"+str(rng))
-                redis.set("&dreamtemp", redis.get("&faker"+str(rng)))
+                redis.set("&dreamtemp", "Fake")
             else:
                 rng -= fakeCount
                 msg = redis.get("&AI"+str(rng))
@@ -176,6 +175,7 @@ async def on_message(message):                                                  
         await message.channel.send("Fake dreams: " + redis.get("&fakecount"))                                         # sends dream count
         await message.channel.send("AI generated dreams: " + redis.get("&AIcount"))
 
+    # TODO allow send to send AI and fakes
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         # cheat prevention
         if guesses < players:
@@ -240,20 +240,15 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):                          # for /dreamfake
         dreamfake = message.content.split(" ")                                   # split message
         if len(dreamfake) < 3:
-            await message.channel.send("Error: Missing required inputs")
-        faker = dreamfake[1]                                                   # define who had the dream  
-        if faker not in names:                                                # input validation
-            await message.channel.send("Error: Invalid faker name")           # throw error to user
-            return
-        fake = (' ').join(dreamfake[2:])                                        # define the dream contents
+            await message.channel.send("Error: Dream must be more than one word.")
+        fake = (' ').join(dreamfake[1:])                                        # define the dream contents
         i = 0
         while (redis.exists("&fake"+str(i))):                                  # find what numbers are taken to not override
             i+=1
-        redis.set(("&faker"+str(i)), ("Fake by " + str(faker)))                            # set dreamer
         redis.set(("&fake"+str(i)), str(fake))                                # set dream
         if (i > int(redis.get("&fakecount"))):                                 # increase dream count if required
             redis.set("&fakecount", str(i))
-        await message.channel.send("Fake dream {} has been added. Fake writer: {}".format(redis.get("&fakecount"),str(faker)))
+        await message.channel.send("Fake dream {} has been added.".format(redis.get("&fakecount")))
     
 
     # AI functions (same concept as fakes, just seperated for gamemode customizability)
@@ -261,7 +256,7 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamAI') or message.content.startswith('/dAI'):
         dreamAI = message.content.split(" ")                                   # split message
         if len(dreamAI) < 4:
-            await message.channel.send("Error: AI dreams must be more than 3 words in length")
+            await message.channel.send("Error: AI dreams must be 3 or more words in length.")
         dreamAI = (' ').join(dreamAI[1:])                                        # define the dream contents
         i = 0
         while (redis.exists("&AI"+str(i))):                                  # find what numbers are taken to not override
@@ -314,12 +309,6 @@ async def on_message(message):                                                  
 
         if (guess.capitalize() in names or guess.upper() in names) and guess.lower() == dreamTemp[0].lower():
             scores[message.author.id] += 1
-        elif "Fake" in dreamTemp:
-            msgSplit = (guess.lower()).split(" ")
-            if "fake" in msgSplit and dreamTemp[2].lower() in msgSplit:
-                scores[message.author.id] += 2
-            elif "fake" in msgSplit:
-                scores[message.author.id] += 1
         else:
             if message.author.id not in scores:
                 scores[message.author.id] = 0
