@@ -33,7 +33,7 @@
 
 - /dreamreset - Resets scores and buffer (for auto scoring)
 
-- /dreamundo [number] [name] - Undo most recently added dream. Number and name required to prevent accidental an undo.
+- /dreamundo [number] [name] - Undo most recently added dream. Number and name required to prevent an accidental undo.
 
 Most dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
 

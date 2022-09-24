@@ -14,6 +14,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO replace &dreamtemp with global variable
 # TODO make all multi-line sends into single lines to eliminate cooldown issue
+# TODO make fake same as AI for guessing
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI"]
 buffer = []
 guesses = 0
