@@ -360,6 +360,7 @@ async def on_message(message):                                                  
                     if streak >= 5:
                         scores[player] += 1
                         streakMsg += "<@{}>, ".format(player)
+                if streakMsg:
                     bonusMsg += ("Streaks: " + streakMsg + "\n")
                 # Lone wolf bonus
                 if len(correct) == 1:
@@ -384,8 +385,8 @@ async def on_message(message):                                                  
             for player, score in scores.items():
                 await channel.send("<@{}>: {}".format(player, score))
 
-            # bonus messages
-            if bonus:
+            # bonus messages (only send if anything has been added to the message)
+            if bonus and bonusMsg != "BONUSES:\n":
                 await channel.send(bonusMsg)
 
             # reset
