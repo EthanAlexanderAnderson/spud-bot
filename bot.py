@@ -201,7 +201,7 @@ async def on_message(message):                                                  
             if msg[2].upper() == "AI":
                 msg = redis.get("&AI" + num)
             elif msg[2].upper() == "FAKE":
-                msg = redis.get("&Fake" + num)
+                msg = redis.get("&fake" + num)
         else:
             msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
         await message.channel.send(msg)
