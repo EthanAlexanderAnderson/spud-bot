@@ -363,7 +363,7 @@ async def on_message(message):                                                  
                 if streakMsg:
                     bonusMsg += ("Streaks: " + streakMsg + "\n")
                 # Lone wolf bonus
-                if len(correct) == 1:
+                if len(correct) == 1 and players >= 3:
                     scores[correct[0]] += 1
                     bonusMsg += "Lone Wolf: <@{}>\n".format(correct[0])
                 # Early bird bonus
