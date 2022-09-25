@@ -122,31 +122,26 @@ async def on_message(message):                                                  
         if rng <= dreamCount:
             msg = redis.get("&dream"+str(rng))
             answer = redis.get("&dreamer"+str(rng))
-            #redis.set("&dreamtemp", redis.get("&dreamer"+str(rng)))
         # fake mode
         elif rng > dreamCount and fake and not AI:
             rng -= dreamCount
             msg = redis.get("&fake"+str(rng))
             answer = "Fake"
-            #redis.set("&dreamtemp", "Fake")
         # AI mode
         elif rng > dreamCount and AI and not fake:
             rng -= dreamCount
             msg = redis.get("&AI"+str(rng))
             answer = "AI"
-            #redis.set("&dreamtemp", "AI")
         #both mode
         elif rng > dreamCount and AI and fake:
             rng -= dreamCount
             if rng <= fakeCount:
                 msg = redis.get("&fake"+str(rng))
                 answer = "Fake"
-                #redis.set("&dreamtemp", "Fake")
             else:
                 rng -= fakeCount
                 msg = redis.get("&AI"+str(rng))
                 answer = "AI"
-                #redis.set("&dreamtemp", "AI")
 
         # if censor flag is true, censor names
         if censor:
@@ -174,20 +169,19 @@ async def on_message(message):                                                  
 
         await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
-    elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
         if guesses < players:
             await message.channel.send("This commmand is disabled while dreamplay is active")
             return
-        
-        msg = answer
-        #msg = redis.get("&dreamtemp")                                           # gets dreamer of random number (defined previously)
-        await message.channel.send(msg)                                         # sends dreamer and number for debug
 
-    elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):                            # for /dreamreveal
-        await message.channel.send("Dreams: " + redis.get("&dreamcount"))                                         # sends dream count
-        await message.channel.send("Fake dreams: " + redis.get("&fakecount"))                                         # sends dream count
+        await message.channel.send(answer)
+
+    elif message.content.startswith('/dreamcount') or message.content.startswith('/dc'):
+        await message.channel.send("Dreams: " + redis.get("&dreamcount"))
+        await message.channel.send("Fake dreams: " + redis.get("&fakecount"))
         await message.channel.send("AI generated dreams: " + redis.get("&AIcount"))
+        await message.channel.send("TOTAL: " + str( int(redis.get("&dreamcount")) + int(redis.get("&fakecount")) + int(redis.get("&AIcount")) ))
 
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         # cheat prevention
@@ -206,7 +200,7 @@ async def on_message(message):                                                  
             msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
         await message.channel.send(msg)
 
-    elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal
+    elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):
         msg = message.content.split(" ")
         total = 0
         count = int(redis.get("&dreamcount"))
@@ -254,9 +248,8 @@ async def on_message(message):                                                  
         players = 0 
         await message.channel.send("Dream skipped.")
 
-    # Fake functions
-
-    elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):                          # for /dreamfake
+    # Fake function
+    elif message.content.startswith('/dreamfake') or message.content.startswith('/df'):
         dreamfake = message.content.split(" ")                                   # split message
         if len(dreamfake) < 3:
             await message.channel.send("Error: Dream must be more than one word.")
@@ -270,8 +263,7 @@ async def on_message(message):                                                  
         await message.channel.send("Fake dream {} has been added.".format(redis.get("&fakecount")))
     
 
-    # AI functions (same concept as fakes, just seperated for gamemode customizability)
-
+    # AI function (same concept as fakes, just seperated for gamemode customizability)
     elif message.content.startswith('/dreamAI') or message.content.startswith('/dAI'):
         dreamAI = message.content.split(" ")                                   # split message
         if len(dreamAI) < 4:
@@ -306,7 +298,6 @@ async def on_message(message):                                                  
             # decrease dreamcount
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
-    #debug
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)))
         await message.channel.send("Guesses: " + str(guesses) + "\n" + "Guessed: " + str(guessed))
@@ -319,14 +310,13 @@ async def on_message(message):                                                  
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guesses < players and message.author.id != client.user.id:
 
-        #dreamTemp = redis.get("&dreamtemp").split(" ")
         guess = message.content
 
-        # prevent double guess
-        if message.author.id in guessed:
+        # prevent double guess, and don't count non-name guesses
+        if message.author.id in guessed or not (guess.capitalize() in names or guess.upper() in names):
             return
 
-        if (guess.capitalize() in names or guess.upper() in names) and guess.lower() == answer.lower():
+        if guess.lower() == answer.lower():
             scores[message.author.id] += 1
             streaks[message.author.id] += 1
             correct.append(message.author.id)
@@ -348,10 +338,9 @@ async def on_message(message):                                                  
                 bonusMsg = "BONUSES:\n"
                 streakMsg = ""
                 breakerMsg = ""
-                # underdog bonus
-                # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
-                scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
+                scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
                 keys = list(scores.keys())
+                # underdog bonus
                 if keys[-1] in correct and keys[0] not in correct and (scores[0] - scores[-1] > 0):
                     scores[keys[-1]] += 1
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
@@ -377,10 +366,9 @@ async def on_message(message):                                                  
                         breakerMsg += "<@{}>, ".format(player)
                     bonusMsg += ("Streak Breakers: " + breakerMsg + "\n")
 
-            # auto reveal and show scores
+            # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
             msg = answer
-            #msg = redis.get("&dreamtemp")
             await channel.send("Answer: " + msg + "\n" + "Scores: ")    
             for player, score in scores.items():
                 await channel.send("<@{}>: {}".format(player, score))
