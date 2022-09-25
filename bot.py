@@ -317,6 +317,17 @@ async def on_message(message):                                                  
         await message.channel.send("Streaks broken: " + str(streaksBroken))
         await message.channel.send("Correct: " + str(correct))
 
+    elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
+        msgh = message.content.split(" ")                                   # split message
+        if len(msgh) > 1:
+            if msgh[1].capitalize() == "Bonus":
+                outh = "Bonuses:\n"
+                outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect.\n"
+                outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more.\n"
+                outh += "Lone Wolf - If only one player is correct they recieve +1.\n"
+                outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
+                outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1."
+                await message.channel.send(outh)
 
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guesses < players and message.author.id != client.user.id:
