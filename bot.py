@@ -310,7 +310,6 @@ async def on_message(message):                                                  
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
         await message.channel.send("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">")
-        await message.channel.send("(c f AI b) FLAGS:" + str(censor) + str(fake) + str(AI) + str(bonus))
         await message.channel.send("Streaks: ")
         for player, streak in streaks.items():
             await message.channel.send("<@{}>: {}".format(player, streak))
