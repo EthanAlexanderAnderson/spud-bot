@@ -205,7 +205,7 @@ async def on_message(message):                                                  
         total = 0
         count = int(redis.get("&dreamcount"))
         ids = []
-        dict = defaultdict(int)
+        perPerson = defaultdict(int)
 
         if (len(msg) > 1):       # if name is provided
             name = msg[1]
@@ -223,11 +223,11 @@ async def on_message(message):                                                  
                 await message.channel.send("Error: No dreams under the name " + name)
         else:       # if no name
             for i in range(count):
-                dict[redis.get("&dreamer" + str(i))] += 1
+                perPerson[redis.get("&dreamer" + str(i))] += 1
             await message.channel.send("Count per name: ")
             msgout = ""
-            for key in dict:
-                msgout += key + ": " + str(dict[key]) + "\n"
+            for key in perPerson:
+                msgout += key + ": " + str(perPerson[key]) + "\n"
             await message.channel.send(msgout)
 
 
