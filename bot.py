@@ -240,6 +240,10 @@ async def on_message(message):                                                  
         scores = defaultdict(int)
         players = 0
         channelplaying = 0
+        streaks = defaultdict(int)
+        streaksBroken = 0
+        correct = []
+        bonus = False
         await message.channel.send("Scores reset.")
 
     # skip feature, also doubles as insurance encase a user puts too high of a playercount
