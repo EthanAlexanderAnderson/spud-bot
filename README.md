@@ -15,7 +15,7 @@
 
 ## Dream Journal Game Commands:
 
-- /dreamplay (#) (c) (f) (AI) - Get a random dream. # = Number of players, c = Censor names, f = Include fake dreams, AI = Include AI dreams
+- /dreamplay (#) (c) (f) (AI) (b) - Get a random dream. # = Number of players, c = Censor names, f = Include fake dreams, AI = Include AI dreams, b = include bonus points
 
 - /dreamreveal - Reveal the dreamer of the random dream
 

@@ -22,6 +22,10 @@ guessed = []
 scores = defaultdict(int)
 players = 0
 channelplaying = 0
+#bonus variables
+streaks = defaultdict(int)
+streaksBroken = 0
+correct = []
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -31,7 +35,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guesses, guessed, scores, players, channelplaying
+    global answer, buffer, guesses, guessed, scores, players, channelplaying, streaks, streaksBroken, correct
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
@@ -82,6 +86,7 @@ async def on_message(message):                                                  
         censor = False
         fake = False
         AI = False
+        bonus = False
         msg = message.content.split(" ")
         dreamCount = int(redis.get("&dreamcount"))
         fakeCount = int(redis.get("&fakecount"))
@@ -97,6 +102,8 @@ async def on_message(message):                                                  
                 fake = True
             if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
                 AI = True
+            if ('B' in msg or 'b' in msg):
+                bonus = True
 
         # generate random number for dream (buffer is used to avoid repeats)
         maxCount = dreamCount
@@ -310,9 +317,8 @@ async def on_message(message):                                                  
 
 
     # for scoring (must be at the bottom to not interfere with other commands)
-    # TODO function for scoring, to remove repeated code
     elif guesses < players and message.author.id != client.user.id:
-        dreamTemp = answer.split(" ")
+
         #dreamTemp = redis.get("&dreamtemp").split(" ")
         guess = message.content
 
@@ -320,25 +326,74 @@ async def on_message(message):                                                  
         if message.author.id in guessed:
             return
 
-        if (guess.capitalize() in names or guess.upper() in names) and guess.lower() == dreamTemp[0].lower():
+        if (guess.capitalize() in names or guess.upper() in names) and guess.lower() == answer.lower():
             scores[message.author.id] += 1
+            streaks[message.author.id] += 1
+            correct.append(message.author.id)
         else:
-            if message.author.id not in scores:
-                scores[message.author.id] = 0
+            if streaks[message.author.id] >= 5:
+                streaksBroken += 1
+            streaks[message.author.id] = 0
 
         guessed.append(message.author.id)
         guesses += 1
+
         if guesses >= players:
             channel = client.get_channel(channelplaying)
+
+            # evaluate bonuses
+            if bonus:
+                bonusMsg = "BONUSES:\n"
+                streakMsg = ""
+                breakerMsg = ""
+                # underdog bonus
+                # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
+                scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
+                keys = list(scores)
+                if keys[-1] in correct and keys[0] not in correct and (scores[0] - scores[-1] > 0):
+                    scores[keys[-1]] += 1
+                    bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
+                # streak bonus
+                for player, streak in streaks.items():
+                    if streak >= 5:
+                        scores[player] += 1
+                        streakMsg += "<@{}>, ".format(player)
+                    bonusMsg += ("Streaks: " + streakMsg + "\n")
+                # Lone wolf bonus
+                if len(correct) == 1:
+                    scores[correct[0]] += 1
+                    bonusMsg += "Lone Wolf: <@{}>\n".format(correct[0])
+                # Early bird bonus
+                if guessed[0] in correct and guessed[-1] not in correct:
+                    scores[guessed[0]] += 1
+                    bonusMsg += "Early Bird: <@{}>\n".format(guessed[0])
+                # streak broken bonus
+                if streaksBroken > 0:
+                    for player in correct:
+                        scores[player] += 1
+                        breakerMsg += "<@{}>, ".format(player)
+                    bonusMsg += ("Streak Breakers: " + breakerMsg + "\n")
+
             # auto reveal and show scores
+            scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
             msg = answer
             #msg = redis.get("&dreamtemp")
             await channel.send("Answer: " + msg + "\n" + "Scores: ")    
             for player, score in scores.items():
                 await channel.send("<@{}>: {}".format(player, score))
+
+            # bonus messages
+            if bonus:
+                await channel.send(bonusMsg)
+
             # reset
             players = 0
             guessed = []
+            streaksBroken = 0
+            correct = []
+            bonusMsg = ""
+            streakMsg = ""
+            breakerMsg = ""
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
