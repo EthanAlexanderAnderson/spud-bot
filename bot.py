@@ -313,16 +313,20 @@ async def on_message(message):                                                  
 
         guess = message.content
 
-        # convert alias to name strict
-        for sublist in aliases:
-            for alias in sublist:
-                if (guess.capitalize() == alias or guess.upper() == alias):
-                    guess = sublist[0]
-
         # prevent double guess, and don't count non-name guesses
         if message.author.id in guessed or not (guess.capitalize() in aliases or guess.upper() in aliases):
             return
 
+        # convert alias to name strict
+        converted = False
+        for sublist in aliases:
+            if converted: break
+            for alias in sublist:
+                if converted: break
+                if (guess.capitalize() == alias or guess.upper() == alias):
+                    guess = sublist[0]
+                    converted = True
+                    
         if guess.lower() == answer.lower():
             scores[message.author.id] += 1
             streaks[message.author.id] += 1
