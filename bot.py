@@ -350,7 +350,7 @@ async def on_message(message):                                                  
                 # underdog bonus
                 # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
                 scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
-                keys = scores.keys()
+                keys = list(scores.keys())
                 if keys[-1] in correct and keys[0] not in correct and (scores[0] - scores[-1] > 0):
                     scores[keys[-1]] += 1
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
