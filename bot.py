@@ -314,7 +314,7 @@ async def on_message(message):                                                  
         guess = message.content
 
         # prevent double guess, and don't count non-name guesses
-        if message.author.id in guessed or not (guess.capitalize() in aliases or guess.upper() in aliases):
+        if message.author.id in guessed or not ((guess.capitalize() in sublist for sublist in aliases) or (guess.upper() in sublist for sublist in aliases)):
             return
 
         # convert alias to name strict
