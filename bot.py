@@ -11,9 +11,10 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
-# TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
-# TODO make all multi-line sends into single lines to eliminate cooldown issue
+# TODO make all multi-line sends into single lines to eliminate cooldown" issue
+namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
+aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "DC"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"]]
 answer = ""
 buffer = []
 guesses = 0
@@ -67,7 +68,7 @@ async def on_message(message):                                                  
             await message.channel.send("Error: Missing required inputs")
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
-        if dreamer not in names:                                                # input validation
+        if dreamer not in namesStrict:                                          # input validation
             await message.channel.send("Error: Invalid dreamer name")           # throw error to user
             return
         i = 0
@@ -209,7 +210,7 @@ async def on_message(message):                                                  
 
         if (len(msg) > 1):       # if name is provided
             name = msg[1]
-            if name not in names:                                                # input validation
+            if name not in namesStrict:                                                # input validation
                 await message.channel.send("Error: Invalid name")           # throw error to user
                 return
 
@@ -287,7 +288,7 @@ async def on_message(message):                                                  
             await message.channel.send("Error: Only the most recently added dream can be undone.")
             await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
             return
-        if msg[2] not in names:
+        if msg[2] not in namesStrict:
             await message.channel.send("Error: Invalid name provided.")
             await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
             return
@@ -312,8 +313,14 @@ async def on_message(message):                                                  
 
         guess = message.content
 
+        # convert alias to name strict
+        for i in aliases:
+            for j in i:
+                if (guess.capitalize() == aliases[i][j] or guess.upper() == aliases[i][j]):
+                    guess = aliases[i][0]
+
         # prevent double guess, and don't count non-name guesses
-        if message.author.id in guessed or not (guess.capitalize() in names or guess.upper() in names):
+        if message.author.id in guessed or not (guess.capitalize() in aliases or guess.upper() in aliases):
             return
 
         if guess.lower() == answer.lower():
