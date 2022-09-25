@@ -26,6 +26,7 @@ channelplaying = 0
 streaks = defaultdict(int)
 streaksBroken = 0
 correct = []
+bonus = False
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -35,7 +36,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guesses, guessed, scores, players, channelplaying, streaks, streaksBroken, correct
+    global answer, buffer, guesses, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
