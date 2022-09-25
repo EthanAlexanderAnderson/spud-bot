@@ -13,7 +13,6 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # global variables for dream journal game
 # TODO make lists of aliases for each person so that you can guess any alias (or abbreviation like 'N' for Nathana)
 # TODO make all multi-line sends into single lines to eliminate cooldown issue
-# TODO bonus point system
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
 answer = ""
 buffer = []
@@ -332,6 +331,8 @@ async def on_message(message):                                                  
             streaks[message.author.id] += 1
             correct.append(message.author.id)
         else:
+            if message.author.id not in scores:
+                scores[message.author.id] = 0
             if streaks[message.author.id] >= 5:
                 streaksBroken += 1
             streaks[message.author.id] = 0
