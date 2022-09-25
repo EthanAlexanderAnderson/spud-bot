@@ -182,7 +182,6 @@ async def on_message(message):                                                  
         await message.channel.send("Fake dreams: " + redis.get("&fakecount"))                                         # sends dream count
         await message.channel.send("AI generated dreams: " + redis.get("&AIcount"))
 
-    # TODO allow send to send AI and fakes
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         # cheat prevention
         if guesses < players:
@@ -191,7 +190,13 @@ async def on_message(message):                                                  
         
         msg = message.content.split(" ")
         num = msg[1]
-        msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
+        if len(msg) > 2:
+            if msg[2].upper() == "AI":
+                msg = redis.get("&AI" + num)
+            elif msg[2].upper() == "FAKE":
+                msg = redis.get("&Fake" + num)
+        else:
+            msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):                            # for /dreamreveal

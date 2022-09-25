@@ -27,7 +27,7 @@
 
 - /dreamcount - Number of dreams in the database
 
-- /dreamsend [number] - Sends the dream and dreamer of corresponding number ID
+- /dreamsend [number] (Fake/AI) - Sends the dream and dreamer of corresponding number ID
 
 - /dreamname (name) - Sends all number IDs of dreams belonging the dreamer name provided. If no name is provided it will send the number of dreams belonging to each name.
 
