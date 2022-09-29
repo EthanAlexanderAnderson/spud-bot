@@ -22,7 +22,9 @@ guessed = []
 scores = defaultdict(int)
 players = 0
 channelplaying = 0
-#bonus variables
+# flags
+censor = fake = AI = False
+# bonus variables
 streaks = defaultdict(int)
 streaksBroken = 0
 correct = []
@@ -37,6 +39,7 @@ async def on_ready():
 @client.event
 async def on_message(message):                                                  # read sent message
     global answer, buffer, guesses, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
