@@ -84,27 +84,29 @@ async def on_message(message):                                                  
         # initialize variables
         guesses = 0
         guessed = []
-        censor = False
-        fake = False
-        AI = False
-        bonus = False
         msg = message.content.split(" ")
         dreamCount = int(redis.get("&dreamcount"))
         fakeCount = int(redis.get("&fakecount"))
         AICount = int(redis.get("&AIcount"))
         # check for flags and set variables
         if (len(msg) > 1):
-            if msg[1].isdigit():
-                players = int(msg[1])
-                channelplaying = message.channel.id
-            if ('C' in msg or 'c' in msg):
-                censor = True
-            if ('F' in msg or 'f' in msg):
-                fake = True
-            if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
-                AI = True
-            if ('B' in msg or 'b' in msg):
-                bonus = True
+            if ('N' not in msg and 'n' not in msg): # dont reset flags if /dp n is used. n meaning next round
+                censor = False
+                fake = False
+                AI = False
+                bonus = False
+                players = 0
+                if msg[1].isdigit():
+                    players = int(msg[1])
+                    channelplaying = message.channel.id
+                if ('C' in msg or 'c' in msg):
+                    censor = True
+                if ('F' in msg or 'f' in msg):
+                    fake = True
+                if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
+                    AI = True
+                if ('B' in msg or 'b' in msg):
+                    bonus = True
 
         # generate random number for dream (buffer is used to avoid repeats)
         maxCount = dreamCount
@@ -409,7 +411,6 @@ async def on_message(message):                                                  
                 await channel.send(bonusMsg)
 
             # reset
-            players = 0
             guessed = []
             streaksBroken = 0
             correct = []
