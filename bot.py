@@ -393,7 +393,7 @@ async def on_message(message):                                                  
                     scores[guessed[0]] += 1
                     bonusMsg += "Early Bird: <@{}>\n".format(guessed[0])
                 # streak broken bonus
-                if streaksBroken > 0:
+                if streaksBroken > 0 and len(correct) > 0:
                     for player in correct:
                         scores[player] += 1
                         breakerMsg += "<@{}>, ".format(player)
