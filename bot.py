@@ -14,7 +14,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make all multi-line sends into single lines to eliminate cooldown" issue
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
-aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "DC"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"]]
+aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"]]
 answer = ""
 buffer = []
 guesses = 0
@@ -121,7 +121,7 @@ async def on_message(message):                                                  
         while rng in buffer:
             rng = random.randint(0, maxCount)
         buffer.append(rng)
-        if len(buffer) > 50:
+        if len(buffer) > 100:
             del buffer[0]
 
         # get dream from database
