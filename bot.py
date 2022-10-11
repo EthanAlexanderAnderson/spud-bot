@@ -340,10 +340,6 @@ async def on_message(message):                                                  
 
         guess = message.content
 
-        # prevent double guess, and don't count non-name guesses
-        if message.author.id in guessed or not ((guess.capitalize() in sublist for sublist in aliases) or (guess.upper() in sublist for sublist in aliases)):
-            return
-
         # convert alias to name strict
         converted = False
         for sublist in aliases:
@@ -353,6 +349,10 @@ async def on_message(message):                                                  
                 if (guess.capitalize() == alias or guess.upper() == alias):
                     guess = sublist[0]
                     converted = True
+
+        # prevent double guess, and don't count non-name guesses
+        if message.author.id in guessed or not converted:
+            return
                     
         if guess.lower() == answer.lower():
             scores[message.author.id] += 1
