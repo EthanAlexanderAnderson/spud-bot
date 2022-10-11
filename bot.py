@@ -405,9 +405,13 @@ async def on_message(message):                                                  
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
             msg = answer
-            await channel.send("Answer: " + msg + "\n" + "Scores: ")    
+            scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
             for player, score in scores.items():
-                await channel.send("<@{}>: {}".format(player, score))
+                if player in correct:
+                    scoreMsg += ("🟢<@{}>: {}".format(player, score))
+                else:
+                    scoreMsg += ("🔴<@{}>: {}".format(player, score))
+            await channel.send(scoreMsg)
 
             # bonus messages (only send if anything has been added to the message)
             if bonus and bonusMsg != "BONUSES:\n":
