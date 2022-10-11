@@ -353,6 +353,8 @@ async def on_message(message):                                                  
         # prevent double guess, and don't count non-name guesses
         if message.author.id in guessed or not converted:
             return
+        else:           # let the user know their vote was counted
+            await message.add_reaction("✅")
                     
         if guess.lower() == answer.lower():
             scores[message.author.id] += 1
