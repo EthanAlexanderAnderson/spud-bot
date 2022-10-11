@@ -412,9 +412,9 @@ async def on_message(message):                                                  
             scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
             for player, score in scores.items():
                 if player in correct:
-                    scoreMsg += ("🟢<@{}>: {}".format(player, score))
+                    scoreMsg += ("🟢<@{}>: {}\n".format(player, score))
                 else:
-                    scoreMsg += ("🔴<@{}>: {}".format(player, score))
+                    scoreMsg += ("🔴<@{}>: {}\n".format(player, score))
             await channel.send(scoreMsg)
 
             # bonus messages (only send if anything has been added to the message)
