@@ -320,6 +320,8 @@ async def on_message(message):                                                  
             await message.channel.send("<@{}>: {}".format(player, streak))
         await message.channel.send("Streaks broken: " + str(streaksBroken))
         await message.channel.send("Correct: " + str(correct))
+        if bonus:
+            await message.channel.send("Names by score: " + keys)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         msgh = message.content.split(" ")                                   # split message
@@ -377,7 +379,7 @@ async def on_message(message):                                                  
                 scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
                 keys = list(scores.keys())
                 # underdog bonus
-                if keys[-1] in correct and keys[0] not in correct and (scores[0] - scores[-1] > 0):
+                if keys[-1] in correct and keys[0] not in correct and (scores[keys[0]] - scores[keys[-1]] > 0):
                     scores[keys[-1]] += 1
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
                 # streak bonus
