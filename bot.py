@@ -387,8 +387,8 @@ async def on_message(message):                                                  
                 # streak bonus
                 for player, streak in streaks.items():
                     if streak >= 5:
-                        scores[player] += 1
-                        streakMsg += "<@{}>, ".format(player)
+                        scores[player] += streak//5
+                        streakMsg += "<@{}> ({}), ".format(player, streak)
                 if streakMsg:
                     bonusMsg += ("Streaks: " + streakMsg + "\n")
                 # Lone wolf bonus
