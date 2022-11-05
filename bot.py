@@ -69,6 +69,7 @@ async def on_message(message):                                                  
         dreamadd = message.content.split(" ")                                   # split incoming message
         if len(dreamadd) < 3:
             await message.channel.send("Error: Missing required inputs")
+            return
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
         if dreamer not in namesStrict:                                          # input validation
@@ -263,6 +264,7 @@ async def on_message(message):                                                  
         dreamfake = message.content.split(" ")                                   # split message
         if len(dreamfake) < 3:
             await message.channel.send("Error: Dream must be more than one word.")
+            return
         fake = (' ').join(dreamfake[1:])                                        # define the dream contents
         i = 0
         while (redis.exists("&fake"+str(i))):                                  # find what numbers are taken to not override
@@ -278,6 +280,7 @@ async def on_message(message):                                                  
         dreamAI = message.content.split(" ")                                   # split message
         if len(dreamAI) < 4:
             await message.channel.send("Error: AI dreams must be 3 or more words in length.")
+            return
         dreamAI = (' ').join(dreamAI[1:])                                        # define the dream contents
         i = 0
         while (redis.exists("&AI"+str(i))):                                  # find what numbers are taken to not override
