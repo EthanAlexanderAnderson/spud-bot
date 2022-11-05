@@ -14,10 +14,10 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make all multi-line sends into single lines to eliminate cooldown" issue
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
-aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa"]]
+aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"]]
 answer = ""
 buffer = []
-guesses = 0
+guessCount = 0
 guessed = []
 scores = defaultdict(int)
 players = 0
@@ -38,7 +38,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guesses, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global answer, buffer, guessCount, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
@@ -86,7 +86,7 @@ async def on_message(message):                                                  
     
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
         # initialize variables
-        guesses = 0
+        guessCount = 0
         guessed = []
         msg = message.content.split(" ")
         dreamCount = int(redis.get("&dreamcount"))
@@ -178,7 +178,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
-        if guesses < players:
+        if guessCount < players:
             await message.channel.send("This commmand is disabled while dreamplay is active")
             return
 
@@ -192,7 +192,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         # cheat prevention
-        if guesses < players:
+        if guessCount < players:
             await message.channel.send("This commmand is disabled while dreamplay is active")
             return
         
@@ -241,7 +241,7 @@ async def on_message(message):                                                  
     # Resets all global variables
     elif message.content.startswith('/dreamreset'):
         buffer = []
-        guesses = 0
+        guessCount = 0
         guessed = []
         scores = defaultdict(int)
         players = 0
@@ -254,7 +254,7 @@ async def on_message(message):                                                  
 
     # skip feature, also doubles as insurance encase a user puts too high of a playercount
     elif message.content.startswith('/dreamskip'):
-        guesses = 0
+        guessCount = 0
         guessed = []
         players = 0 
         await message.channel.send("Dream skipped.")
@@ -313,7 +313,7 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)))
-        await message.channel.send("Guesses: " + str(guesses) + "\n" + "Guessed: " + str(guessed))
+        await message.channel.send("Guesses: " + str(guessCount) + "\n" + "Guessed: " + str(guessed))
         await message.channel.send("Scores: ")
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
@@ -339,7 +339,7 @@ async def on_message(message):                                                  
                 await message.channel.send(outh)
 
     # for scoring (must be at the bottom to not interfere with other commands)
-    elif guesses < players and message.author.id != client.user.id:
+    elif guessCount < players and message.author.id != client.user.id:
 
         guess = message.content
 
@@ -371,9 +371,9 @@ async def on_message(message):                                                  
             streaks[message.author.id] = 0
 
         guessed.append(message.author.id)
-        guesses += 1
+        guessCount += 1
 
-        if guesses >= players:
+        if guessCount >= players:
             channel = client.get_channel(channelplaying)
 
             # evaluate bonuses
