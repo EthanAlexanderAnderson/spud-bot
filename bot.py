@@ -319,13 +319,14 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamdebug'):
         debugMsg = ""
-        debugMsg += ("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)) + "\n")
-        debugMsg += ("GuessCount: " + str(guessCount) + "\n" + "Guessed: " + str(guessed) + "\n")
-        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + "\n" + "namesGuessed: " + str(namesGuessed) + "\n")
+        debugMsg += ("Buffer Length: " + str(len(buffer)) + " " + (', ').join(map(str, buffer)) + "\n")
+        debugMsg += ("GuessCount: " + str(guessCount) + " " + str(guessed) + "\n")
+        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " " + str(namesGuessed) + "\n")
         debugMsg += ("Scores:\n")
         for player, score in scores.items():
             debugMsg += ("<@{}>: {}\n".format(player, score))
-        debugMsg += ("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">\n")
+        debugMsg += ("Players: " + str(players) + "\n")
+        debugMsg += ("Channel Playing: <#" + str(channelplaying) + ">\n")
         debugMsg += ("Streaks:\n")
         for player, streak in streaks.items():
             debugMsg += ("<@{}>: {}\n".format(player, streak))
