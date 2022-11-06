@@ -319,9 +319,9 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamdebug'):
         debugMsg = ""
-        debugMsg += ("Buffer Length: " + str(len(buffer)) + " " + (', ').join(map(str, buffer)) + "\n")
-        debugMsg += ("GuessCount: " + str(guessCount) + " " + str(guessed) + "\n")
-        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " " + str(namesGuessed) + "\n")
+        debugMsg += ("Buffer Length: " + str(len(buffer)) + " : " + (', ').join(map(str, buffer)) + "\n")
+        debugMsg += ("GuessCount: " + str(guessCount) + " : " + str(guessed) + "\n")
+        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " : " + str(namesGuessed) + "\n")
         debugMsg += ("Scores:\n")
         for player, score in scores.items():
             debugMsg += ("<@{}>: {}\n".format(player, score))
