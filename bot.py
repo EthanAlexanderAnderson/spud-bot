@@ -404,7 +404,7 @@ async def on_message(message):                                                  
                 keys = list(scores.keys())
                 # underdog bonus
                 i = 0
-                while (keys[-1] in correct) and (keys[i] not in correct) and (scores[keys[i]] - scores[keys[-1]] > 0) and (keys[-1] != keys[i]):
+                while (keys[-1] in correct) and (keys[i] not in correct) and (keys[-1] != keys[i]):
                     scores[keys[-1]] += 1
                     i += 1
                 if i == 1:
