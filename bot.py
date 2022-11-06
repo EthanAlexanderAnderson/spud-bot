@@ -333,6 +333,7 @@ async def on_message(message):                                                  
         debugMsg += ("Correct: " + str(correct) + "\n")
         if bonus:
             debugMsg += ("Names by score: " + keys)
+        await message.channel.send(debugMsg)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         msgh = message.content.split(" ")                                   # split message
