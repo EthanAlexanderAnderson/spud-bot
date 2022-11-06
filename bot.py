@@ -15,6 +15,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
 aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"]]
+emojiNums = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 answer = ""
 buffer = []
 guessCount = 0
@@ -22,6 +23,7 @@ guessCountUnique = 0
 namesGuessed = []
 guessed = []
 scores = defaultdict(int)
+scoresPrev = defaultdict(int)
 players = 0
 channelplaying = 0
 # flags
@@ -40,7 +42,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, players, channelplaying, streaks, streaksBroken, correct, bonus
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
@@ -451,13 +453,29 @@ async def on_message(message):                                                  
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
+            keys = list(scores.keys())
             msg = answer
             scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
             for player, score in scores.items():
                 if player in correct:
-                    scoreMsg += ("🟢<@{}>: {}\n".format(player, score))
+                    scoreMsg += ("🟢<@{}>: {}".format(player, score))
                 else:
-                    scoreMsg += ("🔴<@{}>: {}\n".format(player, score))
+                    scoreMsg += ("🔴<@{}>: {}".format(player, score))
+                # point emojis
+                if player in scoresPrev:
+                    scoreDiff = score - scoresPrev[player]
+                    if scoreDiff > 1:
+                        scoreMsg += (" ({}".format(emojiNums[scoreDiff]))
+                    indexDiff = keys.index(player) - scoresPrevKeys.index(player)
+                    if indexDiff > 0:
+                        scoreMsg += ("⬆️)\n")
+                    elif indexDiff < 0:
+                        scoreMsg += ("⬇️)\n")
+                    else:
+                        scoreMsg += (")\n")
+                else:
+                    scoreMsg += ("\n")
+                    
             await channel.send(scoreMsg)
 
             # bonus messages (only send if anything has been added to the message)
@@ -473,6 +491,8 @@ async def on_message(message):                                                  
             breakerMsg = ""
             guessCountUnique = 0
             namesGuessed = []
+            scoresPrev = scores
+            scoresPrevKeys = list(scoresPrev)
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
