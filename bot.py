@@ -345,6 +345,11 @@ async def on_message(message):                                                  
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guessCount < players and message.author.id != client.user.id:
 
+        # handle debug
+        if guess[0] == '&':
+            message.author.id = guess[1]
+            guess = guess[2:]
+
         guess = message.content
 
         # convert alias to name strict
