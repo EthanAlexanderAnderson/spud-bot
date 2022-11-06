@@ -318,20 +318,21 @@ async def on_message(message):                                                  
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
     elif message.content.startswith('/dreamdebug'):
-        await message.channel.send("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)))
-        await message.channel.send("GuessCount: " + str(guessCount) + "\n" + "Guessed: " + str(guessed))
-        await message.channel.send("guessCountUnique: " + str(guessCountUnique) + "\n" + "namesGuessed: " + str(namesGuessed))
-        await message.channel.send("Scores: ")
+        debugMsg = ""
+        debugMsg += ("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)) + "\n")
+        debugMsg += ("GuessCount: " + str(guessCount) + "\n" + "Guessed: " + str(guessed) + "\n")
+        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + "\n" + "namesGuessed: " + str(namesGuessed) + "\n")
+        debugMsg += ("Scores:\n")
         for player, score in scores.items():
-            await message.channel.send("<@{}>: {}".format(player, score))
-        await message.channel.send("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">")
-        await message.channel.send("Streaks: ")
+            debugMsg += ("<@{}>: {}\n".format(player, score))
+        debugMsg += ("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">\n")
+        debugMsg += ("Streaks:\n")
         for player, streak in streaks.items():
-            await message.channel.send("<@{}>: {}".format(player, streak))
-        await message.channel.send("Streaks broken: " + str(streaksBroken))
-        await message.channel.send("Correct: " + str(correct))
+            debugMsg += ("<@{}>: {}\n".format(player, streak))
+        debugMsg += ("Streaks broken: " + str(streaksBroken) + "\n")
+        debugMsg += ("Correct: " + str(correct) + "\n")
         if bonus:
-            await message.channel.send("Names by score: " + keys)
+            debugMsg += ("Names by score: " + keys)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         msgh = message.content.split(" ")                                   # split message
