@@ -354,7 +354,6 @@ async def on_message(message):                                                  
         if message.author.id in scores:
             scores.pop(message.author.id)
             streaks.pop(message.author.id)
-            scoresPrev.pop(message.author.id)
             await message.channel.send("<@{}> has left the game.".format(message.author.id))
 
     # for scoring (must be at the bottom to not interfere with other commands)
