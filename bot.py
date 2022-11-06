@@ -362,6 +362,8 @@ async def on_message(message):                                                  
             await message.add_reaction("✅")
                     
         if guess.lower() == answer.lower():
+            if message.author.id not in scores:
+                scores[message.author.id] = 0
             scores[message.author.id] += 1
             streaks[message.author.id] += 1
             correct.append(message.author.id)
