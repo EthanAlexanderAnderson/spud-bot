@@ -465,14 +465,12 @@ async def on_message(message):                                                  
                 if player in scoresPrev:
                     scoreDiff = score - scoresPrev[player]
                     if scoreDiff > 1:
-                        scoreMsg += (" ({}".format(emojiNums[scoreDiff]))
+                        scoreMsg += (" {}".format(emojiNums[scoreDiff]))
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
-                    if indexDiff > 0:
-                        scoreMsg += ("⬆️)\n")
-                    elif indexDiff < 0:
-                        scoreMsg += ("⬇️)\n")
-                    else:
-                        scoreMsg += (")\n")
+                    if indexDiff < 0:
+                        scoreMsg += (" ⬆️\n")
+                    elif indexDiff > 0:
+                        scoreMsg += (" ⬇️\n")
                 else:
                     scoreMsg += ("\n")
                     
