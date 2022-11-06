@@ -245,6 +245,8 @@ async def on_message(message):                                                  
         buffer = []
         guessCount = 0
         guessed = []
+        guessCountUnique = 0
+        namesGuessed = []
         scores = defaultdict(int)
         players = 0
         channelplaying = 0
