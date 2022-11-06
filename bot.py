@@ -410,7 +410,7 @@ async def on_message(message):                                                  
                     elif streak <= -5:
                         scores[player] += 1
                         streaks[player] = 0
-                        bonusMsg += "Biggest Loser: <@{}>\n".format(correct[0])
+                        bonusMsg += "Biggest Loser: <@{}>\n".format(player)
                 if streakMsg:
                     bonusMsg += ("Streaks: " + streakMsg + "\n")
                 # Lone wolf bonus
