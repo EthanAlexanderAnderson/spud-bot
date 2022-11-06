@@ -18,6 +18,8 @@ aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "
 answer = ""
 buffer = []
 guessCount = 0
+guessCountUnique = 0
+namesGuessed = []
 guessed = []
 scores = defaultdict(int)
 players = 0
@@ -38,7 +40,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
@@ -372,6 +374,9 @@ async def on_message(message):                                                  
 
         guessed.append(message.author.id)
         guessCount += 1
+        if guess.lower() not in namesGuessed:
+            guessCountUnique += 1
+            namesGuessed.append(guess.lower())
 
         if guessCount >= players:
             channel = client.get_channel(channelplaying)
@@ -403,6 +408,14 @@ async def on_message(message):                                                  
                 if len(correct) == 1 and players >= 3:
                     scores[correct[0]] += 1
                     bonusMsg += "Lone Wolf: <@{}>\n".format(correct[0])
+                # Non-conformist bonus
+                if len(correct) == 1 and len(namesGuessed) == 2 and players >= 5:
+                    scores[correct[0]] += 1
+                    bonusMsg += "Non-conformist: <@{}>\n".format(correct[0])
+                # Mixed Bag bonus
+                if len(correct) == 1 and len(namesGuessed) == players and players >= 5:
+                    scores[correct[0]] += 1
+                    bonusMsg += "Mixed Bag: <@{}>\n".format(correct[0])
                 # Early bird bonus
                 if guessed[0] in correct and guessed[-1] not in correct:
                     scores[guessed[0]] += 1
