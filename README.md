@@ -35,6 +35,8 @@
 
 - /dreamundo [number] [name] - Undo most recently added dream. Number and name required to prevent an accidental undo.
 
+- /dreamhelp (bonus) - get help about dream game.
+
 Most dream commands have abbreviated forms, for example, you can type /dp instead of /dreamplay
 
 My bot is run using a Heroku free server.

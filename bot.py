@@ -336,11 +336,15 @@ async def on_message(message):                                                  
         if len(msgh) > 1:
             if msgh[1].capitalize() == "Bonus":
                 outh = "Bonuses:\n"
-                outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect.\n"
-                outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more.\n"
-                outh += "Lone Wolf - If only one player is correct they recieve +1.\n"
+                outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect. Underdog bonus scales with number of players incorrect from the top.\n"
+                outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more. Streak bonus scales on streak intervals of 5.\n"
+                outh += "Biggest Loser - Recieve +1 for 5 incorrect answers in a row.\n"
+                outh += "Lone Wolf - If only one player is correct they recieve +1 (3+ players).\n"
                 outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
-                outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1."
+                outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1.\n"
+                outh = "Rare Bonuses:\n"
+                outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
+                outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
                 await message.channel.send(outh)
 
     # for scoring (must be at the bottom to not interfere with other commands)
