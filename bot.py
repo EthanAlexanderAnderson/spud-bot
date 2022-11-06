@@ -467,6 +467,8 @@ async def on_message(message):                                                  
             bonusMsg = ""
             streakMsg = ""
             breakerMsg = ""
+            guessCountUnique = 0
+            namesGuessed = []
 
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
