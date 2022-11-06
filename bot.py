@@ -476,11 +476,10 @@ async def on_message(message):                                                  
                         scoreMsg += ("{}".format(emojiNums[scoreDiff]))
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
                     if indexDiff < 0:
-                        scoreMsg += ("⬆️\n")
+                        scoreMsg += ("⬆️")
                     elif indexDiff > 0:
-                        scoreMsg += ("⬇️\n")
-                else:
-                    scoreMsg += ("\n")
+                        scoreMsg += ("⬇️")
+                scoreMsg += ("\n")
                     
             await channel.send(scoreMsg)
 
