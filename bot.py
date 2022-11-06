@@ -462,7 +462,7 @@ async def on_message(message):                                                  
                 else:
                     scoreMsg += ("🔴<@{}>: {} ".format(player, score))
                 # point emojis
-                if player in scoresPrev:
+                if player in scoresPrev and player in scoresPrevKeys:
                     scoreDiff = score - scoresPrev[player]
                     if scoreDiff > 1:
                         scoreMsg += ("{}".format(emojiNums[scoreDiff]))
