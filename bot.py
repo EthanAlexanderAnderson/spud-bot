@@ -346,10 +346,11 @@ async def on_message(message):                                                  
     elif guessCount < players and message.author.id != client.user.id:
 
         guess = message.content
+        playerID = message.author.id
 
         # handle debug
         if guess[0] == '&':
-            message.author.id = guess[1]
+            playerID = guess[1]
             guess = guess[2:]
 
         # convert alias to name strict
@@ -363,28 +364,28 @@ async def on_message(message):                                                  
                     converted = True
 
         # prevent double guess, and don't count non-name guesses
-        if message.author.id in guessed or not converted:
+        if playerID in guessed or not converted:
             return
         else:           # let the user know their vote was counted
             await message.add_reaction("✅")
                     
         if guess.lower() == answer.lower():
-            if message.author.id not in scores:
-                scores[message.author.id] = 0
-            scores[message.author.id] += 1
-            streaks[message.author.id] += 1
-            correct.append(message.author.id)
+            if playerID not in scores:
+                scores[playerID] = 0
+            scores[playerID] += 1
+            streaks[playerID] += 1
+            correct.append(playerID)
         else:
-            if message.author.id not in scores:
-                scores[message.author.id] = 0
-            if streaks[message.author.id] > 0:
-                streaks[message.author.id] = 0
-                if streaks[message.author.id] >= 5:
+            if playerID not in scores:
+                scores[playerID] = 0
+            if streaks[playerID] > 0:
+                streaks[playerID] = 0
+                if streaks[playerID] >= 5:
                     streaksBroken += 1
             else:
-                streaks[message.author.id] -= 1
+                streaks[playerID] -= 1
 
-        guessed.append(message.author.id)
+        guessed.append(playerID)
         guessCount += 1
         if guess.lower() not in namesGuessed:
             guessCountUnique += 1
