@@ -458,19 +458,19 @@ async def on_message(message):                                                  
             scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
             for player, score in scores.items():
                 if player in correct:
-                    scoreMsg += ("🟢<@{}>: {}".format(player, score))
+                    scoreMsg += ("🟢<@{}>: {} ".format(player, score))
                 else:
-                    scoreMsg += ("🔴<@{}>: {}".format(player, score))
+                    scoreMsg += ("🔴<@{}>: {} ".format(player, score))
                 # point emojis
                 if player in scoresPrev:
                     scoreDiff = score - scoresPrev[player]
                     if scoreDiff > 1:
-                        scoreMsg += (" {}".format(emojiNums[scoreDiff]))
+                        scoreMsg += ("{}".format(emojiNums[scoreDiff]))
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
                     if indexDiff < 0:
-                        scoreMsg += (" ⬆️\n")
+                        scoreMsg += ("⬆️\n")
                     elif indexDiff > 0:
-                        scoreMsg += (" ⬇️\n")
+                        scoreMsg += ("⬇️\n")
                 else:
                     scoreMsg += ("\n")
                     
