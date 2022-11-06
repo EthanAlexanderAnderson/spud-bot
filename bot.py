@@ -350,6 +350,13 @@ async def on_message(message):                                                  
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
                 await message.channel.send(outh)
 
+    elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
+        if message.author.id in scores:
+            scores.pop(message.author.id)
+            streaks.pop(message.author.id)
+            scoresPrev.pop(message.author.id)
+            await message.channel.send("<@{}> has left the game.".format(message.author.id))
+
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guessCount < players and message.author.id != client.user.id:
 
