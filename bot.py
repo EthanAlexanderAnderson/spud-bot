@@ -332,8 +332,6 @@ async def on_message(message):                                                  
             debugMsg += ("<@{}>: {}\n".format(player, streak))
         debugMsg += ("Streaks broken: " + str(streaksBroken) + "\n")
         debugMsg += ("Correct: " + str(correct) + "\n")
-        if bonus:
-            debugMsg += ("Names by score: " + keys)
         await message.channel.send(debugMsg)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
