@@ -427,11 +427,11 @@ async def on_message(message):                                                  
                     scores[correct[0]] += 1
                     bonusMsg += "Lone Wolf: <@{}>\n".format(correct[0])
                 # Non-conformist bonus
-                if len(correct) == 1 and len(namesGuessed) == 2 and players >= 5:
+                if len(correct) == 1 and len(namesGuessed) == 2 and players >= 4:
                     scores[correct[0]] += 1
                     bonusMsg += "Non-conformist: <@{}>\n".format(correct[0])
                 # Mixed Bag bonus
-                if len(correct) == 1 and len(namesGuessed) == players and players >= 5:
+                if len(correct) == 1 and len(namesGuessed) == players and players >= 4:
                     scores[correct[0]] += 1
                     bonusMsg += "Mixed Bag: <@{}>\n".format(correct[0])
                 # Early bird bonus
