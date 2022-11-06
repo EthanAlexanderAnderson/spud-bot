@@ -317,7 +317,8 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamdebug'):
         await message.channel.send("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)))
-        await message.channel.send("Guesses: " + str(guessCount) + "\n" + "Guessed: " + str(guessed))
+        await message.channel.send("GuessCount: " + str(guessCount) + "\n" + "Guessed: " + str(guessed))
+        await message.channel.send("guessCountUnique: " + str(guessCountUnique) + "\n" + "namesGuessed: " + str(namesGuessed))
         await message.channel.send("Scores: ")
         for player, score in scores.items():
             await message.channel.send("<@{}>: {}".format(player, score))
