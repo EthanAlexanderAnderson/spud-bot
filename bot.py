@@ -42,7 +42,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
