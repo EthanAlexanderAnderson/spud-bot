@@ -370,9 +370,12 @@ async def on_message(message):                                                  
         else:
             if message.author.id not in scores:
                 scores[message.author.id] = 0
-            if streaks[message.author.id] >= 5:
-                streaksBroken += 1
-            streaks[message.author.id] = 0
+            if streaks[message.author.id] > 0:
+                streaks[message.author.id] = 0
+                if streaks[message.author.id] >= 5:
+                    streaksBroken += 1
+            else:
+                streaks[message.author.id] -= 1
 
         guessed.append(message.author.id)
         guessCount += 1
@@ -399,11 +402,15 @@ async def on_message(message):                                                  
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
                 elif i > 1:
                     bonusMsg += "Underdog: <@{}> (x{})\n".format(keys[-1], (i))
-                # streak bonus
+                # streak bonus and Biggest Loser
                 for player, streak in streaks.items():
                     if streak >= 5:
                         scores[player] += streak//5
                         streakMsg += "<@{}> ({}), ".format(player, streak)
+                    elif streak <= -5:
+                        scores[player] += 1
+                        streaks[player] = 0
+                        bonusMsg += "Biggest Loser: <@{}>\n".format(correct[0])
                 if streakMsg:
                     bonusMsg += ("Streaks: " + streakMsg + "\n")
                 # Lone wolf bonus
