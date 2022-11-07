@@ -373,7 +373,7 @@ async def on_message(message):                                                  
                 outh += "Lone Wolf - If only one player is correct they recieve +1 (3+ players).\n"
                 outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
                 outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1.\n"
-                outh += "Bottom Feeder - Receive +1 for remaining last place for more than 5 rounds.\n"
+                outh += "Bottom Feeder - Receive +1 for remaining last place for 5 rounds.\n"
                 outh += "**Rare Bonuses:**\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
@@ -479,7 +479,7 @@ async def on_message(message):                                                  
                 else:
                     bottomStreak[0] = keys[-1]
                     bottomStreak[1] = 0
-                if bottomStreak[1] >= 5:
+                if bottomStreak[1] >= 5 and (bottomStreak[1]%5 == 0):
                     scores[bottomStreak[0]] += 1
                     bonusMsg += "Bottom Feeder: <@{}>\n".format(bottomStreak[0])
                 # streak bonus and Biggest Loser
