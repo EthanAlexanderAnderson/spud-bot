@@ -34,6 +34,7 @@ streaks = defaultdict(int)
 streaksBroken = 0
 correct = []
 bonus = False
+bottomStreak = ['', 0]
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -471,6 +472,15 @@ async def on_message(message):                                                  
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
                 elif i > 1:
                     bonusMsg += "Underdog: <@{}> (x{})\n".format(keys[-1], (i))
+                # bottom feeder bonus
+                if keys[-1] == bottomStreak[0]:
+                    bottomStreak[1] += 1
+                else:
+                    bottomStreak[0] = keys[-1]
+                    bottomStreak[1] = 0
+                if bottomStreak[1] >= 5:
+                    scores[bottomStreak[0]] += 1
+                    bonusMsg += "Bottom Feeder: <@{}>\n".format(bottomStreak[0])
                 # streak bonus and Biggest Loser
                 for player, streak in streaks.items():
                     if streak >= 5:
