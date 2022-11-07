@@ -424,6 +424,9 @@ async def on_message(message):                                                  
         # prevent double guess, and don't count non-name guesses
         if playerID in guessed or not converted:
             return
+        elif (guess == "Fake" and fake == False) or (guess == "AI" and AI == False):
+            await message.add_reaction("⛔")
+            return
         else:           # let the user know their vote was counted
             await message.add_reaction("✅")
                     
