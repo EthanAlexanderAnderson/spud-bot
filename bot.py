@@ -340,10 +340,29 @@ async def on_message(message):                                                  
         outh = ""
         if len(msgh) == 1:
             outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
+            outh += "- Commmands\n"
             outh += "- Bonus\n"
-            outh += "- Flag\n"
+            outh += "- Flags\n"
             outh += "- Undo"
         elif len(msgh) == 2:
+            if msgh[1].capitalize() == "Commands":
+                outh += 'Use "/dreamhelp (option)" with one of the following commands:\n'
+                outh += "- Playing:\n"
+                outh += "-- dreamplay\n"
+                outh += "-- dreamreveal\n"
+                outh += "- Adding:\n"
+                outh += "-- dreamadd\n"
+                outh += "-- dreamfake\n"
+                outh += "-- dreamAI\n"
+                outh += "- Info:\n"
+                outh += "-- dreamcount\n"
+                outh += "-- dreamsend\n"
+                outh += "-- dreamname\n"
+                outh += "-- dreamhelp\n"
+                outh += "- Functions:\n"
+                outh += "-- dreamskip\n"
+                outh += "-- dreamreset\n"
+                outh += "-- dreamundo"
             if msgh[1].capitalize() == "Bonus":
                 outh += "Bonuses:\n"
                 outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect. Underdog bonus scales with number of players incorrect from the top.\n"
@@ -355,7 +374,7 @@ async def on_message(message):                                                  
                 outh += "Rare Bonuses:\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
-            if msgh[1].capitalize() == "Flag":
+            if msgh[1].capitalize() == "Flags":
                 outh += "Flags:\n"
                 outh += "# = Number of players.\n"
                 outh += "c = Censor names.\n"
