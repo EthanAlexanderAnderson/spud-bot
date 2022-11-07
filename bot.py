@@ -346,7 +346,7 @@ async def on_message(message):                                                  
             outh += "- Undo"
         elif len(msgh) == 2:
             if msgh[1].capitalize() == "Commands":
-                outh += 'Use "/dreamhelp (command)" with one of the following commands:\n'
+                outh += 'Commands:\n'
                 outh += "- Playing:\n"
                 outh += "-- dreamplay\n"
                 outh += "-- dreamreveal\n"
