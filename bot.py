@@ -181,7 +181,6 @@ async def on_message(message):                                                  
 
         dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
         dreamMsgID = dreamMsg.id
-        await message.channel.send(dreamMsgID)
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
@@ -428,6 +427,10 @@ async def on_message(message):                                                  
         if guess.lower() not in namesGuessed:
             guessCountUnique += 1
             namesGuessed.append(guess.lower())
+
+        # update guess count on dream msg
+        channel = client.get_channel(channelplaying)
+        await dreamMsgID.add_reaction("{}".format(emojiNums[guessCount - 1]))
 
         if guessCount >= players:
             channel = client.get_channel(channelplaying)
