@@ -472,6 +472,8 @@ async def on_message(message):                                                  
                 # point emojis
                 if player in scoresPrev and player in scoresPrevKeys:
                     scoreDiff = score - scoresPrev[player]
+                    # TODO not working for scorediff 2
+                    await channel.send("{}: {} - {}".format(player, score, scoresPrev[player]))
                     if scoreDiff > 1:
                         scoreMsg += ("{}".format(emojiNums[scoreDiff]))
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
