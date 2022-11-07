@@ -26,7 +26,7 @@ scores = defaultdict(int)
 scoresPrev = defaultdict(int)
 players = 0
 channelplaying = 0
-dreamMsgID = 0
+dreamMsg = 0
 # flags
 censor = fake = AI = False
 # bonus variables
@@ -43,7 +43,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsgID
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
@@ -180,7 +180,6 @@ async def on_message(message):                                                  
             msg = (" ").join(censored)
 
         dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
-        dreamMsgID = dreamMsg.id
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
@@ -430,7 +429,7 @@ async def on_message(message):                                                  
 
         # update guess count on dream msg
         channel = client.get_channel(channelplaying)
-        await dreamMsgID.add_reaction("{}".format(emojiNums[guessCount - 1]))
+        await dreamMsg.add_reaction("{}".format(emojiNums[guessCount - 1]))
 
         if guessCount >= players:
             channel = client.get_channel(channelplaying)
