@@ -339,7 +339,7 @@ async def on_message(message):                                                  
         outh = ""
         if len(msgh) == 1:
             outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
-            outh += "Bonus (Description of each bonus point type)"
+            outh += "Bonus (Description of each bonus point type)\n"
             outh += "Flag (Description of each gameplay flag)"
         elif len(msgh) == 2:
             if msgh[1].capitalize() == "Bonus":
