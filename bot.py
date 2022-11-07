@@ -345,7 +345,7 @@ async def on_message(message):                                                  
                 outh += "Lone Wolf - If only one player is correct they recieve +1 (3+ players).\n"
                 outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
                 outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1.\n"
-                outh = "Rare Bonuses:\n"
+                outh += "Rare Bonuses:\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
                 await message.channel.send(outh)
