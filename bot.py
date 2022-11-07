@@ -336,9 +336,14 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         msgh = message.content.split(" ")                                   # split message
-        if len(msgh) > 1:
+        outh = ""
+        if len(msgh) == 1:
+            outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
+            outh += "Bonus (Description of each bonus point type)"
+            outh += "Flag (Description of each gameplay flag)"
+        elif len(msgh) == 2:
             if msgh[1].capitalize() == "Bonus":
-                outh = "Bonuses:\n"
+                outh += "Bonuses:\n"
                 outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect. Underdog bonus scales with number of players incorrect from the top.\n"
                 outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more. Streak bonus scales on streak intervals of 5.\n"
                 outh += "Biggest Loser - Recieve +1 for 5 incorrect answers in a row.\n"
@@ -348,7 +353,16 @@ async def on_message(message):                                                  
                 outh += "Rare Bonuses:\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
-                await message.channel.send(outh)
+            if msgh[1].capitalize() == "Flag":
+                outh += "Flags:\n"
+                outh += "# = Number of players.\n"
+                outh += "c = Censor names.\n"
+                outh += "f = Include fake dreams.\n"
+                outh += "AI = Include AI dreams.\n"
+                outh += "b = include bonus points.\n"
+                outh += "--- NOTE: Number flag must be the first\n"
+                outh += "-- ex: /dreamplay 3 b f"
+        await message.channel.send(outh)
 
     elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
         if message.author.id in scores:
