@@ -475,6 +475,8 @@ async def on_message(message):                                                  
                         scoreMsg += ("⬇️")
                     else:
                         scoreMsg += ("⬛")
+                else:
+                    scoreDiff = score
                 if player in correct:
                     scoreMsg += ("{}<@{}>: {} ".format(emojiNums[scoreDiff], player, score))
                 else:
