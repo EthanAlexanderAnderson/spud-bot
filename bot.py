@@ -465,10 +465,6 @@ async def on_message(message):                                                  
             msg = answer
             scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
             for player, score in scores.items():
-                if player in correct:
-                    scoreMsg += ("🟢<@{}>: {} ".format(player, score))
-                else:
-                    scoreMsg += ("🔴<@{}>: {} ".format(player, score))
                 # point emojis
                 if player in scoresPrev and player in scoresPrevKeys:
                     scoreDiff = score - scoresPrev[player]
@@ -481,6 +477,10 @@ async def on_message(message):                                                  
                         scoreMsg += ("⬆️")
                     elif indexDiff > 0:
                         scoreMsg += ("⬇️")
+                if player in correct:
+                    scoreMsg += ("🟢<@{}>: {} ".format(player, score))
+                else:
+                    scoreMsg += ("🔴<@{}>: {} ".format(player, score))
                 scoreMsg += ("\n")
                     
             await channel.send(scoreMsg)
