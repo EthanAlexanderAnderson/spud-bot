@@ -347,26 +347,26 @@ async def on_message(message):                                                  
             outh += "- Undo"
         elif len(msgh) == 2:
             if msgh[1].capitalize() == "Commands":
-                outh += 'Commands:\n'
-                outh += "- Playing:\n"
+                outh += '**Commands:**\n'
+                outh += "- **Playing:**\n"
                 outh += "-- dreamplay\n"
                 outh += "-- dreamreveal\n"
                 outh += "-- dreamleave\n"
-                outh += "- Adding:\n"
+                outh += "- **Adding:**\n"
                 outh += "-- dreamadd\n"
                 outh += "-- dreamfake\n"
                 outh += "-- dreamAI\n"
-                outh += "- Info:\n"
+                outh += "- **Info:**\n"
                 outh += "-- dreamcount\n"
                 outh += "-- dreamsend\n"
                 outh += "-- dreamname\n"
                 outh += "-- dreamhelp\n"
-                outh += "- Functions:\n"
+                outh += "- **Functions:**\n"
                 outh += "-- dreamskip\n"
                 outh += "-- dreamreset\n"
                 outh += "-- dreamundo"
             if msgh[1].capitalize() == "Bonus":
-                outh += "Bonuses:\n"
+                outh += "**Bonuses:**\n"
                 outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect. Underdog bonus scales with number of players incorrect from the top.\n"
                 outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more. Streak bonus scales on streak intervals of 5.\n"
                 outh += "Biggest Loser - Recieve +1 for 5 incorrect answers in a row.\n"
@@ -374,11 +374,11 @@ async def on_message(message):                                                  
                 outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
                 outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1.\n"
                 outh += "Bottom Feeder - Receive +1 for remaining last place for more than 5 rounds.\n"
-                outh += "Rare Bonuses:\n"
+                outh += "**Rare Bonuses:**\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
             if msgh[1].capitalize() == "Flags":
-                outh += "Flags:\n"
+                outh += "**Flags:**\n"
                 outh += "# = Number of players.\n"
                 outh += "c = Censor names.\n"
                 outh += "f = Include fake dreams.\n"
@@ -387,7 +387,7 @@ async def on_message(message):                                                  
                 outh += "--- NOTE: Number flag must be the first\n"
                 outh += "-- ex: /dreamplay 3 b f"
             if msgh[1].capitalize() == "Undo":
-                outh += "Undo:\n"
+                outh += "**Undo:**\n"
                 outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
                 outh += "/dreamundo [dream number] [dreamer name]\n"
                 outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
@@ -520,7 +520,7 @@ async def on_message(message):                                                  
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
             keys = list(scores.keys())
             msg = answer
-            scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
+            scoreMsg = "**Answer:** " + msg + "\n" + "**Scores:** \n"  
             for player, score in scores.items():
                 # point emojis
                 if player in scoresPrev and player in scoresPrevKeys:
@@ -544,7 +544,7 @@ async def on_message(message):                                                  
             await channel.send(scoreMsg)
 
             # bonus messages (only send if anything has been added to the message)
-            if bonus and bonusMsg != "BONUSES:\n":
+            if bonus and bonusMsg != "**BONUSES:**\n":
                 await channel.send(bonusMsg)
 
             # reset
