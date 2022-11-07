@@ -459,7 +459,7 @@ async def on_message(message):                                                  
 
             # evaluate bonuses
             if bonus:
-                bonusMsg = "BONUSES:\n"
+                bonusMsg = "**BONUSES:**\n"
                 streakMsg = ""
                 breakerMsg = ""
                 scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
