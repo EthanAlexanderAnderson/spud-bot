@@ -467,9 +467,10 @@ async def on_message(message):                                                  
             for player, score in scores.items():
                 # point emojis
                 if player in scoresPrev and player in scoresPrevKeys:
-                    scoreDiff = score - scoresPrev[player]
                     # TODO not working for scorediff 2
-                    await channel.send("{}: {} - {}".format(player, score, scoresPrev[player]))
+                    await channel.send("PRE {}: {} - {}".format(player, score, scoresPrev[player]))
+
+                    scoreDiff = score - scoresPrev[player]
                     if scoreDiff > 1:
                         scoreMsg += ("{}".format(emojiNums[scoreDiff]))
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
@@ -500,6 +501,6 @@ async def on_message(message):                                                  
             namesGuessed = []
             scoresPrev = scores
             scoresPrevKeys = list(scoresPrev)
-
+            await channel.send("POST {}: {} - {}".format(player, score, scoresPrev[player]))
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
