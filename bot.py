@@ -484,7 +484,7 @@ async def on_message(message):                                                  
                     scoreDiff = score - scoresPrev[player]
                     indexDiff = keys.index(player) - scoresPrevKeys.index(player)
                 else:
-                    scoreDiff = score
+                    scoreDiff = (score-1)
                     indexDiff = 0
                 if indexDiff < 0:
                     scoreMsg += ("⬆️")
