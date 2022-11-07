@@ -179,7 +179,7 @@ async def on_message(message):                                                  
                         censored[i] = "(###"
             msg = (" ").join(censored)
 
-        dreamMsg = channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
+        dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
         dreamMsgID = dreamMsg.id
         await message.channel.send(dreamMsgID)
 
