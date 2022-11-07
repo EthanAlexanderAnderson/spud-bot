@@ -350,6 +350,7 @@ async def on_message(message):                                                  
                 outh += "- Playing:\n"
                 outh += "-- dreamplay\n"
                 outh += "-- dreamreveal\n"
+                outh += "-- dreamleave\n"
                 outh += "- Adding:\n"
                 outh += "-- dreamadd\n"
                 outh += "-- dreamfake\n"
