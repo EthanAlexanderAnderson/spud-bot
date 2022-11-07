@@ -339,8 +339,9 @@ async def on_message(message):                                                  
         outh = ""
         if len(msgh) == 1:
             outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
-            outh += "Bonus (Description of each bonus point type)\n"
-            outh += "Flag (Description of each gameplay flag)"
+            outh += "- Bonus\n"
+            outh += "- Flag\n"
+            outh += "- Undo"
         elif len(msgh) == 2:
             if msgh[1].capitalize() == "Bonus":
                 outh += "Bonuses:\n"
@@ -359,9 +360,14 @@ async def on_message(message):                                                  
                 outh += "c = Censor names.\n"
                 outh += "f = Include fake dreams.\n"
                 outh += "AI = Include AI dreams.\n"
-                outh += "b = include bonus points.\n"
+                outh += "b = Include bonus points.\n"
                 outh += "--- NOTE: Number flag must be the first\n"
                 outh += "-- ex: /dreamplay 3 b f"
+            if msgh[1].capitalize() == "Undo":
+                outh += "Undo:\n"
+                outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
+                outh += "/dreamundo [dream number] [dreamer name]\n"
+                outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
         await message.channel.send(outh)
 
     elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
