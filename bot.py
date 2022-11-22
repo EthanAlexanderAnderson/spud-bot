@@ -194,7 +194,7 @@ async def on_message(message):                                                  
             for i in range (len(split)//2,len(split)-5):
                 if len(split[i]) == 5:
                     split[i] = "gnome"
-                    i = 9999
+                    break
             msg = (" ").join(split)
 
         dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
