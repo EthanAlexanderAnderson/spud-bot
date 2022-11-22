@@ -364,6 +364,7 @@ async def on_message(message):                                                  
                 outh += "-- dreamcount\n"
                 outh += "-- dreamsend\n"
                 outh += "-- dreamname\n"
+                outh += "-- dreamprofile\n"
                 outh += "-- dreamhelp\n"
                 outh += "- **Functions:**\n"
                 outh += "-- dreamskip\n"
