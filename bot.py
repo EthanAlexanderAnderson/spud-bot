@@ -79,8 +79,12 @@ async def on_message(message):                                                  
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
         if dreamer not in namesStrict:                                          # input validation
-            await message.channel.send("Error: Invalid dreamer name")           # throw error to user
-            return
+            # if name not given, check profiles
+            if redis.exists("&"+message.author.id):
+                dreamer = (redis.get("&"+message.author.id))
+            else:
+                await message.channel.send("Error: Invalid dreamer name / missing profile")           # throw error to user
+                return
         i = 0
         while (redis.exists("&dream"+str(i))):                                  # find what numbers are taken to not override
             i+=1
