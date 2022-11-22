@@ -419,7 +419,7 @@ async def on_message(message):                                                  
 
             elif len(msg) == 2:
                 # if 1 in names strict, show profile of that user
-                userAT = msg[1][2:-1]
+                userID = msg[1][2:-1]
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
                 await message.channel.send("Profile stats coming soon")
