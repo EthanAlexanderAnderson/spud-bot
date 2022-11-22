@@ -586,12 +586,14 @@ async def on_message(message):                                                  
                     bonusMsg += ("Irony Bonus: " + ironyMsg + "\n")
 
             # gnome mode
+            gnomeMsg = "**GNOMED:** "
             if gnome and answer == "Gnome":
                 for player in guessed:
                     if player not in correct:
                         scores[player] -= 10
                         if scores[player] < 0:
                             scores[player] = 0
+                        gnomeMsg += "<@{}>, ".format(player)
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
@@ -623,6 +625,9 @@ async def on_message(message):                                                  
             # bonus messages (only send if anything has been added to the message)
             if bonus and bonusMsg != "**BONUSES:**\n":
                 await channel.send(bonusMsg)
+            # only send message if someone was gnomed
+            if gnome and gnomeMsg != "**GNOMED:** ":
+                await channel.send(gnomeMsg)
 
             # reset
             guessed = []
