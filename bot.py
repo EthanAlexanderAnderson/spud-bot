@@ -421,8 +421,8 @@ async def on_message(message):                                                  
             elif len(msg) == 4:
                 # if 1 == link and 2 in names strict and 3 is a user id, link that user id to that name
                 userID = msg[3]
-            redis.set(("&"+name), str(id))
-            await message.channel.send("Profile " + userID + " has been assigned to " + name)
+            redis.set(("&"+name), str(userID))
+            await message.channel.send("Profile " + int(userID) + " has been assigned to " + name)
             
 
     # for scoring (must be at the bottom to not interfere with other commands)
