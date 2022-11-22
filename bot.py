@@ -191,7 +191,7 @@ async def on_message(message):                                                  
         split = msg.split(" ")
         gnomeChance = random.randint(0, 4)     
         if gnome and len(split) > 20 and gnomeChance >= 0: #TODO change >= to == after testing is complete
-            for i in range (len(split)/2,len(split)-5):
+            for i in range (len(split)//2,len(split)-5):
                 if len(split[i]) == 5:
                     split[i] = "gnome"
                     i = 9999
