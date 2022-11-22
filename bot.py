@@ -503,6 +503,7 @@ async def on_message(message):                                                  
                 bonusMsg = "**BONUSES:**\n"
                 streakMsg = ""
                 breakerMsg = ""
+                ironyMsg = ""
                 scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
                 keys = list(scores.keys())
                 # underdog bonus
@@ -556,6 +557,16 @@ async def on_message(message):                                                  
                         scores[player] += 1
                         breakerMsg += "<@{}>, ".format(player)
                     bonusMsg += ("Streak Breakers: " + breakerMsg + "\n")
+                # Irony bonus
+                irony = False
+                for player in guessed:
+                    if redis.get("&" + str(player)) == answer and redis.get("&" + str(player)) not in correct:
+                        irony = True
+                if irony:
+                    for player in correct:
+                        scores[player] += 1
+                        ironyMsg += "<@{}>, ".format(player)
+                    bonusMsg += ("Irony Bonus: " + ironyMsg + "\n")
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
