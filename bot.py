@@ -347,6 +347,31 @@ async def on_message(message):                                                  
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
                 await message.channel.send(outh)
 
+    elif message.content.startswith('/dreamprofile'):
+        msg = message.content.split(" ")                                   # split message
+        if len(msg) <= 2:
+            # profile displaying
+            if len(msg) == 1:
+                # show profile of user who sent message
+                await message.channel.send("Profile displaying coming soon")
+
+            elif len(msg) == 2 and msg[1].capitalize() in namesStrict:
+                # if 1 in names strict, show profile of that user
+                await message.channel.send("Profile displaying coming soon ")
+
+        elif len(msg) > 2 and msg[1].lower() == 'link' and msg[2].capitalize() in namesStrict:
+            # profile linking
+            name = msg[2]
+            if len(msg) == 3:
+                # if 1 == link and 2 in names strict, link user id to that name
+                userID = message.author.id
+            elif len(msg) == 4:
+                # if 1 == link and 2 in names strict and 3 is a user id, link that user id to that name
+                userID = msg[3]
+            redis.set(("&"+name), str(id))
+            await message.channel.send("Profile " + userID + " has been assigned to " + name)
+            
+
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guessCount < players and message.author.id != client.user.id:
 
