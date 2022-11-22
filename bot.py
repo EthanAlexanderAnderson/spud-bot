@@ -122,6 +122,8 @@ async def on_message(message):                                                  
                     AI = True
                 if ('B' in msg or 'b' in msg):
                     bonus = True
+                if ('G' in msg or 'g' in msg):
+                    gnome = True
 
         # generate random number for dream (buffer is used to avoid repeats)
         maxCount = dreamCount
