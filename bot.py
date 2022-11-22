@@ -416,7 +416,7 @@ async def on_message(message):                                                  
                 # if 1 in names strict, show profile of that user
                 await message.channel.send("Profile displaying coming soon ")
 
-        elif len(msg) > 2 and msg[1].lower() == 'link' and msg[2].capitalize() in namesStrict:
+        elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
             name = msg[2]
             if len(msg) == 3:
