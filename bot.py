@@ -28,7 +28,7 @@ players = 0
 channelplaying = 0
 dreamMsg = 0
 # flags
-censor = fake = AI = False
+censor = fake = AI = gnome = False
 # bonus variables
 streaks = defaultdict(int)
 streaksBroken = 0
@@ -45,7 +45,7 @@ async def on_ready():
 @client.event
 async def on_message(message):                                                  # read sent message
     global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg
-    global censor, fake, AI
+    global censor, fake, AI, gnome
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
@@ -108,6 +108,7 @@ async def on_message(message):                                                  
                 censor = False
                 fake = False
                 AI = False
+                gnome = False
                 bonus = False
                 players = 0
                 if msg[1].isdigit():
@@ -183,6 +184,16 @@ async def on_message(message):                                                  
                     elif censored[i].lower() == ("("+names[j].lower()):
                         censored[i] = "(###"
             msg = (" ").join(censored)
+
+        # gnome mode
+        split = msg.split(" ")
+        gnomeChance = random.randint(0, 4)     
+        if gnome and len(split) > 20 and gnomeChance >= 0: #TODO change >= to == after testing is complete
+            for i in range (len(split)/2,len(split)-5):
+                if len(split[i]) == 5:
+                    split[i] = "gnome"
+                    i = 9999
+            msg = (" ").join(split)
 
         dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
