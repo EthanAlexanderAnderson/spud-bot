@@ -408,13 +408,21 @@ async def on_message(message):                                                  
         msg = message.content.split(" ")                                   # split message
         if len(msg) <= 2:
             # profile displaying
+            # note to self: profile stats should be under first name instead of ID, to support alt accounts
+            # stats:  dreamcount, all time score (exp), correct ratio, longest streak
             if len(msg) == 1:
                 # show profile of user who sent message
-                await message.channel.send("Profile displaying coming soon")
+                userID = message.author.id
+                name = redis.get("&" + str(userID))
+                await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
+                await message.channel.send("Profile stats coming soon")
 
-            elif len(msg) == 2 and msg[1].capitalize() in namesStrict:
+            elif len(msg) == 2:
                 # if 1 in names strict, show profile of that user
-                await message.channel.send("Profile displaying coming soon ")
+                userID = msg[2][2:-1]
+                name = redis.get("&" + str(userID))
+                await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
+                await message.channel.send("Profile stats coming soon")
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
