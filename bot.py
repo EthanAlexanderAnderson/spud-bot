@@ -241,6 +241,7 @@ async def on_message(message):                                                  
         else:       # if no name
             for i in range(count):
                 perPerson[redis.get("&dreamer" + str(i))] += 1
+            perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
             await message.channel.send("Count per name: ")
             msgout = ""
             for key in perPerson:
