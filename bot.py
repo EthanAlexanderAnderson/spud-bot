@@ -15,6 +15,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
 aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"]]
+emojiNums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 answer = ""
 buffer = []
 guessCount = 0
@@ -22,8 +23,10 @@ guessCountUnique = 0
 namesGuessed = []
 guessed = []
 scores = defaultdict(int)
+scoresPrev = defaultdict(int)
 players = 0
 channelplaying = 0
+dreamMsg = 0
 # flags
 censor = fake = AI = False
 # bonus variables
@@ -31,6 +34,7 @@ streaks = defaultdict(int)
 streaksBroken = 0
 correct = []
 bonus = False
+bottomStreak = ['', 0]
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -40,7 +44,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, players, channelplaying, streaks, streaksBroken, correct, bonus
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg
     global censor, fake, AI
 
     if message.content.startswith('/send '):                                    # for /send
@@ -176,7 +180,7 @@ async def on_message(message):                                                  
                         censored[i] = "(###"
             msg = (" ").join(censored)
 
-        await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
+        dreamMsg = await message.channel.send(msg + " ||#" + str(rng) + "||")             # sends dream and number for debug
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
@@ -316,36 +320,85 @@ async def on_message(message):                                                  
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
     elif message.content.startswith('/dreamdebug'):
-        await message.channel.send("Buffer Length: " + str(len(buffer)) + "\n" + "Buffer Content: " + (', ').join(map(str, buffer)))
-        await message.channel.send("GuessCount: " + str(guessCount) + "\n" + "Guessed: " + str(guessed))
-        await message.channel.send("guessCountUnique: " + str(guessCountUnique) + "\n" + "namesGuessed: " + str(namesGuessed))
-        await message.channel.send("Scores: ")
+        debugMsg = ""
+        debugMsg += ("Buffer Length: " + str(len(buffer)) + " : " + (', ').join(map(str, buffer)) + "\n")
+        debugMsg += ("GuessCount: " + str(guessCount) + " : " + str(guessed) + "\n")
+        debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " : " + str(namesGuessed) + "\n")
+        debugMsg += ("Scores:\n")
         for player, score in scores.items():
-            await message.channel.send("<@{}>: {}".format(player, score))
-        await message.channel.send("Players: " + str(players) + "\n" + "Channel Playing: <#" + str(channelplaying) + ">")
-        await message.channel.send("Streaks: ")
+            debugMsg += ("<@{}>: {}\n".format(player, score))
+        debugMsg += ("Players: " + str(players) + "\n")
+        debugMsg += ("Channel Playing: <#" + str(channelplaying) + ">\n")
+        debugMsg += ("Streaks:\n")
         for player, streak in streaks.items():
-            await message.channel.send("<@{}>: {}".format(player, streak))
-        await message.channel.send("Streaks broken: " + str(streaksBroken))
-        await message.channel.send("Correct: " + str(correct))
-        if bonus:
-            await message.channel.send("Names by score: " + keys)
+            debugMsg += ("<@{}>: {}\n".format(player, streak))
+        debugMsg += ("Streaks broken: " + str(streaksBroken) + "\n")
+        debugMsg += ("Correct: " + str(correct) + "\n")
+        await message.channel.send(debugMsg)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         msgh = message.content.split(" ")                                   # split message
-        if len(msgh) > 1:
+        outh = ""
+        if len(msgh) == 1:
+            outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
+            outh += "- Commmands\n"
+            outh += "- Bonus\n"
+            outh += "- Flags\n"
+            outh += "- Undo"
+        elif len(msgh) == 2:
+            if msgh[1].capitalize() == "Commands":
+                outh += '**Commands:**\n'
+                outh += "- **Playing:**\n"
+                outh += "-- dreamplay\n"
+                outh += "-- dreamreveal\n"
+                outh += "-- dreamleave\n"
+                outh += "- **Adding:**\n"
+                outh += "-- dreamadd\n"
+                outh += "-- dreamfake\n"
+                outh += "-- dreamAI\n"
+                outh += "- **Info:**\n"
+                outh += "-- dreamcount\n"
+                outh += "-- dreamsend\n"
+                outh += "-- dreamname\n"
+                outh += "-- dreamhelp\n"
+                outh += "- **Functions:**\n"
+                outh += "-- dreamskip\n"
+                outh += "-- dreamreset\n"
+                outh += "-- dreamundo"
             if msgh[1].capitalize() == "Bonus":
-                outh = "Bonuses:\n"
+                outh += "**Bonuses:**\n"
                 outh += "Underdog - The lowest scorer recieves +1 when they are correct and the highest scorer is incorrect. Underdog bonus scales with number of players incorrect from the top.\n"
                 outh += "Streak - Recieve +1 for each correct answer on a streak of 5 or more. Streak bonus scales on streak intervals of 5.\n"
                 outh += "Biggest Loser - Recieve +1 for 5 incorrect answers in a row.\n"
                 outh += "Lone Wolf - If only one player is correct they recieve +1 (3+ players).\n"
                 outh += "Early Bird - The fastest answer recieves +1 when they are correct and the slowest answer is incorrect.\n"
                 outh += "Streak Breaker - When a streak of 5 or more is broken, all players correct recieve +1.\n"
-                outh = "Rare Bonuses:\n"
+                outh += "Bottom Feeder - Receive +1 for remaining last place for 5 rounds.\n"
+                outh += "**Rare Bonuses:**\n"
                 outh += "Non-conformist - Achieve Lone Wolf bonus while every incorrect player guessed the same name (4+ players).\n"
                 outh += "Mixed Bag - Achieve Lone Wolf bonus while every incorrect player guessed different names (4+ players)."
-                await message.channel.send(outh)
+            if msgh[1].capitalize() == "Flags":
+                outh += "**Flags:**\n"
+                outh += "# = Number of players.\n"
+                outh += "c = Censor names.\n"
+                outh += "f = Include fake dreams.\n"
+                outh += "AI = Include AI dreams.\n"
+                outh += "b = Include bonus points.\n"
+                outh += "--- NOTE: Number flag must be the first\n"
+                outh += "-- ex: /dreamplay 3 b f"
+            if msgh[1].capitalize() == "Undo":
+                outh += "**Undo:**\n"
+                outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
+                outh += "/dreamundo [dream number] [dreamer name]\n"
+                outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
+        await message.channel.send(outh)
+
+    elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
+        if message.author.id in scores:
+            scores.pop(message.author.id)
+            streaks.pop(message.author.id)
+            players -= 1
+            await message.channel.send("<@{}> has left the game.".format(message.author.id))
 
     elif message.content.startswith('/dreamprofile'):
         msg = message.content.split(" ")                                   # split message
@@ -396,6 +449,9 @@ async def on_message(message):                                                  
         # prevent double guess, and don't count non-name guesses
         if playerID in guessed or not converted:
             return
+        elif (guess == "Fake" and fake == False) or (guess == "AI" and AI == False):
+            await message.add_reaction("⛔")
+            return
         else:           # let the user know their vote was counted
             await message.add_reaction("✅")
                     
@@ -421,12 +477,17 @@ async def on_message(message):                                                  
             guessCountUnique += 1
             namesGuessed.append(guess.lower())
 
+        # update guess count on dream msg
+        if guessCount <= 10: # prevent index error
+            channel = client.get_channel(channelplaying)
+            await dreamMsg.add_reaction("{}".format(emojiNums[guessCount - 1]))
+
         if guessCount >= players:
             channel = client.get_channel(channelplaying)
 
             # evaluate bonuses
             if bonus:
-                bonusMsg = "BONUSES:\n"
+                bonusMsg = "**BONUSES:**\n"
                 streakMsg = ""
                 breakerMsg = ""
                 scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
@@ -440,6 +501,15 @@ async def on_message(message):                                                  
                     bonusMsg += "Underdog: <@{}>\n".format(keys[-1])
                 elif i > 1:
                     bonusMsg += "Underdog: <@{}> (x{})\n".format(keys[-1], (i))
+                # bottom feeder bonus
+                if keys[-1] == bottomStreak[0]:
+                    bottomStreak[1] += 1
+                else:
+                    bottomStreak[0] = keys[-1]
+                    bottomStreak[1] = 0
+                if bottomStreak[1] >= 5 and (bottomStreak[1]%5 == 0):
+                    scores[bottomStreak[0]] += 1
+                    bonusMsg += "Bottom Feeder: <@{}>\n".format(bottomStreak[0])
                 # streak bonus and Biggest Loser
                 for player, streak in streaks.items():
                     if streak >= 5:
@@ -476,17 +546,33 @@ async def on_message(message):                                                  
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
+            keys = list(scores.keys())
             msg = answer
-            scoreMsg = "Answer: " + msg + "\n" + "Scores: \n"  
+            scoreMsg = "**Answer:** " + msg + "\n" + "**Scores:** \n"  
             for player, score in scores.items():
-                if player in correct:
-                    scoreMsg += ("🟢<@{}>: {}\n".format(player, score))
+                # point emojis
+                if player in scoresPrev and player in scoresPrevKeys:
+                    scoreDiff = score - scoresPrev[player]
+                    indexDiff = keys.index(player) - scoresPrevKeys.index(player)
                 else:
-                    scoreMsg += ("🔴<@{}>: {}\n".format(player, score))
+                    scoreDiff = (score-1)
+                    indexDiff = 0
+                if indexDiff < 0:
+                    scoreMsg += ("⬆️")
+                elif indexDiff > 0:
+                    scoreMsg += ("⬇️")
+                else:
+                    scoreMsg += ("⬛")
+                if player in correct:
+                    scoreMsg += ("{}<@{}>: {} ".format(emojiNums[scoreDiff], player, score))
+                else:
+                    scoreMsg += ("🔴<@{}>: {} ".format(player, score))
+                scoreMsg += ("\n")
+                    
             await channel.send(scoreMsg)
 
             # bonus messages (only send if anything has been added to the message)
-            if bonus and bonusMsg != "BONUSES:\n":
+            if bonus and bonusMsg != "**BONUSES:**\n":
                 await channel.send(bonusMsg)
 
             # reset
@@ -498,6 +584,7 @@ async def on_message(message):                                                  
             breakerMsg = ""
             guessCountUnique = 0
             namesGuessed = []
-
+            scoresPrev = scores
+            scoresPrevKeys = list(scoresPrev)
 
 client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
