@@ -421,7 +421,7 @@ async def on_message(message):                                                  
             elif len(msg) == 4:
                 # if 1 == link and 2 in names strict and 3 is a user id, link that user id to that name
                 userID = msg[3]
-            redis.set(("&"+name), str(userID))
+            redis.set("&" + str(userID),(name))
             await message.channel.send("Profile <@" + str(userID) + "> has been assigned to " + name)
             
 
