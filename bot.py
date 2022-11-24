@@ -189,7 +189,7 @@ async def on_message(message):                                                  
 
         # gnome mode
         split = msg.split(" ")
-        gnomeChance = random.randint(0, 3)     
+        gnomeChance = random.randint(0, 4)     
         if gnome and len(split) > 16 and gnomeChance == 0:
             for i in range (len(split)//2,len(split)-5):
                 if len(split[i]) == 5:
