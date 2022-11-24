@@ -512,7 +512,7 @@ async def on_message(message):                                                  
             channel = client.get_channel(channelplaying)
             await dreamMsg.add_reaction("{}".format(emojiNums[guessCount - 1]))
 
-        if guessCount >= players:
+        if guessCount >= players and len(guessed) > 0:
             channel = client.get_channel(channelplaying)
 
             # evaluate bonuses
