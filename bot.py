@@ -14,7 +14,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make all multi-line sends into single lines to eliminate cooldown" issue
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
-aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "eman", "eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
+aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
 emojiNums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 answer = ""
 buffer = []
@@ -577,7 +577,7 @@ async def on_message(message):                                                  
                 # Irony bonus
                 irony = False
                 for player in guessed:
-                    if redis.get("&" + str(player)) == answer and redis.get("&" + str(player)) not in correct:
+                    if redis.get("&" + str(player)) == answer and player not in correct:
                         irony = True
                 if irony:
                     for player in correct:
