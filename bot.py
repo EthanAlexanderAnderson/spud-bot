@@ -189,8 +189,8 @@ async def on_message(message):                                                  
 
         # gnome mode
         split = msg.split(" ")
-        gnomeChance = random.randint(0, 4)     
-        if gnome and len(split) > 20 and gnomeChance == 0:
+        gnomeChance = random.randint(0, 3)     
+        if gnome and len(split) > 16 and gnomeChance == 0:
             for i in range (len(split)//2,len(split)-5):
                 if len(split[i]) == 5:
                     split[i] = "gnome"
@@ -479,7 +479,7 @@ async def on_message(message):                                                  
         # prevent double guess, and don't count non-name guesses
         if playerID in guessed or not converted:
             return
-        elif (guess == "Fake" and fake == False) or (guess == "AI" and AI == False):
+        elif (guess == "Fake" and fake == False) or (guess == "AI" and AI == False) or (guess == "Gnome" and gnome == False):
             await message.add_reaction("⛔")
             return
         else:           # let the user know their vote was counted
