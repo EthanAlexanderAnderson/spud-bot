@@ -38,7 +38,9 @@ correct = []
 bonus = False
 bottomStreak = ['', 0]
 
-def dreamplay(msg):  
+def dreamplay(msg): 
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg, roundOver
+    global censor, fake, AI, gnome 
     guessCount = 0
     guessed = []
     roundOver = False
