@@ -55,3 +55,4 @@ def dreamhelp(msgh):
             outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
             outh += "/dreamundo [dream number] [dreamer name]\n"
             outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
+    return outh
