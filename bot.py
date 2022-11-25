@@ -153,7 +153,6 @@ async def on_ready():
 async def on_reaction_add(reaction, user):
     global channelplaying, adminID
     if reaction.message.author.id == client.user.id and user.id == adminID:
-        await reaction.message.channel.send("reaction added. {} --- {}".format(reaction.message.author.id, client.user.id))
         # channelplaying = reaction.message.channel.id
         dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
 
