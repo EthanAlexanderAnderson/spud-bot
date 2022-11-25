@@ -215,7 +215,7 @@ async def on_message(message):                                                  
         adminID = message.author.id
         msg = message.content.split(" ")
         dreamMsg = await message.channel.send(dreamplay(msg))             # sends dream
-        dreamMsg.add_reaction("⏩")
+        await dreamMsg.add_reaction("⏩")
 
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
