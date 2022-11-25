@@ -154,7 +154,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.author.id == client.user.id and user.id != client.user.id:
         await reaction.message.channel.send("reaction added. {} --- {}".format(reaction.message.author.id, client.user.id))
         # channelplaying = reaction.message.channel.id
-        dreamplay(["/dp"])
+        dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
 
 @client.event
 async def on_message(message):                                                  # read sent message
