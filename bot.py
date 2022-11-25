@@ -150,6 +150,14 @@ async def on_ready():
 
 
 @client.event
+async def on_reaction_remove(reaction, user):
+    global channelplaying
+    await reaction.message.channel.send("reaction removed")
+    if reaction.message.author.id == client.user.id:
+        channelplaying = reaction.message.channel.id
+        dreamplay("/dp")
+
+
 async def on_message(message):                                                  # read sent message
     global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg, roundOver
     global censor, fake, AI, gnome
