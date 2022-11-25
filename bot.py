@@ -27,6 +27,7 @@ scoresPrev = defaultdict(int)
 players = 0
 channelplaying = 0
 dreamMsg = 0
+roundOver = False
 # flags
 censor = fake = AI = gnome = False
 # bonus variables
@@ -44,7 +45,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg
+    global answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg, roundOver
     global censor, fake, AI, gnome
 
     if message.content.startswith('/send '):                                    # for /send
@@ -98,6 +99,7 @@ async def on_message(message):                                                  
         # initialize variables
         guessCount = 0
         guessed = []
+        roundOver = False
         msg = message.content.split(" ")
         dreamCount = int(redis.get("&dreamcount"))
         fakeCount = int(redis.get("&fakecount"))
@@ -456,7 +458,7 @@ async def on_message(message):                                                  
             
 
     # for scoring (must be at the bottom to not interfere with other commands)
-    elif guessCount < players and message.author.id != client.user.id:
+    elif guessCount < players and message.author.id != client.user.id and roundOver == False:
 
         guess = message.content
         playerID = message.author.id
@@ -484,36 +486,39 @@ async def on_message(message):                                                  
             return
         else:           # let the user know their vote was counted
             await message.add_reaction("✅")
-                    
+
+        # add new player to score list
+        if playerID not in scores:
+            scores[playerID] = 0  
+
+        # give score for corect answer
         if guess.lower() == answer.lower():
-            if playerID not in scores:
-                scores[playerID] = 0
             scores[playerID] += 1
             streaks[playerID] += 1
             correct.append(playerID)
         else:
-            if playerID not in scores:
-                scores[playerID] = 0
             if streaks[playerID] > 0:
-                streaks[playerID] = 0
                 if streaks[playerID] >= 5:
                     streaksBroken += 1
+                streaks[playerID] = 0
             else:
                 streaks[playerID] -= 1
 
+        # tracking who guessed and what they guessed
         guessed.append(playerID)
         guessCount += 1
-        if guess.lower() not in namesGuessed:
+        if guess not in namesGuessed:
             guessCountUnique += 1
-            namesGuessed.append(guess.lower())
+            namesGuessed.append(guess)
 
         # update guess count on dream msg
         if guessCount <= 10: # prevent index error
-            channel = client.get_channel(channelplaying)
+            # TODO channel = client.get_channel(channelplaying)  remove this i think
             await dreamMsg.add_reaction("{}".format(emojiNums[guessCount - 1]))
 
         if guessCount >= players and len(guessed) > 0:
             channel = client.get_channel(channelplaying)
+            roundOver = True
 
             # evaluate bonuses
             if bonus:
