@@ -149,12 +149,12 @@ async def on_ready():
     print('Bot is ready.')
 
 @client.event
-async def on_reaction_remove(reaction, user):
+async def on_reaction_add(reaction, user):
     global channelplaying
-    await reaction.message.channel.send("reaction removed")
+    await reaction.message.channel.send("reaction added. {} --- {}".format(reaction.message.author.id, client.user.id))
     if reaction.message.author.id == client.user.id:
-        channelplaying = reaction.message.channel.id
-        dreamplay("/dp")
+        # channelplaying = reaction.message.channel.id
+        dreamplay(["/dp"])
 
 @client.event
 async def on_message(message):                                                  # read sent message
