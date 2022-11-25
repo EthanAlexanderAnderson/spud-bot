@@ -38,7 +38,7 @@ correct = []
 bonus = False
 bottomStreak = ['', 0]
 
-def dreamplay(msg, message):  
+def dreamplay(msg):  
     guessCount = 0
     guessed = []
     roundOver = False
@@ -56,7 +56,6 @@ def dreamplay(msg, message):
             players = 0
             if msg[1].isdigit():
                 players = int(msg[1])
-                channelplaying = message.channel.id
             if ('C' in msg or 'c' in msg):
                 censor = True
             if ('F' in msg or 'f' in msg):
@@ -202,8 +201,9 @@ async def on_message(message):                                                  
     
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
         # initialize variables
+        channelplaying = message.channel.id
         msg = message.content.split(" ")
-        dreamMsg = await message.channel.send(dreamplay(msg, message))             # sends dream
+        dreamMsg = await message.channel.send(dreamplay(msg))             # sends dream
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
         # cheat prevention
