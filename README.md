@@ -2,8 +2,8 @@
 
 # Spam Post User Database - Discord Bot
 
-## Commands:
 [Square Bracket] = Required Flag,   (Round Bracket) = Optional Flag
+## Commands:
 
 - /add [key] [link] - Adds image
 
