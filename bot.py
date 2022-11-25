@@ -2,6 +2,7 @@ from pickle import TRUE
 import discord
 from discord.ext import commands
 import redis
+import random
 import os
 from collections import defaultdict
 from dreamgame.dreamhelp import dreamhelp
