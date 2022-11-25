@@ -215,7 +215,7 @@ async def on_message(message):                                                  
         adminID = message.author.id
         msg = message.content.split(" ")
         dreamMsg = await message.channel.send(dreamplay(msg))             # sends dream
-        dreamMsg.add_reaction("▶")
+        dreamMsg.add_reaction("⏩")
 
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
@@ -582,7 +582,7 @@ async def on_message(message):                                                  
                     scoreMsg += ("{}<@{}>: {} ".format(emojiNums[scoreDiff], player, score))
                 elif player in correct and not bonus:
                     scoreMsg += ("🟢<@{}>: {} ".format(player, score))
-                elif gnome and scoreDiff < 0:
+                elif gnome and answer == "Gnome":
                     scoreMsg += ("👺<@{}>: {} ".format(player, score))
                 else:
                     scoreMsg += ("🔴<@{}>: {} ".format(player, score))
