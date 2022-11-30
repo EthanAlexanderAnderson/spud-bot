@@ -374,6 +374,18 @@ async def on_message(message):                                                  
         debugMsg += ("Correct: " + str(correct) + "\n")
         await message.channel.send(debugMsg)
 
+    elif message.content.startswith('/dreamkeys'):     
+        keys = redis.keys(pattern='&*')
+        fullKeys = (', ').join(keys)
+        length = len(fullKeys)
+        i = 0
+        while length > 1999:
+            await message.channel.send(fullKeys[i:i+1999])
+            i = i + 1999
+            length = length - 1999
+        await message.channel.send(fullKeys[i:length])
+
+
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         await message.channel.send(dreamhelp(message.content.split(" ")))
 
