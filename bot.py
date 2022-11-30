@@ -142,7 +142,7 @@ def dreamplay(msg):
                 answer = "Gnome"
                 break
         msg = (" ").join(split)
-    return msg
+    return ("```" + msg + "```")
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
@@ -154,7 +154,8 @@ async def on_reaction_add(reaction, user):
     global channelplaying, adminID
     if reaction.message.author.id == client.user.id and user.id == adminID:
         # channelplaying = reaction.message.channel.id
-        dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
+        if (reaction.emoji == "⏩"):
+            dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
 
 @client.event
 async def on_message(message):                                                  # read sent message
