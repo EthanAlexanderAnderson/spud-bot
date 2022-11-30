@@ -142,7 +142,7 @@ def dreamplay(msg):
                 answer = "Gnome"
                 break
         msg = (" ").join(split)
-    return ("```" + msg + "```")
+    return ("> " + msg)
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
