@@ -151,7 +151,7 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    global channelplaying, adminID
+    global channelplaying, adminID, dreamMsg
     if reaction.message.author.id == client.user.id and user.id == adminID:
         # channelplaying = reaction.message.channel.id
         if (reaction.emoji == "⏩"):
