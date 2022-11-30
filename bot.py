@@ -156,6 +156,7 @@ async def on_reaction_add(reaction, user):
         # channelplaying = reaction.message.channel.id
         if (reaction.emoji == "⏩"):
             dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
+            await dreamMsg.add_reaction("⏩")
 
 @client.event
 async def on_message(message):                                                  # read sent message
