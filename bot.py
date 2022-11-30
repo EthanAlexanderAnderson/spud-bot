@@ -379,9 +379,9 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
         msg = message.content.split(" ")
-        target = msg[1]
         leaver = 0
         if message.author.id == adminID and len(msg) > 1:
+            target = msg[1]
             leaver = target[2:-1]
         elif message.author.id in scores:
             leaver = message.author.id
