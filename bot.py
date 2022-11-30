@@ -378,11 +378,17 @@ async def on_message(message):                                                  
         await message.channel.send(dreamhelp(message.content.split(" ")))
 
     elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
-        if message.author.id in scores:
-            scores.pop(message.author.id)
-            streaks.pop(message.author.id)
-            players -= 1
-            await message.channel.send("<@{}> has left the game.".format(message.author.id))
+        msg = message.content.split(" ")
+        target = msg[1]
+        leaver = 0
+        if message.author.id == adminID and len(msg) > 1:
+            leaver = target[2:-1]
+        elif message.author.id in scores:
+            leaver = message.author.id
+        scores.pop(leaver)
+        streaks.pop(leaver)
+        players -= 1
+        await message.channel.send("<@{}> has left the game.".format(leaver))
 
     elif message.content.startswith('/dreamprofile'):
         msg = message.content.split(" ")                                   # split message
