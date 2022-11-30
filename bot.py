@@ -376,14 +376,14 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamkeys'):     
         keys = redis.keys(pattern='&*')
-        fullKeys = (', ').join(keys)
+        fullKeys = (', ').join(sorted(keys))
         length = len(fullKeys)
         i = 0
         while length > 1999:
             await message.channel.send(fullKeys[i:i+1999])
             i = i + 1999
             length = length - 1999
-        await message.channel.send(fullKeys[i:length])
+        await message.channel.send(fullKeys[i])
 
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
