@@ -198,6 +198,7 @@ async def on_message(message):                                                  
             # if name not given, check profiles
             if redis.exists("&" + str(message.author.id)):
                 dreamer = (redis.get("&" + str(message.author.id)))
+                dream = (' ').join(dreamadd[1:])
             else:
                 await message.channel.send("Error: Invalid dreamer name / missing profile")           # throw error to user
                 return
