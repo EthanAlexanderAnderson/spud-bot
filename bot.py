@@ -194,8 +194,18 @@ async def on_message(message):                                                  
             return
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
-        if dreamer not in namesStrict:                                          # input validation
-            # if name not given, check profiles
+        # just to help people who accidentally use "/dreamadd fake" instead of "/dreamfake"
+        if dreamer == "Fake":
+            i = 0
+            while (redis.exists("&fake"+str(i))):                               # find what numbers are taken to not override
+                i+=1
+            redis.set(("&fake"+str(i)), str(fake))                              # set dream
+            if (i > int(redis.get("&fakecount"))):                              # increase dream count if required
+                redis.set("&fakecount", str(i))
+            await message.channel.send("Fake dream {} has been added.".format(redis.get("&fakecount")))
+            return
+        # if name not given, check profiles
+        elif dreamer not in namesStrict:                                        # input validation
             if redis.exists("&" + str(message.author.id)):
                 dreamer = (redis.get("&" + str(message.author.id)))
                 dream = (' ').join(dreamadd[1:])
