@@ -492,7 +492,6 @@ async def on_message(message):                                                  
                     profileCorrectCount = int(redis.get(i)[0])
                     profileCorrectCount += 1
                     redis.set(i, str(profileCorrectCount) + redis.get(i)[1::])
-                    await message.channel.send("success " + profileCorrectCount)
         else:
             if streaks[playerID] > 0:
                 if streaks[playerID] >= 5:
