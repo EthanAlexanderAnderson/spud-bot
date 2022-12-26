@@ -491,9 +491,9 @@ async def on_message(message):                                                  
             profileKeys = redis.keys(pattern='%*')
             for i in profileKeys:
                 if i == ("%" + redis.get("&" + str(playerID))):
-                    profileCorrectCount = int(redis.get(i)[0])
-                    profileCorrectCount += 1
-                    redis.set(i, str(profileCorrectCount) + redis.get(i)[1::])
+                    stats = redis.get(i).split(",")
+                    stats[0] = str(int(stats[0]) + 1)
+                    redis.set(i, stats.join(","))
         else:
             if streaks[playerID] > 0:
                 if streaks[playerID] >= 5:
@@ -501,6 +501,13 @@ async def on_message(message):                                                  
                 streaks[playerID] = 0
             else:
                 streaks[playerID] -= 1
+            # profile stats
+            profileKeys = redis.keys(pattern='%*')
+            for i in profileKeys:
+                if i == ("%" + redis.get("&" + str(playerID))):
+                    stats = redis.get(i).split(",")
+                    stats[1] = str(int(stats[1]) + 1)
+                    redis.set(i, stats.join(","))
 
         # tracking who guessed and what they guessed
         guessed.append(playerID)
