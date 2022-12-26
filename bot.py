@@ -489,7 +489,7 @@ async def on_message(message):                                                  
             profileKeys = redis.keys(pattern='%*')
             for i in profileKeys:
                 if i == ("%" + redis.get("&" + str(playerID))):
-                    profileCorrectCount = int(redis.get(i[0]))
+                    profileCorrectCount = int(redis.get(i)[0])
                     profileCorrectCount += 1
                     redis.set(i, str(profileCorrectCount) + redis.get(i)[1::])
                     await message.channel.send("success " + profileCorrectCount)
