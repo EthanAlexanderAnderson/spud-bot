@@ -424,14 +424,16 @@ async def on_message(message):                                                  
                 userID = message.author.id
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                await message.channel.send("Profile stats coming soon")
+                await message.channel.send("Total Corrects: " + redis.get("%" + name))
+                await message.channel.send("More profile stats coming soon")
 
             elif len(msg) == 2:
                 # if 1 in names strict, show profile of that user
                 userID = msg[1][2:-1]
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                await message.channel.send("Profile stats coming soon")
+                await message.channel.send("Total Corrects: " + redis.get("%" + name))
+                await message.channel.send("More profile stats coming soon")
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
