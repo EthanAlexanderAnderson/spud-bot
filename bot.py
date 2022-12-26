@@ -493,7 +493,7 @@ async def on_message(message):                                                  
                 if i == ("%" + redis.get("&" + str(playerID))):
                     stats = redis.get(i).split(",")
                     stats[0] = str(int(stats[0]) + 1)
-                    redis.set(i, stats.join(","))
+                    redis.set(i, (",").join(stats))
         else:
             if streaks[playerID] > 0:
                 if streaks[playerID] >= 5:
@@ -507,7 +507,7 @@ async def on_message(message):                                                  
                 if i == ("%" + redis.get("&" + str(playerID))):
                     stats = redis.get(i).split(",")
                     stats[1] = str(int(stats[1]) + 1)
-                    redis.set(i, stats.join(","))
+                    redis.set(i, (",").join(stats))
 
         # tracking who guessed and what they guessed
         guessed.append(playerID)
