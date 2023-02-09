@@ -519,10 +519,9 @@ async def on_message(message):                                                  
 
         # update guess count on dream msg
         if guessCount <= 10: # prevent index error
-            # TODO channel = client.get_channel(channelplaying)  remove this i think
             await dreamMsg.add_reaction("{}".format(emojiNums[guessCount - 1]))
 
-        if guessCount >= players and len(guessed) > 0:
+        if guessCount == players and len(guessed) > 0:
             channel = client.get_channel(channelplaying)
             roundOver = True
 
