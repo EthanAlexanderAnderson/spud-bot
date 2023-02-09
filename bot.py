@@ -285,6 +285,7 @@ async def on_message(message):                                                  
 
     # Resets all global variables
     elif message.content.startswith('/dreamreset'):
+        # TODO should reset really wipe buffer?
         buffer = []
         guessCount = 0
         guessed = []
@@ -563,7 +564,7 @@ async def on_message(message):                                                  
                 for player in guessed:
                     if redis.get("&" + str(player)) == answer and player not in correct:
                         irony = True
-                if irony:
+                if irony and len(correct) > 0:
                     for player in correct:
                         scores[player] += 1
                         ironyMsg += "<@{}>, ".format(player)
