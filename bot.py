@@ -194,8 +194,18 @@ async def on_message(message):                                                  
             return
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
         dream = (' ').join(dreamadd[2:])                                        # define the dream contents
-        if dreamer not in namesStrict:                                          # input validation
-            # if name not given, check profiles
+        # just to help people who accidentally use "/dreamadd fake" instead of "/dreamfake"
+        if dreamer == "Fake":
+            i = 0
+            while (redis.exists("&fake"+str(i))):                               # find what numbers are taken to not override
+                i+=1
+            redis.set(("&fake"+str(i)), str(dream))                              # set dream
+            if (i > int(redis.get("&fakecount"))):                              # increase dream count if required
+                redis.set("&fakecount", str(i))
+            await message.channel.send("Fake dream {} has been added.".format(redis.get("&fakecount")))
+            return
+        # if name not given, check profiles
+        elif dreamer not in namesStrict:                                        # input validation
             if redis.exists("&" + str(message.author.id)):
                 dreamer = (redis.get("&" + str(message.author.id)))
                 dream = (' ').join(dreamadd[1:])
@@ -415,14 +425,16 @@ async def on_message(message):                                                  
                 userID = message.author.id
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                await message.channel.send("Profile stats coming soon")
+                await message.channel.send("Total Corrects: " + redis.get("%" + name))
+                await message.channel.send("More profile stats coming soon")
 
             elif len(msg) == 2:
                 # if 1 in names strict, show profile of that user
                 userID = msg[1][2:-1]
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                await message.channel.send("Profile stats coming soon")
+                await message.channel.send("Total Corrects: " + redis.get("%" + name))
+                await message.channel.send("More profile stats coming soon")
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
@@ -476,6 +488,13 @@ async def on_message(message):                                                  
             scores[playerID] += 1
             streaks[playerID] += 1
             correct.append(playerID)
+            # profile stats
+            profileKeys = redis.keys(pattern='%*')
+            for i in profileKeys:
+                if i == ("%" + redis.get("&" + str(playerID))):
+                    stats = redis.get(i).split(",")
+                    stats[0] = str(int(stats[0]) + 1)
+                    redis.set(i, (",").join(stats))
         else:
             if streaks[playerID] > 0:
                 if streaks[playerID] >= 5:
@@ -483,6 +502,13 @@ async def on_message(message):                                                  
                 streaks[playerID] = 0
             else:
                 streaks[playerID] -= 1
+            # profile stats
+            profileKeys = redis.keys(pattern='%*')
+            for i in profileKeys:
+                if i == ("%" + redis.get("&" + str(playerID))):
+                    stats = redis.get(i).split(",")
+                    stats[1] = str(int(stats[1]) + 1)
+                    redis.set(i, (",").join(stats))
 
         # tracking who guessed and what they guessed
         guessed.append(playerID)
