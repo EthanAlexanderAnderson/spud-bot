@@ -498,7 +498,7 @@ async def on_message(message):                                                  
             # profile stats correct
             profileKeys = redis.keys(pattern='%*')
             for i in profileKeys:
-                if playerID > 999 and i == ("%" + redis.get("&" + str(playerID))):
+                if str(playerID).isdigit() and i == ("%" + redis.get("&" + str(playerID))):
                     stats = redis.get(i).split(",")
                     stats[0] = str(int(stats[0]) + 1)
                     redis.set(i, (",").join(stats))
@@ -512,7 +512,7 @@ async def on_message(message):                                                  
             # profile stats incorrect
             profileKeys = redis.keys(pattern='%*')
             for i in profileKeys:
-                if playerID > 999 and i == ("%" + redis.get("&" + str(playerID))):
+                if str(playerID).isdigit() and i == ("%" + redis.get("&" + str(playerID))):
                     stats = redis.get(i).split(",")
                     stats[1] = str(int(stats[1]) + 1)
                     redis.set(i, (",").join(stats))
