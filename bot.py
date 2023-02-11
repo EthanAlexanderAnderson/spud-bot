@@ -438,7 +438,7 @@ async def on_message(message):                                                  
                     await message.channel.send("Please use the @ of the profile you wish to view.")
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                stats = redis.get("%" + name).split(",")
+                stats = redis.get("&" + name).split(",")
                 await message.channel.send("Total Corrects: " + stats[0])
                 await message.channel.send("Total Incorrects: " + stats[1])
                 await message.channel.send("More profile stats coming soon")
