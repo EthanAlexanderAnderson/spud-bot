@@ -388,9 +388,9 @@ async def on_message(message):                                                  
 
     elif message.content.startswith('/dreamkeys'):
         msg = message.content.split(" ")
-        if len(msg) == 2:
-            keys = redis.keys(pattern=msg[1]+'*')
-        else :
+        if msg[1] == '%':
+            keys = redis.keys(pattern='%*')
+        else:
             keys = redis.keys(pattern='&*')
         fullKeys = (', ').join(sorted(keys))
         length = len(fullKeys)
