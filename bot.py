@@ -386,8 +386,12 @@ async def on_message(message):                                                  
         debugMsg += ("Correct: " + str(correct) + "\n")
         await message.channel.send(debugMsg)
 
-    elif message.content.startswith('/dreamkeys'):     
-        keys = redis.keys(pattern='&*')
+    elif message.content.startswith('/dreamkeys'):
+        msg = message.content.split(" ")
+        if len(msg) == 2:
+            keys = redis.keys(pattern=msg[1]+'*')
+        else :
+            keys = redis.keys(pattern='&*')
         fullKeys = (', ').join(sorted(keys))
         length = len(fullKeys)
         i = 0
@@ -438,7 +442,7 @@ async def on_message(message):                                                  
                     await message.channel.send("Please use the @ of the profile you wish to view.")
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                stats = redis.get("&" + name).split(",")
+                stats = redis.get("%" + name).split(",")
                 await message.channel.send("Total Corrects: " + stats[0])
                 await message.channel.send("Total Incorrects: " + stats[1])
                 await message.channel.send("More profile stats coming soon")
