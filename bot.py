@@ -399,7 +399,7 @@ async def on_message(message):                                                  
     # a bunch of variables used for debugging
     elif message.content.startswith('/dreamdebug'):
         debugMsg = ""
-        debugMsg += ("Admin: <@" + adminID + ">\n")
+        debugMsg += ("Admin: <@" + str(adminID) + ">\n")
         debugMsg += ("Buffer Length: " + str(len(buffer)) + " : " + (', ').join(map(str, buffer)) + "\n")
         debugMsg += ("GuessCount: " + str(guessCount) + " : " + str(guessed) + "\n")
         debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " : " + str(namesGuessed) + "\n")
@@ -574,7 +574,7 @@ async def on_message(message):                                                  
                 streaks[playerID] -= 1
             # profile stats incorrect
             if str(playerID).isdigit() and name in namesStrict:
-                stats[1] = str(int(stats[0]) + 1)
+                stats[1] = str(int(stats[1]) + 1)
                 redis.set("%" + name, (",").join(stats))
 
         # tracking who guessed and what they guessed
