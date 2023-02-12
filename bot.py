@@ -253,6 +253,7 @@ async def on_message(message):                                                  
         dreamMsg = await message.channel.send(dreamplay(msg))             # sends dream
         await dreamMsg.add_reaction("⏩")
         profileKeys = redis.keys(pattern='%*')
+        browseMsg = 0
 
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
@@ -550,9 +551,7 @@ async def on_message(message):                                                  
         if str(playerID).isdigit():
             name = redis.get("&" + str(playerID))
             if name in namesStrict:
-                stats = redis.get("%" + name)
-        else:
-            name = "X"
+                stats = redis.get("%" + name).split(",")
 
         # give score for corect answer
         if guess.lower() == answer.lower():
