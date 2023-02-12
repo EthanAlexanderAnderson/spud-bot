@@ -480,7 +480,7 @@ async def on_message(message):                                                  
                 if (redis.get("&dreamer" + str(i)) == name):
                     browseList.append(i)
             # controls for dreambrowser, function for this near top
-            await browseMsg.edit(content="Use these reaction controls to browse your dreams. Count: " + len(browseList))
+            await browseMsg.edit(content="Use these reaction controls to browse your dreams. Count: " + str(len(browseList)))
             await browseMsg.add_reaction("⬆️")
             await browseMsg.add_reaction("⬅️")
             await browseMsg.add_reaction("➡️")
