@@ -151,16 +151,40 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    global channelplaying, adminID, dreamMsg
-    if reaction.message.author.id == client.user.id and user.id == adminID:
-        # channelplaying = reaction.message.channel.id
-        if (reaction.emoji == "⏩"):
+    global channelplaying, adminID, dreamMsg, browseMsg, browseIndex, browseList, count
+
+    if reaction.message.author.id == client.user.id:
+        # reaction to start new round in dreamplay
+        if (reaction.emoji == "⏩") and user.id == adminID:
             dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
             await dreamMsg.add_reaction("⏩")
+        # profile dream broswer
+        if reaction.message == browseMsg and user.id != client.user.id:
+            if (reaction.emoji == "⬆️"):
+                # first
+                await browseMsg.remove_reaction("⬆️", user)
+                browseIndex = 0
+                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**" + redis.get("&dream" + str(browseList[browseIndex])))
+            elif (reaction.emoji == "⬅️"):
+                # back
+                await browseMsg.remove_reaction("⬅️", user)
+                browseIndex -= 1
+                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**" + redis.get("&dream" + str(browseList[browseIndex])))
+            elif (reaction.emoji == "➡️"):
+                # forward
+                await browseMsg.remove_reaction("➡️", user)
+                browseIndex += 1
+                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**" + redis.get("&dream" + str(browseList[browseIndex])))
+            elif (reaction.emoji == "⬇️"):
+                # last
+                await browseMsg.remove_reaction("⬇️", user)
+                browseIndex = len(browseList)-1
+                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**" + redis.get("&dream" + str(browseList[browseIndex])))
+
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global adminID, answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg, roundOver
+    global adminID, answer, buffer, count, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, roundOver, dreamMsg, browseMsg, browseIndex, browseList
     global censor, fake, AI, gnome
 
     if message.content.startswith('/send '):                                    # for /send
@@ -418,34 +442,42 @@ async def on_message(message):                                                  
         players -= 1
         await message.channel.send("<@{}> has left the game.".format(leaver))
 
-    elif message.content.startswith('/dreamprofile'):
+    elif message.content.startswith('/dreamprofile') or message.content.startswith('/profile') or message.content == ('/dream') or message.content == ('/d'):
         msg = message.content.split(" ")                                   # split message
         if len(msg) <= 2:
             # profile displaying
-            # TODO profile stats should be under first name instead of ID, to support alt accounts
             # stats:  dreamcount, all time score (exp), correct ratio, longest streak
-            if len(msg) == 1:
-                # show profile of user who sent message
+            # if name provided is in names strict, show profile of that user
+            if len(msg) == 2 and msg[1][0] == "<":
+                userID = msg[1][2:-1]
+            else:
                 userID = message.author.id
-                name = redis.get("&" + str(userID))
-                await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                stats = redis.get("%" + name).split(",")
-                await message.channel.send("Total Corrects: " + stats[0])
-                await message.channel.send("Total Incorrects: " + stats[1])
-                await message.channel.send("More profile stats coming soon")
+            name = redis.get("&" + str(userID))
+            await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
+            # fetch and display stats
+            stats = redis.get("%" + name).split(",")
+            statsMsg = ""
+            statsMsg += "Total Corrects: " + stats[0]
+            statsMsg += "\nTotal Incorrects: " + stats[1]
+            statsMsg += "\nRatio: " + str(round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)) + "%"
+            statsMsg += "\nMore profile stats coming soon"
+            await message.channel.send(statsMsg)
+            # load dream browser
+            browseMsg = await message.channel.send("Loading your dream browser, please wait")
+            count = int(redis.get("&dreamcount"))
+            browseList = []
+            browseIndex = 0
+            for i in range(count):
+                if (redis.get("&dreamer" + str(i)) == name):
+                    browseList.append(i)
+            # controls for dreambrowser, function for this near top
+            await browseMsg.edit(content="Use these reaction controls to browse your dreams")
+            await browseMsg.add_reaction("⬆️")
+            await browseMsg.add_reaction("⬅️")
+            await browseMsg.add_reaction("➡️")
+            await browseMsg.add_reaction("⬇️")
+            #await message.channel.send(browseList)
 
-            elif len(msg) == 2:
-                # if 1 in names strict, show profile of that user
-                if msg[1][0] == "<":
-                    userID = msg[1][2:-1]
-                else:
-                    await message.channel.send("Please use the @ of the profile you wish to view.")
-                name = redis.get("&" + str(userID))
-                await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-                stats = redis.get("%" + name).split(",")
-                await message.channel.send("Total Corrects: " + stats[0])
-                await message.channel.send("Total Incorrects: " + stats[1])
-                await message.channel.send("More profile stats coming soon")
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
