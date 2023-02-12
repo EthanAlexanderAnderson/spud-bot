@@ -8,7 +8,7 @@ from collections import defaultdict
 from dreamgame.dreamhelp import dreamhelp
 
 # -- global variables --
-redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
+redis = redis.Redis.from_url("redis://:pd461d2ca0afbb0e93ddfcda006691526b53a83f255f1420c145b5a39eec47ba9@ec2-54-145-94-157.compute-1.amazonaws.com:12649", decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
@@ -718,4 +718,4 @@ async def on_message(message):                                                  
             scoresPrev = scores
             scoresPrevKeys = list(scoresPrev)
 
-client.run(os.environ['BOT_TOKEN'])       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
+client.run('NjA1NTY5NDczMzY5MzQxOTcy.Xlx_0A.PrLm5bwicqFBBaT8RMkPe9L18_4')       #token to link code to discord bot, replace "os.environ['BOT_TOKEN']" with your token
