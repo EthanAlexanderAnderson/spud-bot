@@ -252,6 +252,7 @@ async def on_message(message):                                                  
         msg = message.content.split(" ")
         dreamMsg = await message.channel.send(dreamplay(msg))             # sends dream
         await dreamMsg.add_reaction("⏩")
+        profileKeys = redis.keys(pattern='%*')
 
 
     elif message.content.startswith('/dreamreveal') or message.content.endswith('/dr'):
@@ -545,18 +546,23 @@ async def on_message(message):                                                  
         if playerID not in scores:
             scores[playerID] = 0  
 
+        # prepare profile stats, if statements to not trigger error
+        if str(playerID).isdigit():
+            name = redis.get("&" + str(playerID))
+            if name in namesStrict:
+                stats = redis.get("%" + name)
+
         # give score for corect answer
         if guess.lower() == answer.lower():
             scores[playerID] += 1
             streaks[playerID] += 1
             correct.append(playerID)
-            # profile stats correct
-            profileKeys = redis.keys(pattern='%*')
-            for i in profileKeys:
-                if str(playerID).isdigit() and i == ("%" + redis.get("&" + str(playerID))):
-                    stats = redis.get(i).split(",")
-                    stats[0] = str(int(stats[0]) + 1)
-                    redis.set(i, (",").join(stats))
+            # profile stats correct & longest streak
+            stats[0] = str(int(stats[0]) + 1)
+            if streaks[playerID] > int(stats[2]):
+                stats[2] = str(streaks[playerID])
+            redis.set("%" + name, (",").join(stats))
+
         else:
             if streaks[playerID] > 0:
                 if streaks[playerID] >= 5:
@@ -565,12 +571,8 @@ async def on_message(message):                                                  
             else:
                 streaks[playerID] -= 1
             # profile stats incorrect
-            profileKeys = redis.keys(pattern='%*')
-            for i in profileKeys:
-                if str(playerID).isdigit() and i == ("%" + redis.get("&" + str(playerID))):
-                    stats = redis.get(i).split(",")
-                    stats[1] = str(int(stats[1]) + 1)
-                    redis.set(i, (",").join(stats))
+            stats[1] = str(int(stats[0]) + 1)
+            redis.set("%" + name, (",").join(stats))
 
         # tracking who guessed and what they guessed
         guessed.append(playerID)
