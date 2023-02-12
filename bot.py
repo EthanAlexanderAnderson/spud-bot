@@ -474,9 +474,13 @@ async def on_message(message):                                                  
                 await message.channel.send("Your profile <@" + str(userID) + "> is assigned to " + name)
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
-            statsMsg = "Total Corrects: " + stats[0]
+            # these two lines are gross and i know that
+            ratio = round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)
+            statsMsg = "**Skill Rating: " + str(int(round(ratio * (10 + int(stats[2])),0))) + "**"
+            statsMsg += "\nTotal Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
-            statsMsg += "\nRatio: " + str(round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)) + "%"
+            statsMsg += "\nRatio: " + str(ratio) + "%"
+            statsMsg += "\nLongest Streak: " + stats[2]
             await message.channel.send(statsMsg)
             # load dream browser
             browseMsg = await message.channel.send("Loading your dream browser, please wait")
