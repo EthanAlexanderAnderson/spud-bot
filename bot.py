@@ -318,9 +318,8 @@ async def on_message(message):                                                  
 
 
     # Resets all global variables
+    # TODO remove AFTER adding reset emoji reaction control (with confirmation)
     elif message.content.startswith('/dreamreset'):
-        # TODO should reset really wipe buffer?
-        buffer = []
         guessCount = 0
         guessed = []
         guessCountUnique = 0
@@ -335,6 +334,7 @@ async def on_message(message):                                                  
         await message.channel.send("Scores reset.")
 
     # skip feature, also doubles as insurance encase a user puts too high of a playercount
+    # TODO remove. Replaced by emoji reaction controls  
     elif message.content.startswith('/dreamskip'):
         guessCount = 0
         guessed = []
@@ -372,6 +372,7 @@ async def on_message(message):                                                  
             redis.set("&AIcount", str(i))
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
 
+    # TODO remove AFTER creating remove functionality with profile, or alternative remove command
     elif message.content.startswith('/dreamundo'):
         msg = message.content.split(" ")
         if len(msg) < 3 or not msg[1].isdigit():
@@ -393,6 +394,7 @@ async def on_message(message):                                                  
             # decrease dreamcount
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
 
+    # a bunch of variables used for debugging
     elif message.content.startswith('/dreamdebug'):
         debugMsg = ""
         debugMsg += ("Buffer Length: " + str(len(buffer)) + " : " + (', ').join(map(str, buffer)) + "\n")
@@ -410,6 +412,7 @@ async def on_message(message):                                                  
         debugMsg += ("Correct: " + str(correct) + "\n")
         await message.channel.send(debugMsg)
 
+    # also for debugging
     elif message.content.startswith('/dreamkeys'):
         msg = message.content.split(" ")
         if msg[1] == '%':
@@ -458,16 +461,15 @@ async def on_message(message):                                                  
                 name = msg[1]
                 await message.channel.send("Profile for " + name)
             else:
+                # nothing provided (return profile of sender)
                 userID = message.author.id
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Your profile <@" + str(userID) + "> is assigned to " + name)
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
-            statsMsg = ""
-            statsMsg += "Total Corrects: " + stats[0]
+            statsMsg = "Total Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)) + "%"
-            statsMsg += "\nMore profile stats coming soon"
             await message.channel.send(statsMsg)
             # load dream browser
             browseMsg = await message.channel.send("Loading your dream browser, please wait")
@@ -483,8 +485,7 @@ async def on_message(message):                                                  
             await browseMsg.add_reaction("⬅️")
             await browseMsg.add_reaction("➡️")
             await browseMsg.add_reaction("⬇️")
-            #await message.channel.send(browseList)
-
+            # TODO add a delete emoji for deleting a dream, with confirmation message before deleting. Maybe edit also
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
@@ -576,6 +577,7 @@ async def on_message(message):                                                  
             roundOver = True
 
             # evaluate bonuses
+            # TODO late joiner bonus (enough to be competitive, but not enough to easily pass last place)
             if bonus:
                 bonusMsg = "**BONUSES:**\n"
                 streakMsg = ""
