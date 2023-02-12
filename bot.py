@@ -551,6 +551,8 @@ async def on_message(message):                                                  
             name = redis.get("&" + str(playerID))
             if name in namesStrict:
                 stats = redis.get("%" + name)
+        else:
+            name = "X"
 
         # give score for corect answer
         if guess.lower() == answer.lower():
@@ -558,10 +560,11 @@ async def on_message(message):                                                  
             streaks[playerID] += 1
             correct.append(playerID)
             # profile stats correct & longest streak
-            stats[0] = str(int(stats[0]) + 1)
-            if streaks[playerID] > int(stats[2]):
-                stats[2] = str(streaks[playerID])
-            redis.set("%" + name, (",").join(stats))
+            if str(playerID).isdigit() and name in namesStrict:
+                stats[0] = str(int(stats[0]) + 1)
+                if streaks[playerID] > int(stats[2]):
+                    stats[2] = str(streaks[playerID])
+                redis.set("%" + name, (",").join(stats))
 
         else:
             if streaks[playerID] > 0:
@@ -571,8 +574,9 @@ async def on_message(message):                                                  
             else:
                 streaks[playerID] -= 1
             # profile stats incorrect
-            stats[1] = str(int(stats[0]) + 1)
-            redis.set("%" + name, (",").join(stats))
+            if str(playerID).isdigit() and name in namesStrict:
+                stats[1] = str(int(stats[0]) + 1)
+                redis.set("%" + name, (",").join(stats))
 
         # tracking who guessed and what they guessed
         guessed.append(playerID)
