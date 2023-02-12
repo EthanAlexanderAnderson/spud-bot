@@ -449,11 +449,18 @@ async def on_message(message):                                                  
             # stats:  dreamcount, all time score (exp), correct ratio, longest streak
             # if name provided is in names strict, show profile of that user
             if len(msg) == 2 and msg[1][0] == "<":
+                # provided @
                 userID = msg[1][2:-1]
+                name = redis.get("&" + str(userID))
+                await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
+            elif len(msg) == 2 and msg[1] in namesStrict:
+                # provided name
+                name = msg[1]
+                await message.channel.send("Profile for " + name)
             else:
                 userID = message.author.id
-            name = redis.get("&" + str(userID))
-            await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
+                name = redis.get("&" + str(userID))
+                await message.channel.send("Your profile <@" + str(userID) + "> is assigned to " + name)
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
             statsMsg = ""
