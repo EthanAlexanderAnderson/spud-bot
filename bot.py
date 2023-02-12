@@ -397,6 +397,7 @@ async def on_message(message):                                                  
     # a bunch of variables used for debugging
     elif message.content.startswith('/dreamdebug'):
         debugMsg = ""
+        debugMsg += ("Admin: <@" + adminID + ">\n")
         debugMsg += ("Buffer Length: " + str(len(buffer)) + " : " + (', ').join(map(str, buffer)) + "\n")
         debugMsg += ("GuessCount: " + str(guessCount) + " : " + str(guessed) + "\n")
         debugMsg += ("guessCountUnique: " + str(guessCountUnique) + " : " + str(namesGuessed) + "\n")
@@ -435,13 +436,19 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamleave') or message.content.startswith('/dl'):
         msg = message.content.split(" ")
         leaver = 0
+        # force another user to leave
         if message.author.id == adminID and len(msg) > 1:
             target = msg[1]
             leaver = target[2:-1]
+        # command user leaves
         elif message.author.id in scores:
             leaver = message.author.id
         scores.pop(leaver)
         streaks.pop(leaver)
+        # if the admin left, assign new admin
+        if message.author.id == adminID and message.author.id not in scores:
+            adminID = scores[0]
+            await message.channel.send("<@{}> is the new admin.".format(adminID))
         players -= 1
         await message.channel.send("<@{}> has left the game.".format(leaver))
 
