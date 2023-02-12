@@ -447,7 +447,7 @@ async def on_message(message):                                                  
         streaks.pop(leaver)
         # if the admin left, assign new admin
         if message.author.id == adminID and message.author.id not in scores:
-            adminID = scores[0]
+            adminID = list(scores.keys())[0]
             await message.channel.send("<@{}> is the new admin.".format(adminID))
         players -= 1
         await message.channel.send("<@{}> has left the game.".format(leaver))
