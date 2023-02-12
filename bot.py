@@ -475,7 +475,7 @@ async def on_message(message):                                                  
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
             ratio = round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)
-            statsMsg = "**Skill Rating: " + str(ratio * (10 + int(stats[2]))) + "**"
+            statsMsg = "**Skill Rating: " + str(round(ratio * (10 + int(stats[2]))),0) + "**"
             statsMsg += "\nTotal Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
