@@ -2,14 +2,21 @@ def dreamhelp(msgh):
     outh = ""
     if len(msgh) == 1:
         outh += 'Use "/dreamhelp (option)" with one of the following options:\n'
+        outh += "- Admin\n"
         outh += "- Commmands\n"
         outh += "- Bonus\n"
         outh += "- Flags\n"
         outh += "- Leaderboard\n"
         outh += "- Undo"
     elif len(msgh) == 2:
+        if msgh[1].capitalize() == "Admin":
+            outh += "**Admin:**\n"
+            outh += "The user who initiates the play command becomes admin.\n"
+            outh += "Admins can use the emoji controls to skip or advance the round.\n"
+            outh += "Admins can also force another user to leave using /dreamleave @user.\n"
+            outh += "If the admin leaves the game, the highest scoring player is assigned as admin."
         if msgh[1].capitalize() == "Commands":
-            outh += '**Commands:**\n'
+            outh += "**Commands:**\n"
             outh += "- **Playing:**\n"
             outh += "-- dreamplay\n"
             outh += "-- dreamreveal\n"
@@ -51,14 +58,14 @@ def dreamhelp(msgh):
             outh += "b = Include bonus points.\n"
             outh += "--- NOTE: Number flag must be the first\n"
             outh += "-- ex: /dreamplay 3 b f"
-        if msgh[1].capitalize() == "Undo":
-            outh += "**Undo:**\n"
-            outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
-            outh += "/dreamundo [dream number] [dreamer name]\n"
-            outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
         if msgh[1].capitalize() == "Leaderboard":
             outh += "**Leaderboard:**\n"
             outh += "The leaderboard ranks players based on skill rating. The skill rating is calculated as follows:\n"
             outh += "R * ( ( C / 10 ) + S )\n"
             outh += "Where R is correct ratio, C is number of correct answers, and S is longest streak."
+        if msgh[1].capitalize() == "Undo":
+            outh += "**Undo:**\n"
+            outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
+            outh += "/dreamundo [dream number] [dreamer name]\n"
+            outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
     return outh
