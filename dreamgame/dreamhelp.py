@@ -5,6 +5,7 @@ def dreamhelp(msgh):
         outh += "- Commmands\n"
         outh += "- Bonus\n"
         outh += "- Flags\n"
+        outh += "- Leaderboard\n"
         outh += "- Undo"
     elif len(msgh) == 2:
         if msgh[1].capitalize() == "Commands":
@@ -55,4 +56,9 @@ def dreamhelp(msgh):
             outh += "If you have a problem with a dream you just added, you can undo it with this command:\n"
             outh += "/dreamundo [dream number] [dreamer name]\n"
             outh += "--- NOTE: only the most recent dream can be removed, for security reasons"
+        if msgh[1].capitalize() == "Leaderboard":
+            outh += "**Leaderboard:**\n"
+            outh += "The leaderboard ranks players based on skill rating. The skill rating is calculated as follows:\n"
+            outh += "R * ( ( C / 10 ) + S )\n"
+            outh += "Where R is correct ratio, C is number of correct answers, and S is longest streak."
     return outh
