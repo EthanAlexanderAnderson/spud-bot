@@ -477,8 +477,10 @@ async def on_message(message):                                                  
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
             # these two lines are gross and i know that
-            ratio = round(int(stats[0])/(int(stats[1])+int(stats[0]))*100,1)
-            statsMsg = "**Skill Rating: " + str(int(round(ratio * (10 + int(stats[2])),0))) + "**"
+            # add tiny number to prevent 0 division
+            ratio = round(int(stats[0])/((int(stats[1])+0.000000001)+int(stats[0]))*100,1)
+            # skill rating formula: ratio * ((#correct / 10) + longest streak)
+            statsMsg = "**Skill Rating: " + str(int(round(ratio * (int(stats[0])/10 + int(stats[2])),0))) + "**"
             statsMsg += "\nTotal Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
@@ -512,6 +514,21 @@ async def on_message(message):                                                  
             redis.set("&" + str(userID),(name))
             await message.channel.send("Profile <@" + str(userID) + "> has been assigned to " + name)
             
+    # skill rating formula: ratio * ((#correct / 10) + longest streak)
+    elif message.content.startswith('/dreamleaderboard') or message.content.startswith('/leaderboard') or message.content.startswith('/db'):
+            profileKeys = redis.keys(pattern='%*')
+            leaderboard = defaultdict(int)
+            for i in profileKeys:
+                stats = redis.get(i).split(",")
+                # add tiny number to prevent 0 division
+                ratio = round(int(stats[0])/((int(stats[1])+0.000000001)+int(stats[0]))*100,1)
+                leaderboard[i[1:]] = int(round(ratio * (int(stats[0])/10 + int(stats[2])),0))
+            leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda x: x[1], reverse=True)}
+            leaderboardMsg = ""
+            for player, score in leaderboard.items():
+                leaderboardMsg += str(player) + ": " + str(score) + "\n"
+            await message.channel.send(leaderboardMsg)
+
 
     # for scoring (must be at the bottom to not interfere with other commands)
     elif guessCount < players and message.author.id != client.user.id and roundOver == False:
