@@ -15,7 +15,7 @@ client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        
 # TODO make all multi-line sends into single lines to eliminate cooldown" issue
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
-aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "EA"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "OS", "OB", "O"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "BS", "NA", "N"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "EL"], ["Mitch", "Mitchell", "MS"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "MTG", "MT", "MK"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "CH", "C"], ["Devon", "Devon C", "Dev", "DC"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "DS"], ["Eddie", "Edmund", "Ed", "EB"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "AG", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "LZ", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "JM", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "ZR", "Z"], ["AI", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
+aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "Ea"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "Col", "Co", "Ch", "C"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "Bs", "Nat", "Na", "N"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "Os", "Ob", "O"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "El"], ["Mitch", "Mitchell", "Ms"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "Mtg", "Mt", "Mk"], ["Devon", "Devon C", "Dev", "Dc"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "Ds"], ["Eddie", "Edmund", "Ed", "Eb"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "Ag", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "Lz", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "Jm", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "Zr", "Z"], ["Ai", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
 emojiNums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 adminID = 0
 answer = ""
@@ -40,7 +40,7 @@ bonus = False
 bottomStreak = ['', 0]
 
 def dreamplay(msg): 
-    global adminID, answer, buffer, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, dreamMsg, roundOver
+    global answer, buffer, guessCount, guessCountUnique, guessed, players, bonus, roundOver
     global censor, fake, AI, gnome 
     guessCount = 0
     guessed = []
@@ -48,27 +48,27 @@ def dreamplay(msg):
     dreamCount = int(redis.get("&dreamcount"))
     fakeCount = int(redis.get("&fakecount"))
     AICount = int(redis.get("&AIcount"))
+
     # check for flags and set variables
     if (len(msg) > 1):
-        if ('N' not in msg and 'n' not in msg): # dont reset flags if /dp n is used. n meaning next round
-            censor = False
-            fake = False
-            AI = False
-            gnome = False
-            bonus = False
-            players = 0
-            if msg[1].isdigit():
-                players = int(msg[1])
-            if ('C' in msg or 'c' in msg):
-                censor = True
-            if ('F' in msg or 'f' in msg):
-                fake = True
-            if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
-                AI = True
-            if ('B' in msg or 'b' in msg):
-                bonus = True
-            if ('G' in msg or 'g' in msg):
-                gnome = True
+        censor = False
+        fake = False
+        AI = False
+        gnome = False
+        bonus = False
+        players = 0
+        if msg[1].isdigit():
+            players = int(msg[1])
+        if ('C' in msg or 'c' in msg):
+            censor = True
+        if ('F' in msg or 'f' in msg):
+            fake = True
+        if ('AI' in msg or 'ai' in msg or 'Ai' in msg):
+            AI = True
+        if ('B' in msg or 'b' in msg):
+            bonus = True
+        if ('G' in msg or 'g' in msg):
+            gnome = True
 
     # generate random number for dream (buffer is used to avoid repeats)
     maxCount = dreamCount
@@ -114,21 +114,21 @@ def dreamplay(msg):
         # nested for loop to search for names
         for i in range(len(censored)):
             for j in range(len(names)):
-                if censored[i].lower() == names[j].lower():
+                if censored[i].capitalize() == names[j]:
                     censored[i] = "###"
-                elif censored[i].lower() == (names[j].lower()+"’s"):
+                elif censored[i].capitalize() == (names[j] + "’s"):
                     censored[i] = "###’s"
-                elif censored[i].lower() == (names[j].lower()+"'s"):
+                elif censored[i].capitalize() == (names[j] + "'s"):
                     censored[i] = "###'s"
-                elif censored[i].lower() == (names[j].lower()+"s"):
+                elif censored[i].capitalize() == (names[j] + "s"):
                     censored[i] = "###s"
-                elif censored[i].lower() == (names[j].lower()+","):
+                elif censored[i].capitalize() == (names[j] + ","):
                     censored[i] = "###,"
-                elif censored[i].lower() == (names[j].lower()+"."):
+                elif censored[i].capitalize() == (names[j] + "."):
                     censored[i] = "###."
-                elif censored[i].lower() == (names[j].lower()+")"):
+                elif censored[i].capitalize() == (names[j] + ")"):
                     censored[i] = "###)"
-                elif censored[i].lower() == ("("+names[j].lower()):
+                elif censored[i].capitalize() == ("(" + names[j]):
                     censored[i] = "(###"
         msg = (" ").join(censored)
 
@@ -142,6 +142,8 @@ def dreamplay(msg):
                 answer = "Gnome"
                 break
         msg = (" ").join(split)
+
+    # return dream to display
     return ("> " + msg)
 
 # -- Bot Functionality --
@@ -151,7 +153,7 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    global channelplaying, adminID, dreamMsg, browseMsg, browseIndex, browseList, count
+    global adminID, dreamMsg, browseMsg, browseIndex, browseList
 
     if reaction.message.author.id == client.user.id:
         # reaction to start new round in dreamplay
@@ -164,22 +166,21 @@ async def on_reaction_add(reaction, user):
                 # first
                 await browseMsg.remove_reaction("⬆️", user)
                 browseIndex = 0
-                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
             elif (reaction.emoji == "⬅️"):
                 # back
                 await browseMsg.remove_reaction("⬅️", user)
                 browseIndex -= 1
-                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
             elif (reaction.emoji == "➡️"):
                 # forward
                 await browseMsg.remove_reaction("➡️", user)
                 browseIndex += 1
-                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
             elif (reaction.emoji == "⬇️"):
                 # last
                 await browseMsg.remove_reaction("⬇️", user)
                 browseIndex = len(browseList)-1
-                await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
+
+            # edit dream browser based on control usage
+            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
 
 
 @client.event
@@ -548,11 +549,16 @@ async def on_message(message):                                                  
 
         guess = message.content
         playerID = message.author.id
+        debug = False
 
-        # handle debug
+        # handle debug players
         if guess[0] == '&':
             playerID = guess[1]
             guess = guess[2:]
+            debug = True
+
+        # capitalize for standardization
+        guess = guess.capitalize()
 
         # convert alias to name strict
         converted = False
@@ -560,7 +566,7 @@ async def on_message(message):                                                  
             if converted: break
             for alias in sublist:
                 if converted: break
-                if (guess.capitalize() == alias or guess.upper() == alias):
+                if guess == alias:
                     guess = sublist[0]
                     converted = True
 
@@ -577,19 +583,19 @@ async def on_message(message):                                                  
         if playerID not in scores:
             scores[playerID] = 0  
 
-        # prepare profile stats, if statements to not trigger error
-        if str(playerID).isdigit():
+        # prepare profile stats, if statements are here to not trigger error
+        if not debug:
             name = redis.get("&" + str(playerID))
             if name in namesStrict:
                 stats = redis.get("%" + name).split(",")
 
         # give score for corect answer
-        if guess.lower() == answer.lower():
+        if guess == answer:
             scores[playerID] += 1
             streaks[playerID] += 1
             correct.append(playerID)
             # profile stats correct & longest streak
-            if str(playerID).isdigit() and name in namesStrict:
+            if not debug and name in namesStrict:
                 stats[0] = str(int(stats[0]) + 1)
                 if streaks[playerID] > int(stats[2]):
                     stats[2] = str(streaks[playerID])
@@ -603,7 +609,7 @@ async def on_message(message):                                                  
             else:
                 streaks[playerID] -= 1
             # profile stats incorrect
-            if str(playerID).isdigit() and name in namesStrict:
+            if not debug and name in namesStrict:
                 stats[1] = str(int(stats[1]) + 1)
                 redis.set("%" + name, (",").join(stats))
 
