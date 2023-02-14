@@ -20,6 +20,7 @@ emojiNums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "
 adminID = 0
 answer = ""
 buffer = []
+browseMsg = 0
 guessCount = 0
 guessCountUnique = 0
 namesGuessed = []
@@ -180,7 +181,7 @@ async def on_reaction_add(reaction, user):
                 browseIndex = len(browseList)-1
 
             # edit dream browser based on control usage
-            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])))
+            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
 
 
 @client.event
@@ -476,6 +477,7 @@ async def on_message(message):                                                  
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
             statsMsg += "\nLongest Streak: " + stats[2]
+            statsMsg += "\nGnome Count: " + stats[3]
             await message.channel.send(statsMsg)
             # load dream browser
             browseMsg = await message.channel.send("Loading your dream browser, please wait")
