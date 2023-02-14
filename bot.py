@@ -528,18 +528,18 @@ async def on_message(message):                                                  
             i = 0
             for player, score in leaderboard.items():
                 if score > 0:
-                    if i == 1:
+                    if i == 0:
                         leaderboardMsg += ":first_place: ***" + str(player) + ": " + str(score) + "***\n"
-                    elif i == 2:
+                    elif i == 1:
                         leaderboardMsg += ":second_place: **" + str(player) + ": " + str(score) + "**\n"
-                    elif i == 3: 
+                    elif i == 2: 
                         leaderboardMsg += ":third_place: **" + str(player) + ": " + str(score) + "**\n"
                     elif i < 10:
                         leaderboardMsg += "{} {}: {}\n".format(emojiNums[i], str(player), str(score))
                     else:
                         leaderboardMsg += ":asterisk: " + str(player) + ": " + str(score) + "\n"
                     i += 1
-                leaderboardMsg += "(skipped zero-rated players)"
+            leaderboardMsg += "(skipped zero-rated players)"
             await message.channel.send(leaderboardMsg)
 
 
