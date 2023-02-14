@@ -527,11 +527,11 @@ async def on_message(message):                                                  
             leaderboardMsg = ""
             i = 0
             for player, score in leaderboard.items():
-                i += 1
                 if i <= 10:
                     leaderboardMsg += "{} {}: {}\n".format(emojiNums[i], str(player), str(score))
                 else:
                     leaderboardMsg += ":asterisk: " + str(player) + ": " + str(score) + "\n"
+                i += 1
             await message.channel.send(leaderboardMsg)
 
 
