@@ -376,26 +376,16 @@ async def on_message(message):                                                  
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
 
     # TODO remove AFTER creating remove functionality with profile, or alternative remove command
-    elif message.content.startswith('/dreamundo'):
-        msg = message.content.split(" ")
-        if len(msg) < 3 or not msg[1].isdigit():
-            await message.channel.send("Error: Missing required inputs.")
-            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
-            return
-        if int(msg[1]) != int(redis.get("&dreamcount")):
-            await message.channel.send("Error: Only the most recently added dream can be undone.")
-            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
-            return
-        if msg[2] not in namesStrict:
-            await message.channel.send("Error: Invalid name provided.")
-            await message.channel.send("Please use this format: `/dreamundo [dream number] [dreamer name]`")
-            return
-        if redis.get("&dreamer"+redis.get("&dreamcount")) == msg[2]:    # final layer of protection
+    elif message.content.startswith('/dreamundo') or message.content.startswith('/du'):
+        # check if undoer has same ID as most recent dream added
+        if redis.get("&dreamer"+redis.get("&dreamcount")) == redis.get("&" + str(message.author.id)):
+            await message.channel.send("Dream {} by {} has been undone.".format(redis.get("&dreamcount"), "<@" + str(message.author.id) + ">"))     # inform user the entry has been removed
             redis.delete("&dream"+redis.get("&dreamcount"))
             redis.delete("&dreamer"+redis.get("&dreamcount"))
-            await message.channel.send("Dream {} by {} has been undone.".format(msg[1], msg[2]))     # inform user the entry has been removed
             # decrease dreamcount
             redis.set("&dreamcount", str(int(redis.get("&dreamcount")) - 1))
+        else:
+            await message.channel.send("The most recent dream is not yours. You cannot undo it")
 
     # a bunch of variables used for debugging
     elif message.content.startswith('/dreamdebug'):
