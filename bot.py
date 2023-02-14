@@ -525,8 +525,13 @@ async def on_message(message):                                                  
                 leaderboard[i[1:]] = int(round(ratio * (int(stats[0])/10 + int(stats[2])),0))
             leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda x: x[1], reverse=True)}
             leaderboardMsg = ""
+            i = 0
             for player, score in leaderboard.items():
-                leaderboardMsg += str(player) + ": " + str(score) + "\n"
+                i += 1
+                if i <= 10:
+                    leaderboardMsg += "{} {}: {}\n".format(emojiNums[i], str(player), str(score))
+                else:
+                    leaderboardMsg += ":asterisk: " + str(player) + ": " + str(score) + "\n"
             await message.channel.send(leaderboardMsg)
 
 
