@@ -506,7 +506,7 @@ async def on_message(message):                                                  
             await message.channel.send("Profile <@" + str(userID) + "> has been assigned to " + name)
             
     # skill rating formula: ratio * ((#correct / 10) + longest streak)
-    elif message.content.startswith('/dreamleaderboard') or message.content.startswith('/leaderboard') or message.content.startswith('/db'):
+    elif message.content.startswith('/dreamleaderboard') or message.content.startswith('/leaderboard') or message.content.startswith('/db') or message.content.startswith('/lb'):
             profileKeys = redis.keys(pattern='%*')
             leaderboard = defaultdict(int)
             for i in profileKeys:
@@ -698,6 +698,10 @@ async def on_message(message):                                                  
                         if scores[player] < 0:
                             scores[player] = 0
                         gnomeMsg += "<@{}>, ".format(player)
+
+                        # track gnome stats
+                        stats[3] = str(int(stats[3]) + 1)
+                        redis.set("%" + name, (",").join(stats))
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
