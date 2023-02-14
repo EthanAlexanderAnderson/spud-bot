@@ -527,7 +527,7 @@ async def on_message(message):                                                  
             leaderboardMsg = ""
             i = 0
             for player, score in leaderboard.items():
-                if i <= 10:
+                if i < 10:
                     leaderboardMsg += "{} {}: {}\n".format(emojiNums[i], str(player), str(score))
                 else:
                     leaderboardMsg += ":asterisk: " + str(player) + ": " + str(score) + "\n"
