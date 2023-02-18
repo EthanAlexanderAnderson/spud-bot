@@ -150,6 +150,23 @@ def dreamplay(msg):
     # return dream to display
     return ("> " + msg)
 
+# calculate a players correct ratio
+def calcRatio(stats):
+    corrects = int(stats[0])
+    incorrects = int(stats[1])
+    decimals = 1
+    ratio = round(corrects/(incorrects+corrects+0.000000001)*100, decimals)
+    return(ratio)
+
+# calculate a players skill rating from their stats and ratio
+def calcSkillRating(stats, ratio):
+    corrects = int(stats[0])
+    longestStreak = int(stats[2])
+    experienceScalar = 10           # this variable affects how important a players experience is to the SR formula
+    decimals = 0
+    skillRating = int(round(ratio * (corrects/10 + longestStreak), decimals))
+    return(skillRating)
+
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
 async def on_ready():
@@ -473,9 +490,9 @@ async def on_message(message):                                                  
             stats = redis.get("%" + name).split(",")
             # these two lines are gross and i know that
             # add tiny number to prevent 0 division
-            ratio = round(int(stats[0])/((int(stats[1])+0.000000001)+int(stats[0]))*100,1)
+            ratio = calcRatio(stats)
             # skill rating formula: ratio * ((#correct / 10) + longest streak)
-            statsMsg = "**Skill Rating: " + str(int(round(ratio * (int(stats[0])/10 + int(stats[2])),0))) + "**"
+            statsMsg = "**Skill Rating: " + str(calcSkillRating(stats, ratio)) + "**"
             statsMsg += "\nTotal Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
@@ -517,8 +534,8 @@ async def on_message(message):                                                  
             for i in profileKeys:
                 stats = redis.get(i).split(",")
                 # add tiny number to prevent 0 division
-                ratio = round(int(stats[0])/((int(stats[1])+0.000000001)+int(stats[0]))*100,1)
-                leaderboard[i[1:]] = int(round(ratio * (int(stats[0])/10 + int(stats[2])),0))
+                ratio = calcRatio(stats)
+                leaderboard[i[1:]] = calcSkillRating(stats, ratio)
             leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda x: x[1], reverse=True)}
             leaderboardMsg = ""
             i = 0
