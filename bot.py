@@ -109,6 +109,7 @@ def dreamplay(msg):
             msg = redis.get("&AI"+str(rng))
             answer = "AI"
 
+    # TODO seperate censor into a function to eliminate repeated code
     # if censor flag is true, censor names
     if censor:
         censored = msg.split(" ")
@@ -135,8 +136,10 @@ def dreamplay(msg):
 
     # gnome mode
     split = msg.split(" ")
-    gnomeChance = random.randint(0, 4)     
+    gnomeChance = random.randint(0, 4)
+    # gnome only applies to dreams of 16 word length or more     
     if gnome and len(split) > 16 and gnomeChance == 0:
+        # gnome is placed in the back half of the dream, but never the very end
         for i in range (len(split)//2,len(split)-5):
             if len(split[i]) == 5:
                 split[i] = "gnome"
@@ -191,7 +194,7 @@ async def on_message(message):                                                  
 
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
-        msg = redis.get((' ').join(keyword[1:]))                                             # find tag in dictionary
+        msg = redis.get((' ').join(keyword[1:]))                                # find tag in dictionary
         await message.channel.send(msg)                                         # send link connected to tag
 
     elif message.content.startswith('/add '):                                   # for /add
