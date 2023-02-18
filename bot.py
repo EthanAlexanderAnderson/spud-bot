@@ -185,20 +185,32 @@ async def on_reaction_add(reaction, user):
         if reaction.message == browseMsg and user.id != client.user.id:
             if (reaction.emoji == "⬆️"):
                 # first
-                await browseMsg.remove_reaction("⬆️", user)
                 browseIndex = 0
+                try:
+                    await browseMsg.remove_reaction("⬆️", user)
+                except Exception:
+                    pass
             elif (reaction.emoji == "⬅️"):
                 # back
-                await browseMsg.remove_reaction("⬅️", user)
                 browseIndex -= 1
+                try:
+                    await browseMsg.remove_reaction("⬅️", user)
+                except Exception:
+                    pass
             elif (reaction.emoji == "➡️"):
                 # forward
-                await browseMsg.remove_reaction("➡️", user)
                 browseIndex += 1
+                try:
+                    await browseMsg.remove_reaction("➡️", user)
+                except Exception:
+                    pass
             elif (reaction.emoji == "⬇️"):
                 # last
-                await browseMsg.remove_reaction("⬇️", user)
                 browseIndex = len(browseList)-1
+                try:
+                    await browseMsg.remove_reaction("⬇️", user)
+                except Exception:
+                    pass
 
             # edit dream browser based on control usage
             await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
