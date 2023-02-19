@@ -510,7 +510,7 @@ async def on_message(message):                                                  
             count = int(redis.get("&dreamcount"))
             browseList = []
             browseIndex = 0
-            for i in range(count):
+            for i in range(count+1):
                 if (redis.get("&dreamer" + str(i)) == name):
                     browseList.append(i)
             # controls for dreambrowser, function for this near top
