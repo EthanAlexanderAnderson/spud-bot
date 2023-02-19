@@ -494,8 +494,6 @@ async def on_message(message):                                                  
                 await message.channel.send("Your profile <@" + str(userID) + "> is assigned to " + name)
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
-            # these two lines are gross and i know that
-            # add tiny number to prevent 0 division
             ratio = calcRatio(stats)
             # skill rating formula: ratio * ((#correct / 10) + longest streak)
             statsMsg = "**Skill Rating: " + str(calcSkillRating(stats, ratio)) + "**"

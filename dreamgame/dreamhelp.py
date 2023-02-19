@@ -31,7 +31,6 @@ def dreamhelp(msgh):
             outh += "-- dreamprofile\n"
             outh += "-- dreamhelp\n"
             outh += "- **Functions:**\n"
-            outh += "-- dreamskip\n"
             outh += "-- dreamreset\n"
             outh += "-- dreamundo"
         if msgh[1].capitalize() == "Bonus":
