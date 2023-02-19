@@ -109,29 +109,23 @@ def dreamplay(msg):
             msg = redis.get("&AI"+str(rng))
             answer = "AI"
 
-    # TODO seperate censor into a function to eliminate repeated code
     # if censor flag is true, censor names
     if censor:
         censored = msg.split(" ")
-        # nested for loop to search for names
+        suffixes = ["", "’s", "'s", "s", ",", ".", "?", "!", ")", "(", '"']
+        prefixes = ["", ",", ".", "?", "!", ")", "(", '"']
+        # nested for loop to search for names and censor them
         for i in range(len(censored)):
-            for j in range(len(names)):
-                if censored[i].capitalize() == names[j]:
-                    censored[i] = "###"
-                elif censored[i].capitalize() == (names[j] + "’s"):
-                    censored[i] = "###’s"
-                elif censored[i].capitalize() == (names[j] + "'s"):
-                    censored[i] = "###'s"
-                elif censored[i].capitalize() == (names[j] + "s"):
-                    censored[i] = "###s"
-                elif censored[i].capitalize() == (names[j] + ","):
-                    censored[i] = "###,"
-                elif censored[i].capitalize() == (names[j] + "."):
-                    censored[i] = "###."
-                elif censored[i].capitalize() == (names[j] + ")"):
-                    censored[i] = "###)"
-                elif censored[i].capitalize() == ("(" + names[j]):
-                    censored[i] = "(###"
+            for name in names:
+                if name in censored[i].capitalize(): # this line is only for optimization
+                    # names followed by a suffix
+                    for suffix in suffixes:
+                        if censored[i].capitalize() == name + suffix:
+                            censored[i] = "###" + suffix
+                    # names preceeded by a prefix
+                    for prefix in prefixes:
+                        if censored[i].capitalize() == prefix + name:
+                            censored[i] = prefix + "###"
         msg = (" ").join(censored)
 
     # gnome mode
