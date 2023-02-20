@@ -212,14 +212,15 @@ async def on_reaction_add(reaction, user):
                 deleteConfirmationMsg = await browseMsg.channel.send("Are you sure you want to delete this dream?") 
                 await deleteConfirmationMsg.add_reaction("🗑️")
             await browseMsg.add_reaction("🗑️")
-
+            # edit dream browser based on control usage
+            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
+        # confirmation for dream deletion
         elif reaction.message == deleteConfirmationMsg and user.id != client.user.id:
             redis.delete("&dream" + str(deleteID))
             redis.delete("&dreamer" + str(deleteID))
             await deleteConfirmationMsg.channel.send("Dream " + str(deleteID) + "has been removed.")
 
-        # edit dream browser based on control usage
-        await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
+
 
 
 @client.event
