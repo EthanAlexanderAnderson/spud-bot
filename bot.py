@@ -159,7 +159,7 @@ def calcSkillRating(stats, ratio):
     longestStreak = int(stats[2])
     experienceScalar = 10           # this variable affects how important a players experience is to the SR formula
     decimals = 0
-    skillRating = int(round(ratio * (corrects/10 + longestStreak), decimals))
+    skillRating = int(round(ratio * (corrects/experienceScalar + longestStreak), decimals))
     return(skillRating)
 
 # -- Bot Functionality --
