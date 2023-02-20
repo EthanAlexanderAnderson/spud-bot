@@ -21,6 +21,7 @@ adminID = 0
 answer = ""
 buffer = []
 browseMsg = 0
+deleteConfirmationMsg = 0
 guessCount = 0
 guessCountUnique = 0
 namesGuessed = []
