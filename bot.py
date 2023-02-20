@@ -169,14 +169,14 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    global adminID, dreamMsg, browseMsg, browseIndex, browseList, deleteConfirmationMsg
+    global adminID, dreamMsg, browseMsg, browseIndex, browseList, browseUser, deleteConfirmationMsg
 
     if reaction.message.author.id == client.user.id:
         # reaction to start new round in dreamplay
         if (reaction.emoji == "⏩") and user.id == adminID:
             dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
             await dreamMsg.add_reaction("⏩")
-        # profile dream broswer
+        # profile dream browser
         elif reaction.message == browseMsg and user.id != client.user.id:
             deleteConfirmationMsg = 0
             if (reaction.emoji == "⬆️"):
@@ -207,15 +207,14 @@ async def on_reaction_add(reaction, user):
                     await browseMsg.remove_reaction("⬇️", user)
                 except Exception:
                     pass
-            elif (reaction.emoji == "🗑️"):
-                
+            elif (reaction.emoji == "🗑️" and user.id == browseUser):
                 deleteConfirmationMsg = await browseMsg.channel.send("Are you sure you want to delete dream #{}?".format(str(browseList[browseIndex]))) 
                 await deleteConfirmationMsg.add_reaction("🗑️")
             await browseMsg.add_reaction("🗑️")
             # edit dream browser based on control usage
             await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
         # confirmation for dream deletion
-        elif reaction.message == deleteConfirmationMsg and user.id != client.user.id:
+        elif reaction.message == deleteConfirmationMsg and user.id == browseUser:
             deleteID = browseList[browseIndex]
             redis.delete("&dream" + str(deleteID))
             redis.delete("&dreamer" + str(deleteID))
@@ -227,7 +226,7 @@ async def on_reaction_add(reaction, user):
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global adminID, answer, buffer, count, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, roundOver, dreamMsg, browseMsg, browseIndex, browseList, deleteConfirmationMsg
+    global adminID, answer, buffer, count, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, roundOver, dreamMsg, browseMsg, browseIndex, browseList, browseUser, deleteConfirmationMsg
     global censor, fake, AI, gnome
 
     if message.content.startswith('/send '):                                    # for /send
@@ -501,6 +500,7 @@ async def on_message(message):                                                  
             elif len(msg) == 2 and msg[1] in namesStrict:
                 # provided name
                 name = msg[1]
+                userID = 0
                 await message.channel.send("Profile for " + name)
             else:
                 # nothing provided (return profile of sender)
@@ -523,6 +523,8 @@ async def on_message(message):                                                  
             count = int(redis.get("&dreamcount"))
             browseList = []
             browseIndex = 0
+            browseUser = userID
+            deleteConfirmationMsg = 0
             for i in range(count+1):
                 if (redis.get("&dreamer" + str(i)) == name):
                     browseList.append(i)
@@ -532,7 +534,6 @@ async def on_message(message):                                                  
             await browseMsg.add_reaction("⬅️")
             await browseMsg.add_reaction("➡️")
             await browseMsg.add_reaction("⬇️")
-            deleteConfirmationMsg = 0
             # TODO add a delete emoji for deleting a dream, with confirmation message before deleting. Maybe edit also
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
