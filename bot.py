@@ -7,6 +7,8 @@ import os
 from collections import defaultdict
 from dreamgame.dreamhelp import dreamhelp
 from dreamgame.dreamcensor import dreamcensor
+from dreamgame.calc import calcRatio
+from dreamgame.calc import calcSkillRating
 
 # -- global variables --
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
@@ -131,27 +133,12 @@ def dreamplay(msg):
     # return dream to display
     return ("> " + msg)
 
-# calculate a players correct ratio
-def calcRatio(stats):
-    corrects = int(stats[0])
-    incorrects = int(stats[1])
-    decimals = 1
-    ratio = round(corrects/(incorrects+corrects+0.000000001)*100, decimals)
-    return(ratio)
-
-# calculate a players skill rating from their stats and ratio
-def calcSkillRating(stats, ratio):
-    corrects = int(stats[0])
-    longestStreak = int(stats[2])
-    experienceScalar = 10           # this variable affects how important a players experience is to the SR formula
-    decimals = 0
-    skillRating = int(round(ratio * (corrects/experienceScalar + longestStreak), decimals))
-    return(skillRating)
 
 # -- Bot Functionality --
 @client.event                                                                   # tell console when bot is ready
 async def on_ready():
     print('Bot is ready.')
+
 
 @client.event
 async def on_reaction_add(reaction, user):
@@ -206,8 +193,6 @@ async def on_reaction_add(reaction, user):
             redis.delete("&dreamer" + str(deleteID))
             del browseList[-1]
             await deleteConfirmationMsg.channel.send("Dream #" + str(deleteID) + " has been deleted.")
-
-
 
 
 @client.event
