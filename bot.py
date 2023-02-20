@@ -168,7 +168,7 @@ async def on_ready():
 
 @client.event
 async def on_reaction_add(reaction, user):
-    global adminID, dreamMsg, browseMsg, browseIndex, browseList
+    global adminID, dreamMsg, browseMsg, browseIndex, browseList, deleteConfirmationMsg
 
     if reaction.message.author.id == client.user.id:
         # reaction to start new round in dreamplay
@@ -528,6 +528,7 @@ async def on_message(message):                                                  
             await browseMsg.add_reaction("⬅️")
             await browseMsg.add_reaction("➡️")
             await browseMsg.add_reaction("⬇️")
+            deleteConfirmationMsg = 0
             # TODO add a delete emoji for deleting a dream, with confirmation message before deleting. Maybe edit also
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
