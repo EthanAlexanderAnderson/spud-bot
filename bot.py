@@ -6,6 +6,7 @@ import random
 import os
 from collections import defaultdict
 from dreamgame.dreamhelp import dreamhelp
+from dreamgame.dreamcensor import dreamcensor
 
 # -- global variables --
 redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
@@ -112,22 +113,7 @@ def dreamplay(msg):
 
     # if censor flag is true, censor names
     if censor:
-        censored = msg.split(" ")
-        suffixes = ["", "’s", "'s", "s", ",", ".", "?", "!", ")", "(", '"']
-        prefixes = ["", ",", ".", "?", "!", ")", "(", '"']
-        # nested for loop to search for names and censor them
-        for i in range(len(censored)):
-            for name in names:
-                if name in censored[i].capitalize(): # this line is only for optimization
-                    # names followed by a suffix
-                    for suffix in suffixes:
-                        if censored[i].capitalize() == name + suffix:
-                            censored[i] = "###" + suffix
-                    # names preceeded by a prefix
-                    for prefix in prefixes:
-                        if censored[i].capitalize() == prefix + name:
-                            censored[i] = prefix + "###"
-        msg = (" ").join(censored)
+        msg = dreamcensor(msg.split(" "), names)
 
     # gnome mode
     split = msg.split(" ")
