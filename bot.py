@@ -219,6 +219,7 @@ async def on_reaction_add(reaction, user):
             deleteID = browseList[browseIndex]
             redis.delete("&dream" + str(deleteID))
             redis.delete("&dreamer" + str(deleteID))
+            del browseList[-1]
             await deleteConfirmationMsg.channel.send("Dream #" + str(deleteID) + " has been deleted.")
 
 
