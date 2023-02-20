@@ -223,7 +223,7 @@ async def on_reaction_add(reaction, user):
 
 @client.event
 async def on_message(message):                                                  # read sent message
-    global adminID, answer, buffer, count, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, roundOver, dreamMsg, browseMsg, browseIndex, browseList
+    global adminID, answer, buffer, count, guessCount, guessCountUnique, namesGuessed, guessed, scores, scoresPrev, scoresPrevKeys, players, channelplaying, streaks, streaksBroken, correct, bonus, keys, roundOver, dreamMsg, browseMsg, browseIndex, browseList, deleteConfirmationMsg
     global censor, fake, AI, gnome
 
     if message.content.startswith('/send '):                                    # for /send
