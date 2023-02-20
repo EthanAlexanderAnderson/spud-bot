@@ -209,7 +209,7 @@ async def on_reaction_add(reaction, user):
                     pass
             elif (reaction.emoji == "🗑️"):
                 
-                deleteConfirmationMsg = await browseMsg.channel.send("Are you sure you want to delete this dream?") 
+                deleteConfirmationMsg = await browseMsg.channel.send("Are you sure you want to delete dream #{}?".format(str(browseList[browseIndex]))) 
                 await deleteConfirmationMsg.add_reaction("🗑️")
             await browseMsg.add_reaction("🗑️")
             # edit dream browser based on control usage
@@ -219,7 +219,7 @@ async def on_reaction_add(reaction, user):
             deleteID = browseList[browseIndex]
             redis.delete("&dream" + str(deleteID))
             redis.delete("&dreamer" + str(deleteID))
-            await deleteConfirmationMsg.channel.send("Dream " + str(deleteID) + "has been removed.")
+            await deleteConfirmationMsg.channel.send("Dream #" + str(deleteID) + " has been deleted.")
 
 
 
