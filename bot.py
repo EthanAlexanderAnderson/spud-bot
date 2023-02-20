@@ -603,6 +603,8 @@ async def on_message(message):                                                  
                 stats[0] = str(int(stats[0]) + 1)
                 if streaks[playerID] > int(stats[2]):
                     stats[2] = str(streaks[playerID])
+                if name == answer:
+                    stats[4] = str(int(stats[4]) + 1)
                 redis.set("%" + name, (",").join(stats))
 
         else:
@@ -615,6 +617,8 @@ async def on_message(message):                                                  
             # profile stats incorrect
             if not debug and name in namesStrict:
                 stats[1] = str(int(stats[1]) + 1)
+                if name == answer:
+                    stats[5] = str(int(stats[5]) + 1)
                 redis.set("%" + name, (",").join(stats))
 
         # tracking who guessed and what they guessed
