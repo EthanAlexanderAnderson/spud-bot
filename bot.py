@@ -487,7 +487,7 @@ async def on_message(message):                                                  
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
             statsMsg += "\nLongest Streak: " + stats[2]
-            statsMsg += "\nMemory: " + calcRatio(stats, 4, 5) + "%"
+            statsMsg += "\nMemory: " + str(calcRatio(stats, 4, 5)) + "%"
             statsMsg += "\nGnome Count: " + stats[3]
             await message.channel.send(statsMsg)
             # load dream browser
