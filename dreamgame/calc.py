@@ -1,9 +1,9 @@
 # calculate a players correct ratio
-def calcRatio(stats):
-    corrects = int(stats[0])
-    incorrects = int(stats[1])
+def calcRatio(stats, num, den):
+    numerator  = int(stats[num])
+    denominator = int(stats[den])
     decimals = 1
-    ratio = round(corrects/(incorrects+corrects+0.000000001)*100, decimals)
+    ratio = round(numerator/(denominator+numerator+0.000000001)*100, decimals)
     return(ratio)
 
 # calculate a players skill rating from their stats and ratio

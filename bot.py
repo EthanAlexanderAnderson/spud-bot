@@ -480,13 +480,14 @@ async def on_message(message):                                                  
                 await message.channel.send("Your profile <@" + str(userID) + "> is assigned to " + name)
             # fetch and display stats
             stats = redis.get("%" + name).split(",")
-            ratio = calcRatio(stats)
+            ratio = calcRatio(stats, 0, 1)
             # skill rating formula: ratio * ((#correct / 10) + longest streak)
             statsMsg = "**Skill Rating: " + str(calcSkillRating(stats, ratio)) + "**"
             statsMsg += "\nTotal Corrects: " + stats[0]
             statsMsg += "\nTotal Incorrects: " + stats[1]
             statsMsg += "\nRatio: " + str(ratio) + "%"
             statsMsg += "\nLongest Streak: " + stats[2]
+            statsMsg += "\nMemory: " + calcRatio(stats, 4, 5) + "%"
             statsMsg += "\nGnome Count: " + stats[3]
             await message.channel.send(statsMsg)
             # load dream browser
@@ -526,7 +527,7 @@ async def on_message(message):                                                  
             for i in profileKeys:
                 stats = redis.get(i).split(",")
                 # add tiny number to prevent 0 division
-                ratio = calcRatio(stats)
+                ratio = calcRatio(stats, 0, 1)
                 leaderboard[i[1:]] = calcSkillRating(stats, ratio)
             leaderboard = {k: v for k, v in sorted(leaderboard.items(), key=lambda x: x[1], reverse=True)}
             leaderboardMsg = ""
