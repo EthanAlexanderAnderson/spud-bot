@@ -176,7 +176,8 @@ async def on_reaction_add(reaction, user):
             dreamMsg = await reaction.message.channel.send(dreamplay(["/dp"]))
             await dreamMsg.add_reaction("⏩")
         # profile dream broswer
-        if reaction.message == browseMsg and user.id != client.user.id:
+        elif reaction.message == browseMsg and user.id != client.user.id:
+            deleteConfirmationMsg = 0
             if (reaction.emoji == "⬆️"):
                 # first
                 browseIndex = 0
@@ -211,7 +212,7 @@ async def on_reaction_add(reaction, user):
                 await deleteConfirmationMsg.add_reaction("🗑️")
             await browseMsg.add_reaction("🗑️")
 
-        if reaction.message == deleteConfirmationMsg and user.id != client.user.id:
+        elif reaction.message == deleteConfirmationMsg and user.id != client.user.id:
             redis.delete("&dream" + str(deleteID))
             redis.delete("&dreamer" + str(deleteID))
             await deleteConfirmationMsg.channel.send("Dream " + str(deleteID) + "has been removed.")
