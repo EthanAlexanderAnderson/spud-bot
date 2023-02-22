@@ -15,7 +15,6 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
-# TODO make all multi-line sends into single lines to eliminate cooldown" issue
 namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
 names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Scoobie", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Maxwel", "Maximillion", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
 aliases = [["Ethan", "Anderson", "Ethan Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "Ea"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "Col", "Co", "Ch", "C"], ["Nathan", "Asthon", "Nathan Ashton", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "Bs", "Nat", "Na", "N"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "Os", "Ob", "O"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "El"], ["Mitch", "Mitchell", "Ms"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "Mtg", "Mt", "Mk"], ["Devon", "Devon C", "Dev", "Dc"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "Ds"], ["Eddie", "Edmund", "Ed", "Eb"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "Ag", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "Lz", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "Jm", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "Zr", "Z"], ["Ai", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
@@ -348,8 +347,6 @@ async def on_message(message):                                                  
         bonus = False
         await message.channel.send("Scores reset.")
 
-    # skip feature, also doubles as insurance encase a user puts too high of a playercount
-    # TODO remove. Replaced by emoji reaction controls  
     elif message.content.startswith('/dreamskip'):
         guessCount = 0
         guessed = []
@@ -387,7 +384,7 @@ async def on_message(message):                                                  
             redis.set("&AIcount", str(i))
         await message.channel.send("AI dream {} has been added.".format(redis.get("&AIcount")))
 
-    # TODO remove AFTER creating remove functionality with profile, or alternative remove command
+    # phased out for delete function in profile dream browser, keeping command for legacy
     elif message.content.startswith('/dreamundo') or message.content.startswith('/du'):
         # check if undoer has same ID as most recent dream added
         if redis.get("&dreamer"+redis.get("&dreamcount")) == redis.get("&" + str(message.author.id)):
@@ -506,7 +503,6 @@ async def on_message(message):                                                  
             await browseMsg.add_reaction("⬅️")
             await browseMsg.add_reaction("➡️")
             await browseMsg.add_reaction("⬇️")
-            # TODO add a delete emoji for deleting a dream, with confirmation message before deleting. Maybe edit also
 
         elif len(msg) > 2 and (msg[1].lower() == 'link' or msg[1].lower() == 'add') and msg[2].capitalize() in namesStrict:
             # profile linking
