@@ -620,6 +620,14 @@ async def on_message(message):                                                  
                 stats[1] = str(int(stats[1]) + 1)
                 if name == answer:
                     stats[5] = str(int(stats[5]) + 1)
+
+                if gnome and answer == "Gnome":
+                    scores[playerID] -= 10
+                    if scores[playerID] < 0:
+                        scores[playerID] = 0
+                    # track gnome stats
+                    stats[3] = str(int(stats[3]) + 1)
+
                 redis.set("%" + name, (",").join(stats))
 
         # tracking who guessed and what they guessed
@@ -713,14 +721,7 @@ async def on_message(message):                                                  
             if gnome and answer == "Gnome":
                 for player in guessed:
                     if player not in correct:
-                        scores[player] -= 10
-                        if scores[player] < 0:
-                            scores[player] = 0
                         gnomeMsg += "<@{}>, ".format(player)
-                        # TODO FIX THIS MOVE UP
-                        # track gnome stats
-                        stats[3] = str(int(stats[3]) + 1)
-                        redis.set("%" + name, (",").join(stats))
 
             # auto reveal and show sorted scores
             scores = {k: v for k, v in sorted(scores.items(), key=lambda x: x[1], reverse=True)}
