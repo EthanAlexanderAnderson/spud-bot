@@ -131,7 +131,7 @@ def dreamplay(msg):
         msg = (" ").join(split)
 
     # return dream to display
-    return ("> " + msg)
+    return ("```" + msg)
 
 
 # -- Bot Functionality --
@@ -185,7 +185,7 @@ async def on_reaction_add(reaction, user):
                 await deleteConfirmationMsg.add_reaction("🗑️")
             await browseMsg.add_reaction("🗑️")
             # edit dream browser based on control usage
-            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**> " + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
+            await browseMsg.edit(content="**ID: " + str(browseList[browseIndex]) + "\n**```" + redis.get("&dream" + str(browseList[browseIndex])) + " \n")
         # confirmation for dream deletion
         elif reaction.message == deleteConfirmationMsg and user.id == browseUser:
             deleteID = browseList[browseIndex]
@@ -717,7 +717,7 @@ async def on_message(message):                                                  
                         if scores[player] < 0:
                             scores[player] = 0
                         gnomeMsg += "<@{}>, ".format(player)
-
+                        # TODO FIX THIS MOVE UP
                         # track gnome stats
                         stats[3] = str(int(stats[3]) + 1)
                         redis.set("%" + name, (",").join(stats))
