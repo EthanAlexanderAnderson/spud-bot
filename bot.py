@@ -217,7 +217,7 @@ async def on_message(message):                                                  
         await message.channel.send("{} has been removed".format(target[1]))     # inform user the entry has been removed
 
     elif message.content.startswith('/list'):                                   # for /list       
-        keys = redis.keys(pattern='[^&]*')                                      # defines all keys (other than dream related)
+        keys = redis.keys(pattern='[^&%]*')                                      # defines all keys (other than dream related)
         await message.channel.send((', ').join(keys))                           # inform user of all set keys
 
     # -- Dream Journal Game Commands --
