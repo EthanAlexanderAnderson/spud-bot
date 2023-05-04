@@ -225,7 +225,7 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamadd') or message.content.startswith('/da'):
         # Input processing and validation
         dreamadd = message.content.split(" ")                                   # split incoming message
-        if len(dreamadd) < 3:
+        if len(dreamadd) < 2:
             await message.channel.send("Error: Missing required inputs")
             return
         dreamer = dreamadd[1].capitalize()                                      # define who had the dream  
@@ -240,14 +240,13 @@ async def on_message(message):                                                  
                 redis.set("&fakecount", str(i))
             await message.channel.send("Fake dream {} has been added.".format(redis.get("&fakecount")))
             return
-        # if name not given, check profiles
-        elif dreamer not in namesStrict:                                        # input validation
-            if redis.exists("&" + str(message.author.id)):
-                dreamer = (redis.get("&" + str(message.author.id)))
-                dream = (' ').join(dreamadd[1:])
-            else:
-                await message.channel.send("Error: Invalid dreamer name / missing profile")           # throw error to user
-                return
+        # check profiles
+        if redis.exists("&" + str(message.author.id)):
+            dreamer = (redis.get("&" + str(message.author.id)))
+            dream = (' ').join(dreamadd[1:])
+        else:
+            await message.channel.send("Error: Invalid dreamer name / missing profile")           # throw error to user
+            return
         i = 0
         while (redis.exists("&dream"+str(i))):                                  # find what numbers are taken to not override
             i+=1
