@@ -207,7 +207,7 @@ async def on_message(message):                                                  
     elif message.content.startswith('/add '):                                   # for /add
         words = message.content.split(" ")                                      # split incoming message
         key = words[1]                                                          # define dictionary key
-        value = words[2]                                                        # define dictionary value
+        value = words[2:]                                                       # define dictionary value
         redis.set(str(key), str(value))                                         # add entry to dictionary
         await message.channel.send("{} has been added".format(words[1]))        # inform user the entry has been made
 
