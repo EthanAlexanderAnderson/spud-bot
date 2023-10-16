@@ -202,7 +202,10 @@ async def on_message(message):                                                  
     if message.content.startswith('/send '):                                    # for /send
         keyword = message.content.split(" ")                                    # split incoming message
         msg = redis.get((' ').join(keyword[1:]))                                # find tag in dictionary
-        await message.channel.send(msg)                                         # send link connected to tag
+        if msg == None or msg == "":                                            # if tag not found
+            await message.channel.send("Error: Tag not found")                  # throw error to user
+        else:
+            await message.channel.send(msg)                                     # send link connected to tag
 
     elif message.content.startswith('/add '):                                   # for /add
         words = message.content.split(" ")                                      # split incoming message
