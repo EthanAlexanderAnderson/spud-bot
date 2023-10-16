@@ -446,7 +446,7 @@ async def on_message(message):                                                  
             dreamer = redis.get("&dreamer" + str(i))
             num = str(i)
             if ((dream == None or dream == "" or dreamer == None or dreamer == "") and i <= count):
-                scanMsg += "Dream or Dreamer #" + num + " is empty\n"
+                scanMsg += "Dream #" + num + " is empty\n"
                 dreams.append("NULL")
             elif (i <= count):
                 if dream[:50] in dreams:
@@ -457,6 +457,8 @@ async def on_message(message):                                                  
                     scanMsg += "Dream #" + num + " exists. Increasing count to " + num + "\n"
                     redis.set("&dreamcount", num)
                     count = int(num)
+        if scanMsg == "":
+            scanMsg = "No issues found"
         await message.channel.send(scanMsg)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
