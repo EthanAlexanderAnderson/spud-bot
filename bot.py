@@ -432,6 +432,27 @@ async def on_message(message):                                                  
             length = length - 1999
         await message.channel.send(fullKeys)
 
+    # also for debugging
+    elif message.content.startswith('/dreamscan'):
+        scanMsg = ""
+        dreams = []
+        for i in range(count+10):
+            dream = redis.get("&dream" + str(i))
+            dreamer = redis.get("&dreamer" + str(i))
+            num = str(i)
+            if ((dream == None or dream == "" or dreamer == None or dreamer == "") and i <= count):
+                scanMsg += "Dream or Dreamer #" + num + " is empty\n"
+                dreams.append("NULL")
+            elif (i <= count):
+                if dream[:50] in dreams:
+                    scanMsg += "Dream #" + num + " is a duplicate of " + str(dreams.index(dream[:50])) + "\n"
+                dreams.append(dream[:50])
+            elif ((dream != None and dream != "" and dreamer != None and dreamer != "")):
+                if "NULL" not in dreams:
+                    scanMsg += "Dream #" + num + " exists. Increasing count to " + num + "\n"
+                    redis.set("&dreamcount", num)
+                    count = int(num)
+        await message.channel.send(scanMsg)
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         await message.channel.send(dreamhelp(message.content.split(" ")))
