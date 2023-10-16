@@ -303,7 +303,11 @@ async def on_message(message):                                                  
         else:
             await message.channel.send("Error: Missing required inputs")
             return
-        await message.channel.send(msg)
+        
+        if msg == None or msg == "":                                            # if tag not found
+            await message.channel.send("Error: Dream not found")                  # throw error to user
+        else:
+            await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):
         msg = message.content.split(" ")
