@@ -450,7 +450,7 @@ async def on_message(message):                                                  
                 dreams.append("NULL")
             elif (i <= count):
                 if dream[:50] in dreams:
-                    scanMsg += "Dream #" + num + " is a duplicate of " + str(dreams.index(dream[:50])) + "\n"
+                    scanMsg += "Dream #" + num + " is a duplicate of #" + str(dreams.index(dream[:50])) + "\n"
                 dreams.append(dream[:50])
             elif ((dream != None and dream != "" and dreamer != None and dreamer != "")):
                 if "NULL" not in dreams:
