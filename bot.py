@@ -438,6 +438,7 @@ async def on_message(message):                                                  
 
     # also for debugging
     elif message.content.startswith('/dreamscan'):
+        count = int(redis.get("&dreamcount"))
         scanMsg = ""
         dreams = []
         for i in range(count+10):
