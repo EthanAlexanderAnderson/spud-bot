@@ -289,13 +289,17 @@ async def on_message(message):                                                  
         
         msg = message.content.split(" ")
         num = msg[1]
+
         if len(msg) > 2:
             if msg[2].upper() == "AI":
                 msg = redis.get("&AI" + num)
             elif msg[2].upper() == "FAKE":
                 msg = redis.get("&fake" + num)
-        else:
+        elif len(msg) > 1:
             msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
+        else:
+            await message.channel.send("Error: Missing required inputs")
+            return
         await message.channel.send(msg)
 
     elif message.content.startswith('/dreamname') or message.content.startswith('/dn'):
