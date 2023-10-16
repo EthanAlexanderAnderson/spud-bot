@@ -321,7 +321,9 @@ async def on_message(message):                                                  
                 await message.channel.send("Error: No dreams under the name " + name)
         else:       # if no name
             for i in range(count):
-                perPerson[redis.get("&dreamer" + str(i))] += 1
+                dreamerTemp = redis.get("&dreamer" + str(i))
+                if dreamerTemp: # if returns not null
+                    perPerson[dreamerTemp] += 1
             perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
             await message.channel.send("Count per name: ")
             msgout = ""
