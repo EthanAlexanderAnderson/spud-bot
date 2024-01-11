@@ -349,11 +349,8 @@ async def on_message(message):                                                  
         ids = []
         perPerson = defaultdict(int)
 
-        if (len(msg) > 1): # if name is provided
+        if (len(msg) > 1): # if name/word is provided
             name = msg[1]
-            if name not in namesStrict: # input validation
-                await message.channel.send("Error: Invalid name") # throw error to user
-                return
 
             for i in range(count):
                 dreamTemp = redis.get("&dream" + str(i))
@@ -364,7 +361,7 @@ async def on_message(message):                                                  
             if total > 0:
                 await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(ids))
             else:
-                await message.channel.send("Error: No dreams containing the name " + name)
+                await message.channel.send("Error: No dreams containing the word " + name)
         else: # if no name
             for i in range(count):
                 dreamTemp = redis.get("&dream" + str(i))
