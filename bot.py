@@ -342,6 +342,42 @@ async def on_message(message):                                                  
                 msgout += key + ": " + str(perPerson[key]) + "\n"
             await message.channel.send(msgout)
 
+    elif message.content.startswith('/dreammentions') or message.content.startswith('/dm'):
+        msg = message.content.split(" ")
+        total = 0
+        count = int(redis.get("&dreamcount"))
+        ids = []
+        perPerson = defaultdict(int)
+
+        if (len(msg) > 1): # if name is provided
+            name = msg[1]
+            if name not in namesStrict: # input validation
+                await message.channel.send("Error: Invalid name") # throw error to user
+                return
+
+            for i in range(count):
+                dreamTemp = redis.get("&dream" + str(i))
+                if dreamTemp: # if returns not null
+                    if name in dreamTemp:
+                        ids.append(str(i))
+                        total+=1
+            if total > 0:
+                await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(ids))
+            else:
+                await message.channel.send("Error: No dreams containing the name " + name)
+        else: # if no name
+            for i in range(count):
+                dreamTemp = redis.get("&dream" + str(i))
+                if dreamTemp: # if returns not null
+                    for name in namesStrict:
+                        if name in dreamTemp:
+                            perPerson[name] += 1
+            perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
+            await message.channel.send("Mentions per name: ")
+            msgout = ""
+            for key in perPerson:
+                msgout += key + ": " + str(perPerson[key]) + "\n"
+            await message.channel.send(msgout)
 
     # Resets all global variables
     # TODO remove AFTER adding reset emoji reaction control (with confirmation)
