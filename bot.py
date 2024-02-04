@@ -391,7 +391,8 @@ async def on_message(message):                                                  
                 msg += "{} - {}: ".format(i, i+9)
             msg += difficultyList[i] + ", "
             # message limit is 2000 characters so we need to split the message
-            if msg.length > 1900:
+            # 1450 should be 500 dreams worth of data
+            if len(msg) >= 1450:
                 await message.channel.send(msg)
                 msg = ""
         await message.channel.send(msg)
