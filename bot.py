@@ -385,7 +385,7 @@ async def on_message(message):                                                  
         diff = ""
         for i in range(count):
             try:
-                if difficultyList[i] == None or difficultyList[i] == "":
+                if difficultyList[i] == None or difficultyList[i] == "" or difficultyList[i] == "NaN":
                     difficultyList[i] = "5"
                     diff += difficultyList[i] + ","
             except IndexError:
