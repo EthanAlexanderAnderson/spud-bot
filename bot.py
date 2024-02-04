@@ -381,18 +381,26 @@ async def on_message(message):                                                  
         count = int(redis.get("&dreamcount"))
         difficultyList = redis.get("%difficulty").split(",")
 
+        # first we set all missing values to 5
+        diff = ""
         for i in range(count):
-            # if our of range set to default (5)
-            if difficultyList[i] == None or difficultyList[i] == "":
-                difficultyList[i] = "5"
+            try:
+                if difficultyList[i] == None or difficultyList[i] == "":
+                    diff += difficultyList[i] + ","
+            except IndexError:
+                difficultyList[i] = "5,"
+
+        for i in range(count):
+
             # set new line after 10 entries
             if (i % 10 == 0 and i != 0):
                 msg += "\n"
                 msg += "{} - {}: ".format(i, i+9)
             msg += difficultyList[i] + ", "
+
             # message limit is 2000 characters so we need to split the message
-            # 1638 should be 400 dreams worth of data
-            if len(msg) >= 1638:
+            # 1650 should be 400 dreams worth of data, split at the end of line
+            if len(msg) >= 1650 and (i % 10 == 9):
                 await message.channel.send(msg)
                 msg = ""
         await message.channel.send(msg)
