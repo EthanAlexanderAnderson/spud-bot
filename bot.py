@@ -391,7 +391,8 @@ async def on_message(message):                                                  
             except IndexError:
                 difficultyList.append("5")
                 diff += difficultyList[i] + ","
-        redis.set("%difficulty", diff)
+        print(diff)
+        #redis.set("%difficulty", diff)
 
         for i in range(count):
 
