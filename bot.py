@@ -384,15 +384,15 @@ async def on_message(message):                                                  
         for i in range(count):
             # if our of range set to default (5)
             if difficultyList[i] == None or difficultyList[i] == "":
-                difficultyList[i] = 5
+                difficultyList[i] = "5"
             # set new line after 10 entries
             if (i % 10 == 0 and i != 0):
                 msg += "\n"
                 msg += "{} - {}: ".format(i, i+9)
             msg += difficultyList[i] + ", "
             # message limit is 2000 characters so we need to split the message
-            # 1450 should be 500 dreams worth of data
-            if len(msg) >= 1450:
+            # 1638 should be 400 dreams worth of data
+            if len(msg) >= 1638:
                 await message.channel.send(msg)
                 msg = ""
         await message.channel.send(msg)
