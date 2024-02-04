@@ -520,24 +520,28 @@ async def on_message(message):                                                  
             dream = redis.get("&dream" + str(i))
             dreamer = redis.get("&dreamer" + str(i))
             num = str(i)
-            # if dream/dreamer is empty or null
-            if ((dream == None or dream == "" or dreamer == None or dreamer == "") and i <= count):
-                scanMsg += "Dream #" + num + " is empty\n"
-                dreams.append("NULL")
-            # if dream string contains dreamer string
-            elif (dreamer in dream):  
-                scanMsg += "Dream #" + num + " contains the dreamer's name\n"
-            # if duplicate dream
-            elif (i <= count):
-                if dream[:100] in dreams:
+
+            if (i <= count):
+                # if dream/dreamer is empty or null
+                if (dream == None or dream == "" or dreamer == None or dreamer == ""):
+                    scanMsg += "Dream #" + num + " is empty\n"
+                    dreams.append("NULL")
+                # if duplicate dream
+                elif dream[:100] in dreams and dream[:100] != "NULL":
                     scanMsg += "Dream #" + num + " is a duplicate of #" + str(dreams.index(dream[:100])) + "\n"
-                dreams.append(dream[:100])
+                    dreams.append(dream[:100])
+                # if dream string contains dreamer string
+                elif (dreamer in dream):  
+                    scanMsg += "Dream #" + num + " contains the dreamer's name\n"
+                    dreams.append(dream[:100])
+
             # if dreamcount is lower than number of dreams
             elif ((dream != None and dream != "" and dreamer != None and dreamer != "")):
                 if "NULL" not in dreams:
                     scanMsg += "Dream #" + num + " exists. Increasing count to " + num + "\n"
                     redis.set("&dreamcount", num)
                     count = int(num)
+
         if scanMsg == "":
             scanMsg = "No issues found"
         await message.channel.send(scanMsg)
