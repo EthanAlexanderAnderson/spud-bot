@@ -389,8 +389,7 @@ async def on_message(message):                                                  
             if (i % 10 == 0 and i != 0):
                 msg += "\n"
                 msg += "{} - {}: ".format(i, i+9)
-            msg += difficultyList[i].toString()
-            msg += ", "
+            msg += difficultyList[i] + ", "
             # message limit is 2000 characters so we need to split the message
             if msg.length > 1900:
                 await message.channel.send(msg)
