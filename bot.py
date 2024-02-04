@@ -388,7 +388,10 @@ async def on_message(message):                                                  
                 if difficultyList[i] == None or difficultyList[i] == "":
                     diff += difficultyList[i] + ","
             except IndexError:
-                difficultyList[i] = "5,"
+                difficultyList.append("5")
+                diff += difficultyList[i] + ","
+        # uncomment this later
+        #redis.set("%difficulty", diff)
 
         for i in range(count):
 
