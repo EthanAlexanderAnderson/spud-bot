@@ -376,6 +376,27 @@ async def on_message(message):                                                  
                 msgout += key + ": " + str(perPerson[key]) + "\n"
             await message.channel.send(msgout)
 
+    elif message.content.startswith('/dreamdifficulty') or message.content.startswith('/dd'):
+        msg = "0 - 9:   "
+        count = int(redis.get("&dreamcount"))
+        difficultyList = redis.get("%difficulty").split(",")
+
+        for i in range(count):
+            # if our of range set to default (5)
+            if difficultyList[i] == None or difficultyList[i] == "":
+                difficultyList[i] = 5
+            # set new line after 10 entries
+            if (i % 10 == 0 and i != 0):
+                msg += "\n"
+                msg += "{} - {}: ".format(i, i+9)
+            msg += difficultyList[i].toString()
+            msg += ", "
+            # message limit is 2000 characters so we need to split the message
+            if msg.length > 1900:
+                await message.channel.send(msg)
+                msg = ""
+        await message.channel.send(msg)
+
     # Resets all global variables
     # TODO remove AFTER adding reset emoji reaction control (with confirmation)
     elif message.content.startswith('/dreamreset'):
