@@ -1,3 +1,4 @@
 pip==21.1
 discord.py==2.0.1
 redis
+matplotlib==3.4.2
