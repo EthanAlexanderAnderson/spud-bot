@@ -416,6 +416,8 @@ async def on_message(message):                                                  
             buffer = io.BytesIO()
             plt.savefig(buffer, format='png')
             buffer.seek(0)
+            # delete old plot
+            plt.clf()
 
             await message.channel.send(file=discord.File(buffer, filename="bar_chart.png"))
         else:
