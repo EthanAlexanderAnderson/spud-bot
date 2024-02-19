@@ -352,7 +352,8 @@ async def on_message(message):                                                  
         perPerson = defaultdict(int)
 
         if (len(msg) > 1): # if name/word is provided
-            name = msg[1]
+            name = msg[1:]
+            name = (' ').join(name)
 
             for i in range(count):
                 dreamTemp = redis.get("&dream" + str(i)).lower()
@@ -363,7 +364,7 @@ async def on_message(message):                                                  
             if total > 0:
                 await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(ids))
             else:
-                await message.channel.send("Error: No dreams containing the word " + name)
+                await message.channel.send('Error: No dreams containing "' + name + '" found.')
         else: # if no name
             for i in range(count):
                 dreamTemp = redis.get("&dream" + str(i)).lower()
