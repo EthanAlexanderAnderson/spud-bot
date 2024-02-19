@@ -9,9 +9,11 @@ from dreamgame.dreamhelp import dreamhelp
 from dreamgame.dreamcensor import dreamcensor
 from dreamgame.calc import calcRatio
 from dreamgame.calc import calcSkillRating
+import matplotlib.pyplot as plt
+import io
 
 # -- global variables --
-redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
+redis = redis.Redis.from_url('redis://:pd461d2ca0afbb0e93ddfcda006691526b53a83f255f1420c145b5a39eec47ba9@ec2-34-205-51-10.compute-1.amazonaws.com:10979', decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
@@ -377,39 +379,80 @@ async def on_message(message):                                                  
             await message.channel.send(msgout)
 
     elif message.content.startswith('/dreamdifficulty') or message.content.startswith('/dd'):
+        flags = message.content.split(" ")[1:]
         msg = "0 - 9:   "
         count = int(redis.get("&dreamcount"))
         difficultyList = redis.get("%difficulty").split(",")
 
-        # first we set all missing values to 5
-        diff = ""
-        for i in range(count):
-            try:
-                if difficultyList[i] == None or difficultyList[i] == "" or difficultyList[i] == "NaN":
-                    difficultyList[i] = "5"
-                    diff += difficultyList[i] + ","
+        # for "graph" keyword, send a graph of the difficulty list using matplotlib
+        if "graph" in flags:
+            # create a bar chart to show the frequency of each number in the difficulty list
+            # x-axis: number that appear, sorted from low to high
+            # y-axis: frequency of each number
+            # create a dictionary to store the frequency of each number
+            frequency = {}
+            for i in range(count):
+                diff = int(difficultyList[i])
+                if diff in frequency:
+                    frequency[diff] += 1
                 else:
+                    frequency[diff] = 1
+            # sort the dictionary by key
+            frequency = {k: v for k, v in sorted(frequency.items(), key=lambda x: x[0])}
+            # create the bar chart
+            plt.bar(frequency.keys(), frequency.values())
+            plt.xlabel('Difficulty')
+            plt.ylabel('Frequency')
+            plt.title('Difficulty Frequency')
+            # x ticks should be from -5 to 15, by 1
+            plt.xticks(range(-5, 16))
+            # y ticks should be from 0 to the max frequency, by 10
+            plt.yticks(range(0, max(frequency.values())+1, 10))
+
+            # increase the width of the graph
+            plt.gcf().set_size_inches(16, 9)
+            # Save the plot to a buffer
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+
+            await message.channel.send(file=discord.File(buffer, filename="bar_chart.png"))
+        else:
+            # first we set all missing values to 5
+            diff = ""
+            for i in range(count):
+                try:
+                    if difficultyList[i] == None or difficultyList[i] == "" or difficultyList[i] == "NaN":
+                        difficultyList[i] = "5"
+                        diff += difficultyList[i] + ","
+                    elif int(difficultyList[i]) < -5:
+                        difficultyList[i] = str((int(difficultyList[i]) + 1))
+                        diff += difficultyList[i] + ","
+                    elif int(difficultyList[i]) > 15:
+                        difficultyList[i] = str((int(difficultyList[i]) - 1))
+                        diff += difficultyList[i] + ","
+                    else:
+                        diff += difficultyList[i] + ","
+                except IndexError:
+                    difficultyList.append("5")
                     diff += difficultyList[i] + ","
-            except IndexError:
-                difficultyList.append("5")
-                diff += difficultyList[i] + ","
-        print(diff)
-        redis.set("%difficulty", diff)
+            print(diff)
+            redis.set("%difficulty", diff)
 
-        for i in range(count):
+            for i in range(count):
 
-            # set new line after 10 entries
-            if (i % 10 == 0 and i != 0):
-                msg += "\n"
-                msg += "{} - {}: ".format(i, i+9)
-            msg += difficultyList[i] + ", "
+                # set new line after 10 entries
+                if (i % 10 == 0 and i != 0):
+                    msg += "\n"
+                    msg += "{} - {}: ".format(i, i+9)
+                msg += difficultyList[i] + ", "
 
-            # message limit is 2000 characters so we need to split the message
-            # 1650 should be 400 dreams worth of data, split at the end of line
-            if len(msg) >= 1650 and (i % 10 == 9):
-                await message.channel.send(msg)
-                msg = ""
-        await message.channel.send(msg)
+                # message limit is 2000 characters so we need to split the message
+                # 1650 should be 400 dreams worth of data, split at the end of line
+                if len(msg) >= 1650 and (i % 10 == 9):
+                    await message.channel.send(msg)
+                    msg = ""
+            await message.channel.send(msg)
 
     # Resets all global variables
     # TODO remove AFTER adding reset emoji reaction control (with confirmation)
@@ -545,6 +588,17 @@ async def on_message(message):                                                  
         if scanMsg == "":
             scanMsg = "No issues found"
         await message.channel.send(scanMsg)
+
+    # also for debugging
+    elif message.content.startswith('/dreamexport'):
+        count = int(redis.get("&dreamcount"))
+        exportMsg = ""
+        for i in range(count):
+            exportMsg += "Dream #" + str(i) + " by " + redis.get("&dreamer" + str(i)) + ": " + redis.get("&dream" + str(i)) + "\n"
+        #export to file on pc
+        with open("dreams.txt", "w", encoding='utf-8') as file:
+            file.write(exportMsg)
+        await message.channel.send("Dreams exported to file")
 
     elif message.content.startswith('/dreamhelp') or message.content.startswith('/dh'):
         await message.channel.send(dreamhelp(message.content.split(" ")))
