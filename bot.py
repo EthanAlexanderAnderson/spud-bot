@@ -363,8 +363,18 @@ async def on_message(message):                                                  
                     if name.lower() in dreamTemp.lower():
                         ids.append(str(i))
                         total+=1
-            if total > 0:
+            # if there are only a few results, display them
+            if total > 0 and total < 4:
                 await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(ids))
+                for i in ids:
+                    await message.channel.send(redis.get("&dream" + i) + " ||" + redis.get("&dreamer" + i) + "||")
+            # if there are more than a few results, display the count and IDs
+            elif total > 0 and total < 200:
+                await message.channel.send("Count: " + str(total) + ". Dream IDs: " + (', ').join(ids))
+            # if there are too many results, display the count and an error message
+            elif total > 200:
+                await message.channel.send("Count: " + str(total) + " Error: Too many results to display IDs, please narrow down search.")
+            # if there are no results, display an error message
             else:
                 await message.channel.send('Error: No dreams containing "' + name + '" found.')
         else: # if no name
@@ -372,7 +382,7 @@ async def on_message(message):                                                  
                 dreamTemp = redis.get("&dream" + str(i))
                 if dreamTemp: # if returns not null
                     for name in namesStrict:
-                        if name.lower() in dreamTemp.lower():
+                        if (name.lower() + " ") in dreamTemp.lower(): # add a space to prevent partial name matches (Devo from Devon)
                             perPerson[name] += 1
             perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
             await message.channel.send("Mentions per name: ")
