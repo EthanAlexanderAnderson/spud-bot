@@ -382,7 +382,8 @@ async def on_message(message):                                                  
                 dreamTemp = redis.get("&dream" + str(i))
                 if dreamTemp: # if returns not null
                     for name in namesStrict:
-                        if (name.lower() + " ") in dreamTemp.lower(): # add a space to prevent partial name matches (Devo from Devon)
+                        # add a space/punctuation to prevent partial name matches (Devo from Devon)
+                        if any((name.lower() + punc) in dreamTemp.lower() for punc in [" ", "\n", ".", ",", "!", "?", ";", ":", "&", "(", ")", "[", "]", "{", "}", "<", ">", "'", '"']):
                             perPerson[name] += 1
             perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
             await message.channel.send("Mentions per name: ")
