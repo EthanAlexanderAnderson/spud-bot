@@ -701,7 +701,7 @@ async def on_message(message):                                                  
             await message.channel.send("Profile <@" + str(userID) + "> has been assigned to " + name)
             
     # skill rating formula: ratio * ((#correct / 10) + longest streak)
-    elif message.content.startswith('/dreamleaderboard') or message.content.startswith('/leaderboard') or message.content.startswith('/db') or message.content.startswith('/lb'):
+    elif message.content.startswith('/dreamleaderboard') or message.content.startswith('/leaderboard') or message.content.startswith('/dlb'):
             profileKeys = redis.keys(pattern='%*')
             leaderboard = defaultdict(int)
             for i in profileKeys:
