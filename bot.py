@@ -289,7 +289,7 @@ async def on_message(message):                                                  
     elif message.content.startswith('/dreamsend') or message.content.startswith('/ds'):
         # cheat prevention
         if guessCount < players:
-            await message.channel.send("This commmand is disabled while dreamplay is active")
+            await message.channel.send("This command is disabled while dreamplay is active")
             return
         
         msg = message.content.split(" ")
@@ -301,7 +301,9 @@ async def on_message(message):                                                  
             elif msg[2].upper() == "FAKE":
                 msg = redis.get("&fake" + num)
         elif len(msg) > 1:
-            msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
+            msg = None
+            if redis.exists("&dream" + num) and redis.exists("&dreamer" + num):
+                msg = redis.get("&dream" + num) + " ||" + redis.get("&dreamer" + num) + "||"
         else:
             await message.channel.send("Error: Missing required inputs")
             return
@@ -356,9 +358,9 @@ async def on_message(message):                                                  
             name = (' ').join(name)
 
             for i in range(count):
-                dreamTemp = redis.get("&dream" + str(i)).lower()
+                dreamTemp = redis.get("&dream" + str(i))
                 if dreamTemp: # if returns not null
-                    if name.lower() in dreamTemp:
+                    if name.lower() in dreamTemp.lower():
                         ids.append(str(i))
                         total+=1
             if total > 0:
@@ -367,10 +369,10 @@ async def on_message(message):                                                  
                 await message.channel.send('Error: No dreams containing "' + name + '" found.')
         else: # if no name
             for i in range(count):
-                dreamTemp = redis.get("&dream" + str(i)).lower()
+                dreamTemp = redis.get("&dream" + str(i))
                 if dreamTemp: # if returns not null
                     for name in namesStrict:
-                        if name.lower() in dreamTemp:
+                        if name.lower() in dreamTemp.lower():
                             perPerson[name] += 1
             perPerson = {k: v for k, v in sorted(perPerson.items(), key=lambda x: x[1], reverse=True)}            # --- sort scores - https://stackoverflow.com/questions/52141785/sort-dict-by-values-in-python-3-6
             await message.channel.send("Mentions per name: ")
