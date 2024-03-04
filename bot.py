@@ -469,6 +469,25 @@ async def on_message(message):                                                  
                     await message.channel.send(msg)
                     msg = ""
             await message.channel.send(msg)
+        # also send the mean, median, mode
+        # mean
+        mean = sum(map(int, difficultyList)) / len(difficultyList)
+        # median
+        difficultyList.sort()
+        if len(difficultyList) % 2 == 0:
+            median = (int(difficultyList[len(difficultyList)//2]) + int(difficultyList[len(difficultyList)//2 - 1])) / 2
+        else:
+            median = int(difficultyList[len(difficultyList)//2])
+        # mode
+        frequency = {}
+        for i in range(count):
+            diff = int(difficultyList[i])
+            if diff in frequency:
+                frequency[diff] += 1
+            else:
+                frequency[diff] = 1
+        mode = max(frequency, key=frequency.get)
+        await message.channel.send("Mean: " + str(mean) + ", Median: " + str(median) + ", Mode: " + str(mode))
 
     # Resets all global variables
     # TODO remove AFTER adding reset emoji reaction control (with confirmation)
