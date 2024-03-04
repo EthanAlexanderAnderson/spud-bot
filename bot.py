@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import io
 
 # -- global variables --
-redis = redis.Redis.from_url('redis://:pd461d2ca0afbb0e93ddfcda006691526b53a83f255f1420c145b5a39eec47ba9@ec2-34-205-51-10.compute-1.amazonaws.com:10979', decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
+redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
