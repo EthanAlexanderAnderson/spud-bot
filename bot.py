@@ -668,7 +668,7 @@ async def on_message(message):                                                  
                 userID = msg[1][2:-1]
                 name = redis.get("&" + str(userID))
                 await message.channel.send("Profile <@" + str(userID) + "> is assigned to " + name)
-            elif len(msg) == 2 and msg[1] in namesStrict:
+            elif len(msg) == 2 and msg[1].capitalize() in namesStrict:
                 # provided name
                 name = msg[1]
                 userID = 0
