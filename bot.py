@@ -259,6 +259,12 @@ async def on_message(message):                                                  
         redis.set(("&dream"+str(i)), str(dream))                                # set dream
         if (i > int(redis.get("&dreamcount"))):                                 # increase dream count if required
             redis.set("&dreamcount", str(i))
+        # add a 5 to the difficulty database for the new dream if required
+        diff = redis.get("%difficulty")
+        diffLength = len(diff.split(","))
+        if diffLength < i:
+            diff += "5,"
+            redis.set("%difficulty", diff)
         await message.channel.send("Dream {} has been added. Dreamer: {}".format(redis.get("&dreamcount"),str(dreamer)))
     
     elif message.content.startswith('/dreamplay') or message.content.startswith('/dp'):
