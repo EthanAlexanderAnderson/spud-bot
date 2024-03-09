@@ -440,16 +440,22 @@ async def on_message(message):                                                  
 
             await message.channel.send(file=discord.File(buffer, filename="bar_chart.png"))
         else:
-            # first we set all missing values to 5
+            # Filter out empty strings and convert to integers
+            difficulty_values = [int(x) for x in difficultyList if x.strip()]
+            # average of ints in difficulty list (account for empty values)
+            mean = sum(map(int, difficulty_values)) / len(difficulty_values)
             diff = ""
             for i in range(count):
                 try:
+                    # if difficultyList[i] is empty, null, or NaN, set it to 5
                     if difficultyList[i] == None or difficultyList[i] == "" or difficultyList[i] == "NaN":
                         difficultyList[i] = "5"
                         diff += difficultyList[i] + ","
+                    # if difficultyList[i] is less than -5, add 1
                     elif int(difficultyList[i]) < -5:
                         difficultyList[i] = str((int(difficultyList[i]) + 1))
                         diff += difficultyList[i] + ","
+                    # if difficultyList[i] is greater than 15, subtract 1
                     elif int(difficultyList[i]) > 15:
                         difficultyList[i] = str((int(difficultyList[i]) - 1))
                         diff += difficultyList[i] + ","
@@ -476,18 +482,19 @@ async def on_message(message):                                                  
                     msg = ""
             await message.channel.send(msg)
         # also send the mean, median, mode
+        difficulty_values = [int(x) for x in difficultyList if x.strip()]
         # mean
-        mean = sum(map(int, difficultyList)) / len(difficultyList)
+        mean = round(sum(map(int, difficulty_values)) / len(difficulty_values), 2)
         # median
-        difficultyList.sort()
-        if len(difficultyList) % 2 == 0:
-            median = (int(difficultyList[len(difficultyList)//2]) + int(difficultyList[len(difficultyList)//2 - 1])) / 2
+        difficulty_values.sort()
+        if len(difficulty_values) % 2 == 0:
+            median = (int(difficulty_values[len(difficulty_values)//2]) + int(difficulty_values[len(difficulty_values)//2 - 1])) / 2
         else:
-            median = int(difficultyList[len(difficultyList)//2])
+            median = int(difficulty_values[len(difficulty_values)//2])
         # mode
         frequency = {}
         for i in range(count):
-            diff = int(difficultyList[i])
+            diff = int(difficulty_values[i])
             if diff in frequency:
                 frequency[diff] += 1
             else:
