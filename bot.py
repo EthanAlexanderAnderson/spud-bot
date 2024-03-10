@@ -17,9 +17,9 @@ redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
-namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo", "Eddie"]
-names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Eddie", "Edmund", "Ed", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
-aliases = [["Ethan", "Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "Ea"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "Col", "Co", "Ch", "C"], ["Nathan", "Asthon", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "Bs", "Nat", "Na", "N"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "Os", "Ob", "O"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "El"], ["Mitch", "Mitchell", "Ms"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "Mtg", "Mt", "Mk"], ["Devon", "Devon C", "Dev", "Dc"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "Ds"], ["Eddie", "Edmund", "Ed", "Eb"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "Ag", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "Lz", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "Jm", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "Zr", "Z"], ["Ai", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
+namesStrict = ["Ethan", "Nathan", "Cole", "Max", "Devon", "Oobie", "Eric", "Dylan", "Adam", "Mitch", "Jack", "Zach", "Devo"]
+names = ["Ethan", "Ham", "Anderson", "Oobie", "Oob", "Larose", "Nathan", "Nash", "Nate", "Nashton", "Skrimp", "Ashton", "Eric", "Ric", "Rick", "Mitch", "Mitchell", "Max", "Maxwell", "Mac", "Macs", "MTG", "MT", "Cole", "Devon", "Devo", "Deevi", "Shmev", "Adam", "Chad", "Chadam", "Dylan", "Teddy", "Jack", "Jac", "Jak", "Zach", "Zack", "Zac", "Zak", "Zachary", "AI", "Fake"]
+aliases = [["Ethan", "Anderson", "Ethan A", "Ham", "Hammie", "Hammy", "Eman", "Eman826", "Et", "Eth", "Etha", "Ander", "Ea"], ["Cole", "Coal", "Cole H", "Justin", "Pokerstars", "Col", "Co", "Ch", "C"], ["Nathan", "Asthon", "Nathan A", "Nash", "Nate", "Nashton", "Skrimp", "Big Skrimp", "Bs", "Nat", "Na", "N"], ["Oobie", "Stew", "Oobie Stew", "Oob", "Scoobie", "Beta", "Weeb", "Larose", "Ethan Larose", "Ethan L", "Os", "Ob", "O"], ["Eric", "Linguine", "Eric L", "Ric", "Rick", "El"], ["Mitch", "Mitchell", "Ms"], ["Max", "Max K", "Maxwell", "Maxwel", "Maximillion", "Mac", "Macs", "Mtg", "Mt", "Mk"], ["Devon", "Devon C", "Dev", "Dc"], ["Devo", "Devo S", "Devon S", "Deevi", "Shmev", "Ds"], ["Adam", "Adam G", "Chad", "Chadam", "Graf", "Ag", "A"], ["Dylan", "Dylan C", "Teddy", "Ted", "Cam", "Lz", "T"], ["Jack", "Jack M", "Jack Mac", "Jac", "Jak", "Jm", "J"], ["Zach", "Zach R", "Zack", "Zac", "Zak", "Zachary", "Zr", "Z"], ["Ai", "Bot", "Chester"], ["Fake", "Fak", "Fa", "F"], ["Gnome", "Gnom", "Gno", "Gn", "G"]]
 emojiNums = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 adminID = 0
 answer = ""
@@ -601,6 +601,13 @@ async def on_message(message):                                                  
             i = i + 1999
             length = length - 1999
         await message.channel.send(fullKeys)
+
+    # also for debugging
+    elif message.content.startswith('/dreamstats'):
+        msg = ""
+        for name in namesStrict:
+            msg += name + ": " + redis.get("%" + name) + "\n"
+        await message.channel.send(msg)
 
     # also for debugging
     elif message.content.startswith('/dreamscan'):
