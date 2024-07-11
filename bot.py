@@ -412,7 +412,11 @@ async def on_message(message):                                                  
             # create a dictionary to store the frequency of each number
             frequency = {}
             for i in range(count):
-                diff = int(difficultyList[i])
+                try:
+                    diff = int(difficultyList[i])
+                except Exception as e:
+                    print(e)
+                    diff = 5
                 if diff in frequency:
                     frequency[diff] += 1
                 else:
