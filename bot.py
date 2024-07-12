@@ -443,6 +443,21 @@ async def on_message(message):                                                  
             plt.clf()
 
             await message.channel.send(file=discord.File(buffer, filename="bar_chart.png"))
+        elif "hardest" in flags:
+            # show the dreams with the highest difficulty
+            # if more than 5 dreams have the same difficulty, only show the IDs
+            # if less than 5 dreams have the same difficulty, show the dreams
+            difficulty_values = [int(x) for x in difficultyList if x.strip()]
+            max_diff = max(difficulty_values)
+            num_of_max = difficulty_values.count(max_diff)
+            msg = "Hardest dreams (difficulty " + str(max_diff) + "): "
+            for i in range(count):
+                if difficultyList[i] == str(max_diff):
+                    if num_of_max > 5:
+                        msg += str(i) + ", "
+                    else:
+                        msg += "\n" + redis.get("&dream" + str(i)) + " ||" + redis.get("&dreamer" + str(i)) + "||"
+            await message.channel.send(msg)
         else:
             # Filter out empty strings and convert to integers
             difficulty_values = [int(x) for x in difficultyList if x.strip()]
