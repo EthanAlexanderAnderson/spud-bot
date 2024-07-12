@@ -513,7 +513,11 @@ async def on_message(message):                                                  
         # mode
         frequency = {}
         for i in range(count):
-            diff = int(difficulty_values[i])
+            try:
+                diff = int(difficulty_values[i])
+            except Exception as e:
+                print(e)
+                diff = 5
             if diff in frequency:
                 frequency[diff] += 1
             else:
