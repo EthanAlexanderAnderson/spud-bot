@@ -13,7 +13,13 @@ import matplotlib.pyplot as plt
 import io
 
 # -- global variables --
-redis = redis.Redis.from_url(os.environ['REDIS_URL'], decode_responses=True)    # loads redis server, replace "os.environ['REDIS_URL']" with your redis URL
+# Create a Redis client that disables SSL certificate verification
+redis_url = os.environ['REDIS_URL']
+redis = redis.Redis.from_url(
+    redis_url,
+    decode_responses=True,
+    ssl_cert_reqs=None  # Disable SSL certificate verification
+)
 client = commands.Bot(command_prefix='/', intents=discord.Intents.all())        # command prefix (/)
 
 # global variables for dream journal game
